@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34009.444
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ControlApp", "Dshm_ControlApp_WpfUi\ControlApp.csproj", "{4708E83B-4ED2-44F5-9758-E8A183142806}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4708E83B-4ED2-44F5-9758-E8A183142806}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4708E83B-4ED2-44F5-9758-E8A183142806}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4708E83B-4ED2-44F5-9758-E8A183142806}.Debug|x64.ActiveCfg = Debug|x64
+		{4708E83B-4ED2-44F5-9758-E8A183142806}.Debug|x64.Build.0 = Debug|x64
+		{4708E83B-4ED2-44F5-9758-E8A183142806}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4708E83B-4ED2-44F5-9758-E8A183142806}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4708E83B-4ED2-44F5-9758-E8A183142806}.Release|x64.ActiveCfg = Release|x64
+		{4708E83B-4ED2-44F5-9758-E8A183142806}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EF46C1CC-3DEF-4760-8256-B1C9145ACA01}
+	EndGlobalSection
+EndGlobal
