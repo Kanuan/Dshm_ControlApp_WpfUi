@@ -13,12 +13,12 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         private BackingData_LEDs _tempBackingData = new();
 
         public override SettingsModeGroups Group { get; } = SettingsModeGroups.LEDsControl;
-        public ControlApp_LEDsModes LEDMode
+        public int LEDMode
         {
-            get => _tempBackingData.LEDMode;
+            get => (int)_tempBackingData.LEDMode;
             set
             {
-                _tempBackingData.LEDMode = value;
+                _tempBackingData.LEDMode = (ControlApp_LEDsModes)value;
                 this.OnPropertyChanged(nameof(LEDMode));
             }
         }

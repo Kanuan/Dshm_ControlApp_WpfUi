@@ -68,17 +68,5 @@ namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
             { DSHM_PressureModes.Analogue, ControlApp_DsPressureMode.Analogue },
             { DSHM_PressureModes.Digital, ControlApp_DsPressureMode.Digital },
         };
-
-
-
-        public static Dictionary<ControlApp_QuickDisconnectCombo, DSHM_QuickDisconnectCombo> QuickDisconnectCombo_Control_DSHM_Pair = new()
-        {
-            { ControlApp_QuickDisconnectCombo.PS_R1_L1, DSHM_QuickDisconnectCombo.PS_R1_L1 },
-            { ControlApp_QuickDisconnectCombo.PS_Start, DSHM_QuickDisconnectCombo.PS_Start },
-            { ControlApp_QuickDisconnectCombo.PS_Select, DSHM_QuickDisconnectCombo.PS_Select },
-            { ControlApp_QuickDisconnectCombo.Start_R1_L1, DSHM_QuickDisconnectCombo.Start_R1_L1 },
-            { ControlApp_QuickDisconnectCombo.Select_R1_L1, DSHM_QuickDisconnectCombo.Select_R1_L1 },
-            { ControlApp_QuickDisconnectCombo.Start_Select, DSHM_QuickDisconnectCombo.Start_Select },
-        };
     }
 }

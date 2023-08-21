@@ -1,6 +1,7 @@
 ﻿using FontAwesome5;
 using Nefarius.DsHidMini.ControlApp.Drivers;
 using Nefarius.DsHidMini.ControlApp.UserData;
+using Nefarius.Utilities.Bluetooth;
 using Nefarius.Utilities.DeviceManagement.PnP;
 using Newtonsoft.Json.Linq;
 using ReactiveUI;
@@ -13,6 +14,7 @@ using System.Drawing;
 using System.Net.NetworkInformation;
 using System.Reactive;
 using System.Reactive.Linq;
+using Wpf.Ui.Common;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
@@ -113,26 +115,28 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         /// <summary>
         ///     Return a battery icon depending on the charge.
         /// </summary>
-        public EFontAwesomeIcon BatteryIcon
+        public SymbolRegular BatteryIcon
         {
             get
             {
                 switch (BatteryStatus)
                 {
                     case DsBatteryStatus.Charged:
+                        return SymbolRegular.Battery1024;
                     case DsBatteryStatus.Charging:
+                        return SymbolRegular.BatteryCharge24;
                     case DsBatteryStatus.Full:
-                        return EFontAwesomeIcon.Solid_BatteryFull;
+                        return SymbolRegular.Battery1024;
                     case DsBatteryStatus.High:
-                        return EFontAwesomeIcon.Solid_BatteryThreeQuarters;
+                        return SymbolRegular.Battery724;
                     case DsBatteryStatus.Medium:
-                        return EFontAwesomeIcon.Solid_BatteryHalf;
+                        return SymbolRegular.Battery524;
                     case DsBatteryStatus.Low:
-                        return EFontAwesomeIcon.Solid_BatteryQuarter;
+                        return SymbolRegular.Battery224;
                     case DsBatteryStatus.Dying:
-                        return EFontAwesomeIcon.Solid_BatteryEmpty;
+                        return SymbolRegular.Battery024;
                     default:
-                        return EFontAwesomeIcon.Solid_BatteryEmpty;
+                        return SymbolRegular.BatteryWarning24;
                 }
             }
         }
@@ -191,6 +195,14 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
                 : EFontAwesomeIcon.Brands_Bluetooth;
 
         /// <summary>
+        ///     Icon for connection protocol
+        /// </summary>
+        public SymbolRegular ConnectionTypeIcon =>
+            !IsWireless
+                ? SymbolRegular.UsbPlug24
+                : SymbolRegular.Bluetooth24;
+
+        /// <summary>
         ///     Last time this device has been seen connected (applies to Bluetooth connected devices only).
         /// </summary>
         public DateTimeOffset LastConnected =>
@@ -227,17 +239,10 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
             CurrentDeviceSettingsMode = deviceUserData.SettingsMode;
 
-            SaveChangesCommand = ReactiveCommand.Create(OnSaveButtonPressed);
-            CancelChangesCommand = ReactiveCommand.Create(OnCancelButtonPressed);
-
             this.WhenAnyValue(x => x.CurrentDeviceSettingsMode, x => x.SelectedProfile)
                 .Subscribe(x => UpdateEditor());
         }
 
-        // ---------------------------------------- ReactiveCommands
-
-        public ReactiveCommand<Unit, Unit> SaveChangesCommand { get; }
-        public ReactiveCommand<Unit, Unit> CancelChangesCommand { get; }
 
         // ------------------------------------------------------ METHODS
 
@@ -272,7 +277,8 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         // ---------------------------------------- Commands
 
-        private void OnSaveButtonPressed()
+        [RelayCommand]
+        private void ApplyChanges()
         {
             deviceUserData.SettingsMode = CurrentDeviceSettingsMode;
             deviceUserData.AutoPairWhenCabled = AutoPairDeviceWhenCabled;
@@ -291,12 +297,36 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             UserDataManager.UpdateDsHidMiniSettings();
         }
 
-        private void OnCancelButtonPressed()
+        [RelayCommand]
+        private void RevertChanges()
         {
             DeviceCustomsVM.LoadDatasToAllGroups(deviceUserData.DatasContainter);
             SelectedProfile = UserDataManager.GetProfile(deviceUserData.GuidOfProfileToUse);
             CurrentDeviceSettingsMode = deviceUserData.SettingsMode;
             AutoPairDeviceWhenCabled = deviceUserData.AutoPairWhenCabled;
+        }
+
+        [RelayCommand]
+        private void RestartDevice()
+        {
+            if(IsWireless)
+            {
+                using (var radio = new HostRadio())
+                {
+                    radio.DisconnectRemoteDevice(DeviceAddress);
+                };
+            }
+            else
+            {
+                try
+                {
+                    ((UsbPnPDevice)_device).CyclePort();
+                }
+                catch
+                {
+
+                }
+            }
         }
 
     }

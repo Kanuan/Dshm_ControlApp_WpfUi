@@ -19,5 +19,10 @@ namespace Dshm_ControlApp_WpfUi.Views.Pages
 
             InitializeComponent();
         }
+
+        private void ListView_Scroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
+        {
+
+        }
     }
 }

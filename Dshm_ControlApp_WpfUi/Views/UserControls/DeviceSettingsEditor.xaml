@@ -9,6 +9,8 @@
              mc:Ignorable="d" 
              xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
              d:DesignHeight="450" d:DesignWidth="400"
+             d:DataContext="{d:DesignInstance local:VMGroupsContainer,
+                                IsDesignTimeCreatable=False}"
              >
     <UserControl.Resources>
         <helpers:SettingsGroupsDataTemplateSelector x:Key="GroupSettingsTemplateSelector"/>
@@ -41,7 +43,7 @@
                                     <ui:DropDownButton 
 				            Grid.Column="2"
 				            Content="..."
-				            Visibility="{Binding !IsGroupLocked}"
+				            Visibility="{Binding IsGroupLocked, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"
 				            HorizontalAlignment="Right">
                             <ui:DropDownButton.ContextMenu>
                                 <ContextMenu>
@@ -57,7 +59,6 @@
                     <ContentControl
 					DockPanel.Dock="Top"
 					HorizontalAlignment="Stretch"
-					Margin="0,0,0,0"
 					Visibility="{Binding IsGroupLocked, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"
 					Content="{Binding }"
         ContentTemplateSelector="{StaticResource GroupSettingsTemplateSelector}">
@@ -82,7 +83,7 @@
         </Style>
     </UserControl.Resources>
     <ui:DynamicScrollViewer>
-        <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" LastChildFill="True">
+        <DockPanel IsEnabled="{Binding AllowEditing}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" LastChildFill="True">
 
             <!-- Mode unique settings -->
             <ContentControl Style="{StaticResource SetGroupItem}" Content="{Binding GroupModeUnique}"/>

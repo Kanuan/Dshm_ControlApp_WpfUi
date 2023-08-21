@@ -31,10 +31,10 @@
 					VerticalAlignment="Center"
 					Grid.Row="0" Grid.Column="1"
 					SelectedIndex="{Binding LEDMode}">
-					<ComboBoxItem Content="Battery level - single led"/>
-					<ComboBoxItem Content="Battery level - filling bar"/>
-					<ComboBoxItem Content="Custom - simple"/>
-					<ComboBoxItem Content="Custom - advanced"/>
+					<ComboBoxItem Content="Battery level (single led)"/>
+					<ComboBoxItem Content="Battery level (filling bar)"/>
+					<ComboBoxItem Content="Custom (simple)"/>
+					<ComboBoxItem Content="Custom (advanced)"/>
 				</ComboBox>
 
 				<TabControl Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" SelectedIndex="{Binding SelectedIndex, ElementName=LEDModeComboBox}">
@@ -60,10 +60,10 @@
 								<Label Content="2" Grid.Column="1"/>
 								<Label Content="3" Grid.Column="2"/>
 								<Label Content="4" Grid.Column="3"/>
-								<ui:ToggleSwitch Grid.Row="1" Grid.Column="0" IsChecked="{Binding IsLedN1Enabled}"/>
-								<ui:ToggleSwitch Grid.Row="1" Grid.Column="1" IsChecked="{Binding IsLedN2Enabled}"/>
-								<ui:ToggleSwitch Grid.Row="1" Grid.Column="2" IsChecked="{Binding IsLedN3Enabled}"/>
-								<ui:ToggleSwitch Grid.Row="1" Grid.Column="3" IsChecked="{Binding IsLedN4Enabled}"/>
+								<CheckBox Grid.Row="1" Grid.Column="0" IsChecked="{Binding IsLedN1Enabled}"/>
+                                <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding IsLedN2Enabled}"/>
+                                <CheckBox Grid.Row="1" Grid.Column="2" IsChecked="{Binding IsLedN3Enabled}"/>
+                                <CheckBox Grid.Row="1" Grid.Column="3" IsChecked="{Binding IsLedN4Enabled}"/>
 							</Grid>
 						</ContentControl>
 						<!-- Index 3: LEDs custom advanced -->
@@ -74,10 +74,10 @@
 							<TabControl
 								HorizontalAlignment="Center"
 								SelectedIndex="{Binding CurrentLEDCustomsIndex}">
-								<TabItem Header="1"/>
-								<TabItem Header="2"/>
-								<TabItem Header="3"/>
-								<TabItem Header="4"/>
+								<TabItem Header="1" Width="50"/>
+                                <TabItem Header="2" Width="50"/>
+                                <TabItem Header="3" Width="50"/>
+                                <TabItem Header="4" Width="50"/>
 							</TabControl>
 							<!-- LED fine tuning -->
 							<DockPanel>
@@ -212,21 +212,21 @@
 				<ComboBox
 					Width="80"
 					DockPanel.Dock="Left"
-					ItemsSource="{Binding controlApp_ComboButtons}"
+					ItemsSource="{Binding Source={wpf:EnumBindingSource {x:Type devmvvm:ControlApp_ComboButtons}}}"
 					SelectedItem="{Binding QuickDisconnectComboButton1}"
 					IsEnabled="{Binding IsChecked,ElementName=EnableQuickDisconnectComboCheckbox}"
 						/>
 				<ComboBox
 					Width="80"
 					DockPanel.Dock="Left"
-					ItemsSource="{Binding controlApp_ComboButtons}"
+					ItemsSource="{Binding Source={wpf:EnumBindingSource {x:Type devmvvm:ControlApp_ComboButtons}}}"
 					SelectedItem="{Binding QuickDisconnectComboButton2}"
 					IsEnabled="{Binding IsChecked,ElementName=EnableQuickDisconnectComboCheckbox}"
 						/>
 				<ComboBox
 					Width="80"
 					DockPanel.Dock="Left"
-					ItemsSource="{Binding controlApp_ComboButtons}"
+					ItemsSource="{Binding Source={wpf:EnumBindingSource {x:Type devmvvm:ControlApp_ComboButtons}}}"
 					SelectedItem="{Binding QuickDisconnectComboButton3}"
 					IsEnabled="{Binding IsChecked,ElementName=EnableQuickDisconnectComboCheckbox}"
 						/>
@@ -254,148 +254,102 @@
 	<DataTemplate x:Key="Template_SticksDeadZone">
 		<DockPanel>
 			<!-- Grid test -->
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="4*"/>
-					<ColumnDefinition Width="2*"/>
-					<ColumnDefinition Width="2*"/>
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition/>
-					<RowDefinition/>
-					<RowDefinition/>
-					<RowDefinition/>
-					<RowDefinition/>
-				</Grid.RowDefinitions>
-				<!-- Row 0: Labels -->
-				<Label
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <!-- Row 0: Labels -->
+                <Label
 					Grid.Row="0" Grid.Column="1"
 					Content="Left Stick"
 					VerticalContentAlignment="Center"
 					HorizontalContentAlignment="Center"
 						/>
-				<Label
+                <Label
 					Grid.Row="0" Grid.Column="2"
 					Content="Right Stick"
 					VerticalContentAlignment="Center"
 					HorizontalContentAlignment="Center"
 						/>
-				<!-- Row 1: DeadZone -->
-				<Label
+                <!-- Row 1: DeadZone -->
+                <Label
 					Grid.Row="1" Grid.Column="0"
 					Content="DeadZone (%):"
 					VerticalContentAlignment="Center"
 					HorizontalContentAlignment="Left"
 						/>
-				<ui:NumberBox
+                <ui:NumberBox
 					Grid.Row="1" Grid.Column="1"
 					Minimum="0" Maximum="142" ClipToBounds="True"
 					Value="{Binding LeftStickDeadZone}"
 					/>
-				<ui:NumberBox
+                <ui:NumberBox
 					Grid.Row="1" Grid.Column="2"
 					Minimum="0" Maximum="142" ClipToBounds="True"
 					Value="{Binding RightStickDeadZone}"
 					/>
-				<!-- Row 2: Invert X -->
-				<Label
+                <!-- Row 2: Invert X -->
+                <Label
 					Grid.Row="2" Grid.Column="0"
 					Content="Invert horizontally (X-Axis):"
 					VerticalContentAlignment="Center"
 					HorizontalContentAlignment="Left"
 						/>
-				<ui:ToggleSwitch
+                <ui:ToggleSwitch
 					Grid.Row="2" Grid.Column="1"
 					IsChecked="{Binding InvertLSX}"
 					HorizontalAlignment="Center"
 						/>
-				<ui:ToggleSwitch
+                <ui:ToggleSwitch
 					Grid.Row="2" Grid.Column="2"
 					IsChecked="{Binding InvertRSX}"
 					HorizontalAlignment="Center"
 						/>
-				<!-- Row 3: Invert Y -->
-				<Label
+                <!-- Row 3: Invert Y -->
+                <Label
 					Grid.Row="3" Grid.Column="0"
 					Content="Invert vertically (Y-Axis):"
 					VerticalContentAlignment="Center"
 					HorizontalContentAlignment="Left"
 						/>
-				<ui:ToggleSwitch
+                <ui:ToggleSwitch
 					Grid.Row="3" Grid.Column="1"
 					IsChecked="{Binding InvertLSY}"
 					HorizontalAlignment="Center"
 						/>
-				<ui:ToggleSwitch
+                <ui:ToggleSwitch
 					Grid.Row="3" Grid.Column="2"
 					IsChecked="{Binding InvertRSY}"
 					HorizontalAlignment="Center"
 						/>
-			</Grid>
-			<!-- Left stick DZ
-				<DockPanel DockPanel.Dock="Top">
-					<TextBlock
-						Text="Left stick DZ:"
-						HorizontalAlignment="Left"
-						VerticalAlignment="Center"
-						DockPanel.Dock="Left"/>
-					<TextBlock
-						DockPanel.Dock="Left"
-						Text="{Binding LeftStickDeadZoneInPercent, StringFormat={}{0}%}}%"
-						HorizontalAlignment="Left"
-						VerticalAlignment="Center"
-						Margin="5,0,5,0"/>
-					<Slider
-						DockPanel.Dock="Right"
-						IsSnapToTickEnabled="True"
-						TickFrequency="1"
-						ToolTip.Tip="{Binding Value, RelativeSource={RelativeSource Self}}"
-						ToolTip.Placement="Top"
-						Minimum="0"
-						Maximum="180"
-						Value="{Binding LeftStickDeadZone}"/>
-				</DockPanel>
-				< Right stick DZ
-				<DockPanel DockPanel.Dock="Top">
-					<TextBlock
-						DockPanel.Dock="Left"
-						Text="Right Stick DZ:"
-						HorizontalAlignment="Left"
-						VerticalAlignment="Center"/>
-					<TextBlock
-						DockPanel.Dock="Left"
-						Text="{Binding RightStickDeadZoneInPercent, StringFormat={}{0}%}}%"
-						HorizontalAlignment="Left"
-						VerticalAlignment="Center"
-						Margin="5,0,5,0"/>
-					<Slider
-						DockPanel.Dock="Right"
-						IsSnapToTickEnabled="True"
-						TickFrequency="1"
-						ToolTip.Tip="{Binding Value, RelativeSource={RelativeSource Self}}"
-						ToolTip.Placement="Top"
-						Minimum="0"
-						Maximum="180"
-						Value="{Binding RightStickDeadZone}"/>
-				</DockPanel>  -->
-		</DockPanel>
+            </Grid>
+        </DockPanel>
 	</DataTemplate>
 
 	<!-- Rumble template -->
 	<DataTemplate x:Key="Template_RumbleBasicFunctions">
 		<DockPanel>
 			<!-- Variable light rumble emulationg enabler -->
-			<ui:ToggleSwitch
+            <ui:ToggleSwitch
 				DockPanel.Dock="Top"
 				IsChecked="{Binding IsVariableLightRumbleEmulationEnabled}">
-				<TextBlock Text="Start with variable right rumble emulation enabled (Use left motor for both left and right rumble)" TextWrapping="Wrap"/>
-			</ui:ToggleSwitch>
-			<ui:ToggleSwitch
-				x:Name="EnableVariableRightRumbleEmulationToggleCheckbox"
+                <TextBlock Text="Start with variable right rumble emulation enabled" TextWrapping="Wrap"/>
+            </ui:ToggleSwitch>
+            <ui:ToggleSwitch
+				x:Name="EnableQuickDisconnectComboCheckbox"
 				DockPanel.Dock="Top"
-				Content="Toggle variable right rumble emulation via combo"
+				Content="Toggle variable right rumble emulation via button combo"
 				IsChecked="{Binding IsVariableRightEmulToggleComboEnabled}"/>
-			<DockPanel
+            <DockPanel
 				DockPanel.Dock="Top"
 					>
 				<!-- DataContext="{Binding VariableRightEmulToggleCombo}" -->
@@ -407,21 +361,21 @@
 				<ComboBox
 					Width="80"
 					DockPanel.Dock="Left"
-					ItemsSource="{Binding controlApp_ComboButtons}"
+					ItemsSource="{Binding Source={wpf:EnumBindingSource {x:Type devmvvm:ControlApp_ComboButtons}}}"
 					SelectedItem="{Binding VarRightEmul_ToggleComboButton1}"
 					IsEnabled="{Binding IsChecked,ElementName=EnableQuickDisconnectComboCheckbox}"
 						/>
 				<ComboBox
 					Width="80"
 					DockPanel.Dock="Left"
-					ItemsSource="{Binding controlApp_ComboButtons}"
+					ItemsSource="{Binding Source={wpf:EnumBindingSource {x:Type devmvvm:ControlApp_ComboButtons}}}"
 					SelectedItem="{Binding VarRightEmul_ToggleComboButton2}"
 					IsEnabled="{Binding IsChecked,ElementName=EnableQuickDisconnectComboCheckbox}"
 						/>
 				<ComboBox
 					Width="80"
 					DockPanel.Dock="Left"
-					ItemsSource="{Binding controlApp_ComboButtons}"
+					ItemsSource="{Binding Source={wpf:EnumBindingSource {x:Type devmvvm:ControlApp_ComboButtons}}}"
 					SelectedItem="{Binding VarRightEmul_ToggleComboButton3}"
 					IsEnabled="{Binding IsChecked,ElementName=EnableQuickDisconnectComboCheckbox}"
 						/>

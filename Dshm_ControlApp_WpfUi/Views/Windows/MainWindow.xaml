@@ -21,10 +21,10 @@
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <ui:FluentWindow.InputBindings>
-        <KeyBinding
+        <!--<KeyBinding
             Key="F"
             Command="{Binding ElementName=AutoSuggestBox, Path=FocusCommand}"
-            Modifiers="Control" />
+            Modifiers="Control" />-->
     </ui:FluentWindow.InputBindings>
 
     <Grid>
@@ -40,7 +40,7 @@
 
         <ui:NavigationView
             x:Name="NavigationView"
-            Padding="42,0,42,0"
+            Padding="10,0,10,0"
             FooterMenuItemsSource="{Binding ViewModel.FooterMenuItems, Mode=OneWay}"
             FrameMargin="0"
             IsBackButtonVisible="Collapsed"

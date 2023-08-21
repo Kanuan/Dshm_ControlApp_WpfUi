@@ -18,22 +18,73 @@
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     mc:Ignorable="d"
     >
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    </Page.Resources>
     
     <DockPanel VerticalAlignment="Stretch">
-        <DockPanel DockPanel.Dock="Left" Width="200">
+        <DockPanel DockPanel.Dock="Left" Width="250" MaxWidth="250">
             <ui:TextBlock 
                 DockPanel.Dock="Top"
                 Text="DsHidMini Devices"
                 HorizontalAlignment="Center"/>
             <ListView
             DockPanel.Dock="Top"
-            Grid.Column="2"
             VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"
             ItemsSource="{Binding ViewModel.Devices}"
-            SelectedItem="{Binding ViewModel.SelectedDevice}">
+            SelectedItem="{Binding ViewModel.SelectedDevice}"
+            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            >
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <ui:TextBlock Text="{Binding DisplayName}"/>
+                        <ui:Card Padding="2">
+                            <Viewbox Margin="10,0,0,0">
+                                <Grid Height="30">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="120"/>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="20"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!--BatteryIcon-->
+                                    <Viewbox Grid.Column="0" >
+                                        <ui:TextBlock Text="{Binding DisplayName}"/>
+                                    </Viewbox>
+                                    <Viewbox Grid.Column="2" Grid.RowSpan="2" Stretch="None" >
+                                        <ui:SymbolIcon Symbol="{Binding ConnectionTypeIcon}"/>
+                                    </Viewbox>
+                                    <Viewbox  Grid.Column="1" Grid.RowSpan="2"  Stretch="None" >
+                                        <ui:SymbolIcon Symbol="{Binding BatteryIcon}">
+                                            <ui:SymbolIcon.LayoutTransform>
+                                                <RotateTransform Angle="270"/>
+                                            </ui:SymbolIcon.LayoutTransform>
+                                        </ui:SymbolIcon>
+                                    </Viewbox>
+
+                                    <Button Grid.Column="3" Grid.RowSpan="2" Padding="0" VerticalAlignment="Stretch" Command="{Binding RestartDeviceCommand}">
+                                        <Button.Content>
+                                            <Viewbox Stretch="None" >
+                                                <ui:SymbolIcon Symbol="Power24" />
+
+                                            </Viewbox>
+                                        </Button.Content>
+                                    </Button>
+
+
+
+
+
+                                </Grid>
+                            </Viewbox>
+                        </ui:Card>
+
+                        
+                        
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
@@ -44,8 +95,8 @@
             <DockPanel DockPanel.Dock="Bottom">
                 <UniformGrid
                     Columns="2">
-                    <ui:Button Content="Apply changes" HorizontalAlignment="Stretch" />
-                    <ui:Button Content="Cancel" HorizontalAlignment="Stretch"/>
+                    <ui:Button Content="Apply changes" HorizontalAlignment="Stretch" Command="{Binding ApplyChangesCommand}" />
+                    <ui:Button Content="Cancel" HorizontalAlignment="Stretch" Command="{Binding RevertChangesCommand}"/>
                 </UniformGrid>
                 
             </DockPanel>
@@ -136,14 +187,14 @@
 				                    SelectedItem="{Binding CurrentDeviceSettingsMode}"
 			                    />
                                                     <Label
-				                    Visibility="{Binding IsProfileSelectorVisible}"
+				                    Visibility="{Binding IsProfileSelectorVisible, Converter={StaticResource BoolToVis}}"
 				                    DockPanel.Dock="Left"
 				                    Content="->"
 				                    VerticalContentAlignment="Center"
 			                    />
                                                     <ComboBox
 				                    DockPanel.Dock="Left"
-				                    Visibility="{Binding IsProfileSelectorVisible}"
+				                    Visibility="{Binding IsProfileSelectorVisible, Converter={StaticResource BoolToVis}}"
 				                    x:Name="ProfileSelection_ComboBox"
 				                    VerticalAlignment="Center"
 				                    ItemsSource="{Binding ListOfProfiles}"

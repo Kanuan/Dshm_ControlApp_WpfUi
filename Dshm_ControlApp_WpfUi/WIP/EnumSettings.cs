@@ -50,16 +50,6 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         CustomPattern,
     }
 
-    public enum ControlApp_QuickDisconnectCombo
-    {
-        PS_R1_L1,
-        PS_Start,
-        PS_Select,
-        Start_R1_L1,
-        Select_R1_L1,
-        Start_Select,
-    }
-
     public enum ControlApp_ComboButtons
     {
         None,
