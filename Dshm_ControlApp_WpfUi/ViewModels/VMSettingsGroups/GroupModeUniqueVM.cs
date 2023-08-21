@@ -47,7 +47,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.SettingsContext = value;
-                this.RaisePropertyChanged(nameof(Context));
+                this.OnPropertyChanged(nameof(Context));
             }
 
         }
@@ -57,7 +57,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.PressureExposureMode = value;
-                this.RaisePropertyChanged(nameof(PressureExposureMode));
+                this.OnPropertyChanged(nameof(PressureExposureMode));
             }
         }
 
@@ -67,7 +67,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.DPadExposureMode = value;
-                this.RaisePropertyChanged(nameof(DPadExposureMode));
+                this.OnPropertyChanged(nameof(DPadExposureMode));
             }
         }
 
@@ -78,7 +78,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.PreventRemappingConflictsInSXSMode = value;
-                this.RaisePropertyChanged(nameof(PreventRemappingConflictsInSXSMode));
+                this.OnPropertyChanged(nameof(PreventRemappingConflictsInSXSMode));
             }
         }
 
@@ -88,7 +88,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.AllowAppsToOverrideLEDsInSXSMode = value;
-                this.RaisePropertyChanged(nameof(AllowAppsToControlLEDsInSXSMode));
+                this.OnPropertyChanged(nameof(AllowAppsToControlLEDsInSXSMode));
             }
         }
 
@@ -99,7 +99,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.IsLEDsAsXInputSlotEnabled = value;
-                this.RaisePropertyChanged(nameof(IsLEDsAsXInputSlotEnabled));
+                this.OnPropertyChanged(nameof(IsLEDsAsXInputSlotEnabled));
             }
         }
 
@@ -110,18 +110,18 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.IsDS4LightbarTranslationEnabled = value;
-                this.RaisePropertyChanged(nameof(IsDS4LightbarTranslationEnabled));
+                this.OnPropertyChanged(nameof(IsDS4LightbarTranslationEnabled));
             }
         }
 
-        public GroupModeUniqueVM(BackingDataContainer backingDataContainer, VMGroupsContainer vmGroupsContainter) : base(backingDataContainer)
+        public GroupModeUniqueVM(BackingDataContainer backingDataContainer) : base(backingDataContainer)
         {
         }
 
         public override void ResetGroupToOriginalDefaults()
         {
             _tempBackingData.ResetToDefault();
-            this.RaisePropertyChanged(string.Empty);
+            this.OnPropertyChanged(string.Empty);
         }
 
         public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
@@ -132,7 +132,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         public void LoadSettingsFromBackingData(BackingData_ModesUnique dataTarget)
         {
             BackingData_ModesUnique.CopySettings(_tempBackingData, dataTarget);
-            this.RaisePropertyChanged(string.Empty);
+            this.OnPropertyChanged(string.Empty);
         }
 
         public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)

@@ -18,7 +18,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.IsLeftMotorStrRescalingEnabled = value;
-                this.RaisePropertyChanged(nameof(IsLeftMotorStrRescalingEnabled));
+                this.OnPropertyChanged(nameof(IsLeftMotorStrRescalingEnabled));
             }
         }
         public int LeftMotorStrRescalingUpperRange
@@ -27,7 +27,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.LeftMotorStrRescalingUpperRange = value;
-                this.RaisePropertyChanged(nameof(LeftMotorStrRescalingUpperRange));
+                this.OnPropertyChanged(nameof(LeftMotorStrRescalingUpperRange));
             }
         }
         public int LeftMotorStrRescalingLowerRange
@@ -36,16 +36,16 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.LeftMotorStrRescalingLowerRange = value;
-                this.RaisePropertyChanged(nameof(LeftMotorStrRescalingLowerRange));
+                this.OnPropertyChanged(nameof(LeftMotorStrRescalingLowerRange));
             }
         }
 
-        public GroupRumbleLeftRescaleVM(BackingDataContainer backingDataContainer, VMGroupsContainer vmGroupsContainter) : base(backingDataContainer) { }
+        public GroupRumbleLeftRescaleVM(BackingDataContainer backingDataContainer) : base(backingDataContainer) { }
 
         public override void ResetGroupToOriginalDefaults()
         {
             _tempBackingData.ResetToDefault();
-            this.RaisePropertyChanged(string.Empty);
+            this.OnPropertyChanged(string.Empty);
         }
 
         public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
@@ -66,7 +66,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         public void LoadSettingsFromBackingData(BackingData_LeftRumbleRescale dataTarget)
         {
             BackingData_LeftRumbleRescale.CopySettings(_tempBackingData, dataTarget);
-            this.RaisePropertyChanged(string.Empty);
+            this.OnPropertyChanged(string.Empty);
         }
     }
 

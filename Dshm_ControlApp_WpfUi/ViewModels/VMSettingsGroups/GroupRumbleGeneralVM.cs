@@ -18,7 +18,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.IsVariableLightRumbleEmulationEnabled = value;
-                this.RaisePropertyChanged(nameof(IsVariableLightRumbleEmulationEnabled));
+                this.OnPropertyChanged(nameof(IsVariableLightRumbleEmulationEnabled));
             }
         }
 
@@ -28,7 +28,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.IsVariableRightEmulToggleComboEnabled = value;
-                this.RaisePropertyChanged(nameof(IsVariableRightEmulToggleComboEnabled));
+                this.OnPropertyChanged(nameof(IsVariableRightEmulToggleComboEnabled));
             }
         }
 
@@ -38,7 +38,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.VariableRightEmulToggleCombo.Button1 = value;
-                this.RaisePropertyChanged(nameof(VarRightEmul_ToggleComboButton1));
+                this.OnPropertyChanged(nameof(VarRightEmul_ToggleComboButton1));
             }
         }
 
@@ -48,7 +48,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.VariableRightEmulToggleCombo.Button2 = value;
-                this.RaisePropertyChanged(nameof(VarRightEmul_ToggleComboButton2));
+                this.OnPropertyChanged(nameof(VarRightEmul_ToggleComboButton2));
             }
         }
         public ControlApp_ComboButtons VarRightEmul_ToggleComboButton3
@@ -57,7 +57,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.VariableRightEmulToggleCombo.Button3 = value;
-                this.RaisePropertyChanged(nameof(VarRightEmul_ToggleComboButton3));
+                this.OnPropertyChanged(nameof(VarRightEmul_ToggleComboButton3));
             }
         }
 
@@ -68,7 +68,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.IsLeftMotorDisabled = value;
-                this.RaisePropertyChanged(nameof(IsLeftMotorDisabled));
+                this.OnPropertyChanged(nameof(IsLeftMotorDisabled));
             }
         }
         public bool IsRightMotorDisabled
@@ -78,14 +78,14 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.IsRightMotorDisabled = value;
-                this.RaisePropertyChanged(nameof(IsRightMotorDisabled));
+                this.OnPropertyChanged(nameof(IsRightMotorDisabled));
             }
         }
 
         public override void ResetGroupToOriginalDefaults()
         {
             _tempBackingData.ResetToDefault();
-            this.RaisePropertyChanged(string.Empty);
+            this.OnPropertyChanged(string.Empty);
         }
 
         public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
@@ -106,10 +106,10 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         public void LoadSettingsFromBackingData(BackingData_RumbleGeneral dataTarget)
         {
             BackingData_RumbleGeneral.CopySettings(_tempBackingData, dataTarget);
-            this.RaisePropertyChanged(string.Empty);
+            this.OnPropertyChanged(string.Empty);
         }
 
-        public GroupRumbleGeneralVM(BackingDataContainer backingDataContainer, VMGroupsContainer vmGroupsContainter) : base(backingDataContainer) { }
+        public GroupRumbleGeneralVM(BackingDataContainer backingDataContainer) : base(backingDataContainer) { }
     }
 
 

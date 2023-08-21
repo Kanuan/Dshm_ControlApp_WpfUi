@@ -62,7 +62,7 @@ namespace Dshm_ControlApp_WpfUi.Services
                 return;
             }
 
-            navigationWindow.NavigationView.Navigate(typeof(DashboardPage));
+            navigationWindow.NavigationView.Navigate(typeof(DevicesPage));
         }
     }
 }

@@ -16,7 +16,7 @@ using System.Reactive.Linq;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
-    internal class TestViewModel : ObservableObject
+    public partial class TestViewModel : ObservableObject
     {
         // ------------------------------------------------------ FIELDS
 
@@ -33,15 +33,15 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         // ------------------------------------------------------ PROPERTIES
 
-        [ObservableProperty] private VMGroupsContainer DeviceCustomsVM { get; set; }
-        [ObservableProperty] private VMGroupsContainer SelectedGroupsVM { get; set; }
+        [ObservableProperty] private VMGroupsContainer _deviceCustomsVM;
+        [ObservableProperty] private VMGroupsContainer _selectedGroupsVM;
 
         //internal string DisplayName { get; set; }
-        [ObservableProperty] public bool IsEditorEnabled { get; set; }
-        [ObservableProperty] public bool IsProfileSelectorVisible { get; set; }
+        [ObservableProperty] private bool _isEditorEnabled;
+        [ObservableProperty] private bool _isProfileSelectorVisible;
         public List<SettingsModes> SettingsModesList => settingsModesList;
 
-        [ObservableProperty] public SettingsModes CurrentDeviceSettingsMode { get; set; }
+        [ObservableProperty] private SettingsModes _currentDeviceSettingsMode;
 
         /// <summary>
         ///     Current HID device emulation mode.
@@ -96,7 +96,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        [ObservableProperty] public bool AutoPairDeviceWhenCabled { get; set; } = true;
+        [ObservableProperty] private bool _autoPairDeviceWhenCabled = true;
 
         /// <summary>
         ///     Current battery status.
@@ -205,7 +205,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         // ------------------------------------------------------ CONSTRUCTOR
 
-        public TestViewModel(PnPDevice device)
+        internal TestViewModel(PnPDevice device)
         {
             _device = device;
             // Loads correspondent controller data based on controller's MAC address 
@@ -262,11 +262,11 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
                     SelectedGroupsVM = UserDataManager.GlobalProfile.GetProfileVMGroupsContainer();
                     break;
             }
-            SelectedGroupsVM._allowEditing = CurrentDeviceSettingsMode == SettingsModes.Custom;
+            SelectedGroupsVM.AllowEditing = CurrentDeviceSettingsMode == SettingsModes.Custom;
             IsProfileSelectorVisible = CurrentDeviceSettingsMode == SettingsModes.Profile;
         }
 
-        [ObservableProperty] public ProfileData? SelectedProfile { get; set; }
+        [ObservableProperty] private ProfileData? _selectedProfile;
 
         public List<ProfileData> ListOfProfiles => UserDataManager.Profiles;
 

@@ -19,7 +19,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.LEDMode = value;
-                this.RaisePropertyChanged(nameof(LEDMode));
+                this.OnPropertyChanged(nameof(LEDMode));
             }
         }
 
@@ -29,7 +29,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.LEDsCustoms.LED_x_Customs[0].IsLedEnabled = value;
-                this.RaisePropertyChanged(nameof(IsLedN1Enabled));
+                this.OnPropertyChanged(nameof(IsLedN1Enabled));
             }
         }
         public bool IsLedN2Enabled
@@ -38,7 +38,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.LEDsCustoms.LED_x_Customs[1].IsLedEnabled = value;
-                this.RaisePropertyChanged(nameof(IsLedN1Enabled));
+                this.OnPropertyChanged(nameof(IsLedN1Enabled));
             }
         }
         public bool IsLedN3Enabled
@@ -47,7 +47,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.LEDsCustoms.LED_x_Customs[2].IsLedEnabled = value;
-                this.RaisePropertyChanged(nameof(IsLedN1Enabled));
+                this.OnPropertyChanged(nameof(IsLedN1Enabled));
             }
         }
         public bool IsLedN4Enabled
@@ -56,7 +56,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.LEDsCustoms.LED_x_Customs[3].IsLedEnabled = value;
-                this.RaisePropertyChanged(nameof(IsLedN1Enabled));
+                this.OnPropertyChanged(nameof(IsLedN1Enabled));
             }
         }
 
@@ -69,7 +69,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.LEDsCustoms.LED_x_Customs[CurrentLEDCustomsIndex].IsLedEnabled = value;
-                this.RaisePropertyChanged(nameof(IsCurrentLedEnabled));
+                this.OnPropertyChanged(nameof(IsCurrentLedEnabled));
             }
         }
         public bool UseLEDEffectsInIndexLED
@@ -78,7 +78,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.LEDsCustoms.LED_x_Customs[CurrentLEDCustomsIndex].UseLEDEffects = value;
-                this.RaisePropertyChanged(nameof(UseLEDEffectsInIndexLED));
+                this.OnPropertyChanged(nameof(UseLEDEffectsInIndexLED));
             }
         }
 
@@ -88,7 +88,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.LEDsCustoms.LED_x_Customs[CurrentLEDCustomsIndex].Duration = value;
-                this.RaisePropertyChanged(nameof(IndexLEDDuration));
+                this.OnPropertyChanged(nameof(IndexLEDDuration));
             }
         }
         public byte IndexLEDIntervalDuration
@@ -97,7 +97,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.LEDsCustoms.LED_x_Customs[CurrentLEDCustomsIndex].IntervalDuration = value;
-                this.RaisePropertyChanged(nameof(IndexLEDIntervalDuration));
+                this.OnPropertyChanged(nameof(IndexLEDIntervalDuration));
             }
         }
         public byte IndexLEDIntervalPortionON
@@ -106,8 +106,8 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.LEDsCustoms.LED_x_Customs[CurrentLEDCustomsIndex].IntervalPortionON = value;
-                this.RaisePropertyChanged(nameof(IndexLEDIntervalPortionON));
-                this.RaisePropertyChanged(nameof(IndexLEDIntervalPortionOFF));
+                this.OnPropertyChanged(nameof(IndexLEDIntervalPortionON));
+                this.OnPropertyChanged(nameof(IndexLEDIntervalPortionOFF));
             }
         }
         public byte IndexLEDIntervalPortionOFF
@@ -116,7 +116,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 //_tempBackingData.LEDsCustoms.LED_x_Customs[CurrentLEDCustomsIndex].IntervalPortionOFF = value;
-                this.RaisePropertyChanged(nameof(IndexLEDIntervalPortionOFF));
+                this.OnPropertyChanged(nameof(IndexLEDIntervalPortionOFF));
             }
         }
 
@@ -127,17 +127,17 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 currentLEDIndex = value;
-                this.RaisePropertyChanged(nameof(CurrentLEDCustomsIndex));
-                this.RaisePropertyChanged(nameof(IsCurrentLedEnabled));
-                this.RaisePropertyChanged(nameof(UseLEDEffectsInIndexLED));
-                this.RaisePropertyChanged(nameof(IndexLEDDuration));
-                this.RaisePropertyChanged(nameof(IndexLEDIntervalDuration));
-                this.RaisePropertyChanged(nameof(IndexLEDIntervalPortionON));
+                this.OnPropertyChanged(nameof(CurrentLEDCustomsIndex));
+                this.OnPropertyChanged(nameof(IsCurrentLedEnabled));
+                this.OnPropertyChanged(nameof(UseLEDEffectsInIndexLED));
+                this.OnPropertyChanged(nameof(IndexLEDDuration));
+                this.OnPropertyChanged(nameof(IndexLEDIntervalDuration));
+                this.OnPropertyChanged(nameof(IndexLEDIntervalPortionON));
 
             }
         }
 
-        public GroupLEDsCustomsVM(BackingDataContainer backingDataContainer, VMGroupsContainer vmGroupsContainter) : base(backingDataContainer)
+        public GroupLEDsCustomsVM(BackingDataContainer backingDataContainer) : base(backingDataContainer)
         {
         }
 
@@ -145,7 +145,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         {
             _tempBackingData.ResetToDefault();
             CurrentLEDCustomsIndex = 0;
-            this.RaisePropertyChanged(string.Empty);
+            this.OnPropertyChanged(string.Empty);
         }
 
         public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
@@ -167,7 +167,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         {
             BackingData_LEDs.CopySettings(_tempBackingData, dataTarget);
             CurrentLEDCustomsIndex = 0;
-            this.RaisePropertyChanged(string.Empty);
+            this.OnPropertyChanged(string.Empty);
         }
 
     }

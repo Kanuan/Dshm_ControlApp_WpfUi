@@ -13,29 +13,29 @@ using System.Windows;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
-    public class VMGroupsContainer : ObservableObject
+    public partial class VMGroupsContainer : ObservableObject
     {
-        [PropertyChanged] internal List<GroupSettingsVM> GroupSettingsList { get; set; } = new();
+        [ObservableProperty] internal List<GroupSettingsVM> _groupSettingsList = new();
         [ObservableProperty] public bool _allowEditing = false;
-        [ObservableProperty] public GroupModeUniqueVM GroupModeUnique { get; set; }
-        [ObservableProperty] public GroupLEDsCustomsVM GroupLEDsControl { get; set; }
-        [ObservableProperty] public GroupWirelessSettingsVM GroupWireless { get; set; }
-        [ObservableProperty] public GroupSticksVM GroupSticksDZ { get; set; }
-        [ObservableProperty] public GroupRumbleGeneralVM GroupRumbleGeneral { get; set; }
-        [ObservableProperty] public GroupOutRepControlVM GroupOutRepControl { get; set; }
-        [ObservableProperty] public GroupRumbleLeftRescaleVM GroupRumbleLeftRescale { get; set; }
-        [ObservableProperty] public GroupRumbleRightConversionAdjustsVM GroupRumbleRightConversion { get; set; }
+        [ObservableProperty] public GroupModeUniqueVM _groupModeUnique;
+        [ObservableProperty] public GroupLEDsCustomsVM _groupLEDsControl;
+        [ObservableProperty] public GroupWirelessSettingsVM _groupWireless;
+        [ObservableProperty] public GroupSticksVM _groupSticksDZ;
+        [ObservableProperty] public GroupRumbleGeneralVM _groupRumbleGeneral;
+        [ObservableProperty] public GroupOutRepControlVM _groupOutRepControl;
+        [ObservableProperty] public GroupRumbleLeftRescaleVM _groupRumbleLeftRescale;
+        [ObservableProperty] public GroupRumbleRightConversionAdjustsVM _groupRumbleRightConversion;
 
         public VMGroupsContainer(BackingDataContainer dataContainer)
         {
-            GroupSettingsList.Add(GroupModeUnique = new(dataContainer, this));
-            GroupSettingsList.Add(GroupLEDsControl = new(dataContainer, this));
-            GroupSettingsList.Add(GroupWireless = new(dataContainer, this));
-            GroupSettingsList.Add(GroupSticksDZ = new(dataContainer, this));
-            GroupSettingsList.Add(GroupRumbleGeneral = new(dataContainer, this));
-            GroupSettingsList.Add(GroupOutRepControl = new(dataContainer, this));
-            GroupSettingsList.Add(GroupRumbleLeftRescale = new(dataContainer, this));
-            GroupSettingsList.Add(GroupRumbleRightConversion = new(dataContainer, this));
+            GroupSettingsList.Add(GroupModeUnique = new(dataContainer));
+            GroupSettingsList.Add(GroupLEDsControl = new(dataContainer));
+            GroupSettingsList.Add(GroupWireless = new(dataContainer));
+            GroupSettingsList.Add(GroupSticksDZ = new(dataContainer));
+            GroupSettingsList.Add(GroupRumbleGeneral = new(dataContainer));
+            GroupSettingsList.Add(GroupOutRepControl = new(dataContainer));
+            GroupSettingsList.Add(GroupRumbleLeftRescale = new(dataContainer));
+            GroupSettingsList.Add(GroupRumbleRightConversion = new(dataContainer));
 
             this.WhenAnyValue(
                 x => x.GroupModeUnique.Context,
@@ -88,7 +88,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         }
     }
 
-    public abstract class GroupSettingsVM : ObservableObject
+    public abstract partial class GroupSettingsVM : ObservableObject
     {
         /// Replace with LexLoc
         private static Dictionary<SettingsModeGroups, string> DictGroupHeader = new()
@@ -111,9 +111,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         };
 
-        [ObservableProperty] public virtual bool IsGroupLocked { get; set; } = false;
-
-        [ObservableProperty] public virtual bool IsOverrideCheckboxVisible { get; set; } = false;
+        [ObservableProperty] public bool _isGroupLocked = false;
 
         public abstract SettingsModeGroups Group { get; }
 

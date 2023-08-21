@@ -15,9 +15,8 @@
     d:DesignWidth="800"
     ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
     ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-    ExtendsContentIntoTitleBar="True"
+    ExtendsContentIntoTitleBar="False"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-    WindowBackdropType="Mica"
     WindowCornerPreference="Round"
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
@@ -48,7 +47,7 @@
             IsPaneToggleVisible="False"
             MenuItemsSource="{Binding ViewModel.MenuItems, Mode=OneWay}"
             OpenPaneLength="100"
-            PaneDisplayMode="LeftMinimal"
+            PaneDisplayMode="LeftFluent"
             TitleBar="{Binding ElementName=TitleBar, Mode=OneWay}">
 
             <!--<ui:NavigationView.AutoSuggestBox>

@@ -1,42 +1,24 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Reactive;
-using System.Reflection;
-using Microsoft.Win32;
-using Nefarius.DsHidMini.ControlApp.Drivers;
-using Nefarius.DsHidMini.ControlApp.Util;
-using Nefarius.DsHidMini.ControlApp.Util.App;
-using Nefarius.DsHidMini.ControlApp.Util.Web;
-using Nefarius.DsHidMini.Util;
-using Nefarius.Utilities.DeviceManagement.PnP;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+﻿// This Source Code Form is subject to the terms of the MIT License.
+// If a copy of the MIT was not distributed with this file, You can obtain one at https://opensource.org/licenses/MIT.
+// Copyright (C) Leszek Pomianowski and WPF UI Contributors.
+// All Rights Reserved.
 
-namespace Nefarius.DsHidMini.ControlApp.MVVM
+using Nefarius.DsHidMini.ControlApp.MVVM;
+using System.Collections.ObjectModel;
+
+namespace Dshm_ControlApp_WpfUi.ViewModels.Pages
 {
-    public partial class MainViewModel : ObservableObject
+    public partial class DevicesViewModel : ObservableObject
     {
         /// <summary>
         ///     List of detected devices.
         /// </summary>
-        internal ObservableCollection<TestViewModel> Devices { get; set; }
+        public ObservableCollection<TestViewModel> Devices { get; set; } = new();
 
         /// <summary>
         ///     Currently selected device, if any.
         /// </summary>
         [ObservableProperty] private TestViewModel _selectedDevice;
-
-        public MainViewModel()
-        {
-            Devices = new ObservableCollection<TestViewModel>();
-
-        }
-
-
-
-        public ApplicationConfiguration AppConfig => ApplicationConfiguration.Instance;
-
-
 
         /// <summary>
         ///     Is a device currently selected.
@@ -137,3 +119,15 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         */
     }
 }
+
+//[ObservableProperty]
+//private int _counter = 0;
+
+
+
+//[RelayCommand]
+//private void OnCounterIncrement()
+//{
+//    Counter++;
+//}
+

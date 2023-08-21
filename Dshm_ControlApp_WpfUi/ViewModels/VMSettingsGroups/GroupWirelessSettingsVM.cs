@@ -17,7 +17,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.IsWirelessIdleDisconnectEnabled = value;
-                this.RaisePropertyChanged(nameof(IsWirelessIdleDisconnectEnabled));
+                this.OnPropertyChanged(nameof(IsWirelessIdleDisconnectEnabled));
             }
         }
         public int WirelessIdleDisconnectTime
@@ -26,7 +26,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.WirelessIdleDisconnectTime = value;
-                this.RaisePropertyChanged(nameof(WirelessIdleDisconnectTime));
+                this.OnPropertyChanged(nameof(WirelessIdleDisconnectTime));
             }
         }
         public bool IsQuickDisconnectComboEnabled
@@ -35,7 +35,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.IsQuickDisconnectComboEnabled = value;
-                this.RaisePropertyChanged(nameof(IsQuickDisconnectComboEnabled));
+                this.OnPropertyChanged(nameof(IsQuickDisconnectComboEnabled));
             }
         }
 
@@ -45,7 +45,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.QuickDisconnectCombo.Button1 = value;
-                this.RaisePropertyChanged(nameof(QuickDisconnectComboButton1));
+                this.OnPropertyChanged(nameof(QuickDisconnectComboButton1));
             }
         }
 
@@ -55,7 +55,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.QuickDisconnectCombo.Button2 = value;
-                this.RaisePropertyChanged(nameof(QuickDisconnectComboButton2));
+                this.OnPropertyChanged(nameof(QuickDisconnectComboButton2));
             }
         }
 
@@ -65,11 +65,11 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.QuickDisconnectCombo.Button3 = value;
-                this.RaisePropertyChanged(nameof(QuickDisconnectComboButton3));
+                this.OnPropertyChanged(nameof(QuickDisconnectComboButton3));
             }
         }
 
-        public GroupWirelessSettingsVM(BackingDataContainer backingDataContainer, VMGroupsContainer vmGroupsContainter) : base(backingDataContainer)
+        public GroupWirelessSettingsVM(BackingDataContainer backingDataContainer) : base(backingDataContainer)
         {
 
         }
@@ -77,7 +77,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         public override void ResetGroupToOriginalDefaults()
         {
             _tempBackingData.ResetToDefault();
-            this.RaisePropertyChanged(string.Empty);
+            this.OnPropertyChanged(string.Empty);
         }
 
         public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
@@ -98,7 +98,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         public void LoadSettingsFromBackingData(BackingData_Wireless dataSource)
         {
             BackingData_Wireless.CopySettings(_tempBackingData, dataSource);
-            this.RaisePropertyChanged(string.Empty);
+            this.OnPropertyChanged(string.Empty);
         }
     }
 

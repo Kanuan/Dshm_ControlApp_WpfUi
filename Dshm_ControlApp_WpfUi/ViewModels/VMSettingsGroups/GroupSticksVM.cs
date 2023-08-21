@@ -21,7 +21,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.LeftStickData.IsDeadZoneEnabled = value;
-                this.RaisePropertyChanged(nameof(ApplyLeftStickDeadZone));
+                this.OnPropertyChanged(nameof(ApplyLeftStickDeadZone));
             }
         }
 
@@ -31,7 +31,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.RightStickData.IsDeadZoneEnabled = value;
-                this.RaisePropertyChanged(nameof(ApplyRightStickDeadZone));
+                this.OnPropertyChanged(nameof(ApplyRightStickDeadZone));
             }
         }
 
@@ -41,7 +41,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.LeftStickData.DeadZone = value;
-                this.RaisePropertyChanged(nameof(LeftStickDeadZone));
+                this.OnPropertyChanged(nameof(LeftStickDeadZone));
             }
         }
 
@@ -51,7 +51,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.RightStickData.DeadZone = value;
-                this.RaisePropertyChanged(nameof(RightStickDeadZone));
+                this.OnPropertyChanged(nameof(RightStickDeadZone));
             }
         }
 
@@ -61,7 +61,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.LeftStickData.InvertXAxis = value;
-                this.RaisePropertyChanged(nameof(InvertLSX));
+                this.OnPropertyChanged(nameof(InvertLSX));
             }
         }
 
@@ -71,7 +71,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.LeftStickData.InvertYAxis = value;
-                this.RaisePropertyChanged(nameof(InvertLSY));
+                this.OnPropertyChanged(nameof(InvertLSY));
             }
         }
 
@@ -81,7 +81,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.RightStickData.InvertXAxis = value;
-                this.RaisePropertyChanged(nameof(InvertRSX));
+                this.OnPropertyChanged(nameof(InvertRSX));
             }
         }
 
@@ -91,35 +91,21 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.RightStickData.InvertYAxis = value;
-                this.RaisePropertyChanged(nameof(InvertRSY));
+                this.OnPropertyChanged(nameof(InvertRSY));
             }
         }
 
-        readonly ObservableAsPropertyHelper<int> leftStickDeadZoneInpercent;
-        public int LeftStickDeadZoneInPercent => leftStickDeadZoneInpercent.Value;
 
-        readonly ObservableAsPropertyHelper<int> rightStickDeadZoneInpercent;
-        public int RightStickDeadZoneInPercent => rightStickDeadZoneInpercent.Value;
-
-
-        public GroupSticksVM(BackingDataContainer backingDataContainer, VMGroupsContainer vmGroupsContainter) : base(backingDataContainer)
+        public GroupSticksVM(BackingDataContainer backingDataContainer) : base(backingDataContainer)
         {
-            leftStickDeadZoneInpercent = this
-                .WhenAnyValue(x => x.LeftStickDeadZone)
-                .Select(LeftStickDeadZone => LeftStickDeadZone * 141 / 180)
-                .ToProperty(this, x => x.LeftStickDeadZoneInPercent);
 
-            rightStickDeadZoneInpercent = this
-                .WhenAnyValue(x => x.RightStickDeadZone)
-                .Select(RightStickDeadZone => RightStickDeadZone * 141 / 180)
-                .ToProperty(this, x => x.RightStickDeadZoneInPercent);
 
         }
 
         public override void ResetGroupToOriginalDefaults()
         {
             _tempBackingData.ResetToDefault();
-            this.RaisePropertyChanged(string.Empty);
+            this.OnPropertyChanged(string.Empty);
         }
 
         public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
@@ -139,7 +125,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         public void LoadSettingsFromBackingData(BackingData_Sticks dataTarget)
         {
             BackingData_Sticks.CopySettings(_tempBackingData, dataTarget);
-            this.RaisePropertyChanged(string.Empty);
+            this.OnPropertyChanged(string.Empty);
         }
     }
 }

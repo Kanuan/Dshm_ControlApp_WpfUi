@@ -16,7 +16,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.IsOutputReportRateControlEnabled = value;
-                this.RaisePropertyChanged(nameof(IsOutputReportRateControlEnabled));
+                this.OnPropertyChanged(nameof(IsOutputReportRateControlEnabled));
             }
         }
 
@@ -26,7 +26,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.MaxOutputRate = value;
-                this.RaisePropertyChanged(nameof(MaxOutputRate));
+                this.OnPropertyChanged(nameof(MaxOutputRate));
             }
         }
 
@@ -36,16 +36,16 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             set
             {
                 _tempBackingData.IsOutputReportDeduplicatorEnabled = value;
-                this.RaisePropertyChanged(nameof(IsOutputReportDeduplicatorEnabled));
+                this.OnPropertyChanged(nameof(IsOutputReportDeduplicatorEnabled));
             }
         }
 
-        public GroupOutRepControlVM(BackingDataContainer backingDataContainer, VMGroupsContainer vmGroupsContainter) : base(backingDataContainer) { }
+        public GroupOutRepControlVM(BackingDataContainer backingDataContainer) : base(backingDataContainer) { }
 
         public override void ResetGroupToOriginalDefaults()
         {
             _tempBackingData.ResetToDefault();
-            this.RaisePropertyChanged(string.Empty);
+            this.OnPropertyChanged(string.Empty);
         }
 
         public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
@@ -66,7 +66,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         public void LoadSettingsFromBackingData(BackingData_OutRepControl dataTarget)
         {
             BackingData_OutRepControl.CopySettings(_tempBackingData, dataTarget);
-            this.RaisePropertyChanged(string.Empty);
+            this.OnPropertyChanged(string.Empty);
         }
     }
 

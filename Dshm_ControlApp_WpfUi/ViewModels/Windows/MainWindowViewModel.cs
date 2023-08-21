@@ -3,6 +3,7 @@
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
+using Nefarius.DsHidMini.ControlApp.MVVM;
 using System.Collections.ObjectModel;
 using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
@@ -20,13 +21,13 @@ namespace Dshm_ControlApp_WpfUi.ViewModels.Windows
             new NavigationViewItem()
             {
                 Content = "Devices",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.Home24 },
-                TargetPageType = typeof(Views.Pages.DashboardPage)
+                Icon = new SymbolIcon { Symbol = SymbolRegular.XboxController48 },
+                TargetPageType = typeof(Views.Pages.DevicesPage)
             },
             new NavigationViewItem()
             {
                 Content = "Profiles",
-                Icon = new SymbolIcon { Symbol = SymbolRegular.DataHistogram24 },
+                Icon = new SymbolIcon { Symbol = SymbolRegular.DocumentOnePage20 },
                 TargetPageType = typeof(Views.Pages.DataPage)
             },
         };
@@ -47,5 +48,7 @@ namespace Dshm_ControlApp_WpfUi.ViewModels.Windows
         {
             new MenuItem { Header = "Home", Tag = "tray_home" }
         };
+
+
     }
 }

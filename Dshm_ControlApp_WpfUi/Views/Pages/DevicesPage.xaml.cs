@@ -8,11 +8,11 @@ using Wpf.Ui.Controls;
 
 namespace Dshm_ControlApp_WpfUi.Views.Pages
 {
-    public partial class DashboardPage : INavigableView<DashboardViewModel>
+    public partial class DevicesPage : INavigableView<DevicesViewModel>
     {
-        public DashboardViewModel ViewModel { get; }
+        public DevicesViewModel ViewModel { get; }
 
-        public DashboardPage(DashboardViewModel viewModel)
+        public DevicesPage(DevicesViewModel viewModel)
         {
             ViewModel = viewModel;
             DataContext = this;

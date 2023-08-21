@@ -2,10 +2,11 @@
 using System.Globalization;
 using Nefarius.DsHidMini.ControlApp.MVVM;
 using System.Collections.Generic;
+using System.Windows.Data;
 
 namespace Nefarius.DsHidMini.ControlApp.Util.WPF
 {
-    public class VisibilityPerHidModeConverter
+    public class VisibilityPerHidModeConverter : IValueConverter
     {
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -42,7 +43,7 @@ namespace Nefarius.DsHidMini.ControlApp.Util.WPF
                     return false;
             }
 
-            return (((VisibilityPerHIDModeFlags >> amountToBitShift) & 1U) == 1) ? true : false;
+            return (((VisibilityPerHIDModeFlags >> amountToBitShift) & 1U) == 1) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -15,7 +15,7 @@ using System.Reactive.Linq;
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
 
-    internal class ProfileEditorViewModel : ObservableObject
+    internal partial class ProfileEditorViewModel : ObservableObject
     {
         // ----------------------------------------------------------- FIELDS
 
@@ -23,8 +23,8 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         // ----------------------------------------------------------- PROPERTIES
 
-        [ObservableProperty] public List<ProfileData> Profiles { get; set; }
-        [ObservableProperty] public ProfileData? SelectedProfile { get; set; } = null;
+        [ObservableProperty] public List<ProfileData> _profiles;
+        [ObservableProperty] public ProfileData? _selectedProfile = null;
 
         public VMGroupsContainer? SelectedProfileVMGroups => selectedProfileVMGroups.Value;
 
@@ -45,15 +45,15 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         {
             Profiles = new List<ProfileData>(TestViewModel.UserDataManager.Profiles);
 
-            selectedProfileVMGroups = this.
-                WhenAnyValue(x => x.SelectedProfile)
-                .Select(VMGroups => SelectedProfile != null ? SelectedProfile.GetProfileVMGroupsContainer() : null)
-                .ToProperty(this, nameof(SelectedProfileVMGroups));
+            //selectedProfileVMGroups = this.
+            //    WhenAnyValue(x => x.SelectedProfile)
+            //    .Select(VMGroups => SelectedProfile != null ? SelectedProfile.GetProfileVMGroupsContainer() : null)
+            //    .ToProperty(this, nameof(SelectedProfileVMGroups));
 
-            this.
-                WhenAnyValue(x => x.SelectedProfile)
-                .Where(x => SelectedProfile != null)
-                .Subscribe(x => LockProfileIfDefault());
+            //this.
+            //    WhenAnyValue(x => x.SelectedProfile)
+            //    .Where(x => SelectedProfile != null)
+            //    .Subscribe(x => LockProfileIfDefault());
 
             CreateProfileCommand = ReactiveCommand.Create(OnAddProfileButtonPressed);
             DeleteProfileCommand = ReactiveCommand.Create<ProfileData>(OnDeleteProfileButtonPressed);
@@ -69,7 +69,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         public void LockProfileIfDefault()
         {
-            SelectedProfileVMGroups._allowEditing = (SelectedProfile == ProfileData.DefaultProfile) ? false : true;
+            SelectedProfileVMGroups.AllowEditing = (SelectedProfile == ProfileData.DefaultProfile) ? false : true;
         }
 
 
