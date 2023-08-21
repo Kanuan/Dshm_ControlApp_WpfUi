@@ -20,14 +20,14 @@
     >
     
     <DockPanel VerticalAlignment="Stretch">
-        <DockPanel DockPanel.Dock="Left">
+        <DockPanel DockPanel.Dock="Left" Width="200">
             <ui:TextBlock 
                 DockPanel.Dock="Top"
-                Text="DsHidMini Devices"/>
+                Text="DsHidMini Devices"
+                HorizontalAlignment="Center"/>
             <ListView
             DockPanel.Dock="Top"
             Grid.Column="2"
-            Margin="12,0,0,0"
             VerticalAlignment="Stretch"
             ItemsSource="{Binding ViewModel.Devices}"
             SelectedItem="{Binding ViewModel.SelectedDevice}">
@@ -85,36 +85,6 @@
                             </DockPanel>
                         </DockPanel>
 
-                        <ui:Card DockPanel.Dock="Top" Margin="5">
-                            <!--Top settings mode choose-->
-                            <DockPanel DockPanel.Dock="Top" LastChildFill="True">
-                                <ui:TextBlock
-				DockPanel.Dock="Left"
-				Text="Settings mode: "
-			/>
-                                <ComboBox
-				DockPanel.Dock="Left"
-				x:Name="SettingsModeSelection_ComboBox"
-				VerticalAlignment="Center"
-				ItemsSource="{Binding SettingsModesList}"
-				SelectedItem="{Binding CurrentDeviceSettingsMode}"
-			/>
-                                <Label
-				Visibility="{Binding IsProfileSelectorVisible}"
-				DockPanel.Dock="Left"
-				Content="->"
-				VerticalContentAlignment="Center"
-			/>
-                                <ComboBox
-				DockPanel.Dock="Left"
-				Visibility="{Binding IsProfileSelectorVisible}"
-				x:Name="ProfileSelection_ComboBox"
-				VerticalAlignment="Center"
-				ItemsSource="{Binding ListOfProfiles}"
-				SelectedItem="{Binding SelectedProfile}"
-			/>
-                            </DockPanel>
-                        </ui:Card>
 
 
                         <DockPanel DockPanel.Dock="Bottom">
@@ -150,10 +120,40 @@
                     <DockPanel LastChildFill="True">
 
 
-
+                        <ui:Card DockPanel.Dock="Top" Margin="5">
+                            <!--Top settings mode choose-->
+                            <DockPanel DockPanel.Dock="Top" LastChildFill="True">
+                                <ui:TextBlock
+				                    DockPanel.Dock="Left"
+				                    Text="Settings mode: "
+                                    VerticalAlignment="Center"
+			                    />
+                                                    <ComboBox
+				                    DockPanel.Dock="Left"
+				                    x:Name="SettingsModeSelection_ComboBox"
+				                    VerticalAlignment="Center"
+				                    ItemsSource="{Binding SettingsModesList}"
+				                    SelectedItem="{Binding CurrentDeviceSettingsMode}"
+			                    />
+                                                    <Label
+				                    Visibility="{Binding IsProfileSelectorVisible}"
+				                    DockPanel.Dock="Left"
+				                    Content="->"
+				                    VerticalContentAlignment="Center"
+			                    />
+                                                    <ComboBox
+				                    DockPanel.Dock="Left"
+				                    Visibility="{Binding IsProfileSelectorVisible}"
+				                    x:Name="ProfileSelection_ComboBox"
+				                    VerticalAlignment="Center"
+				                    ItemsSource="{Binding ListOfProfiles}"
+				                    SelectedItem="{Binding SelectedProfile}"
+			                    />
+                            </DockPanel>
+                        </ui:Card>
                   
 
-                        <viewuserctrls:DeviceSettingsEditor Height="auto" DockPanel.Dock="Top" VerticalAlignment="Stretch" DataContext="{Binding SelectedGroupsVM}"/>
+                        <viewuserctrls:DeviceSettingsEditor Margin="0,10,0,0" Height="auto" DockPanel.Dock="Top" VerticalAlignment="Stretch" DataContext="{Binding SelectedGroupsVM}"/>
                         
                         
                         
