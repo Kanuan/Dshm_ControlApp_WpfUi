@@ -1,9 +1,11 @@
-﻿using Nefarius.DsHidMini.ControlApp.DSHM_Settings;
+﻿using Microsoft.Win32.SafeHandles;
+using Nefarius.DsHidMini.ControlApp.DSHM_Settings;
 using Nefarius.DsHidMini.ControlApp.MVVM;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -292,6 +294,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
 
             // Save profile to disk
             string profileJson = JsonSerializer.Serialize(profile, ControlAppJsonSerializerOptions);
+
 
             System.IO.Directory.CreateDirectory(ProfilesFolderFullPath);
             System.IO.File.WriteAllText($@"{ProfilesFolderFullPath}{profile.DiskFileName}", profileJson);

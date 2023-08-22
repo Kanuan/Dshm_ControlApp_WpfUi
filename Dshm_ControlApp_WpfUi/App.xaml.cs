@@ -11,9 +11,11 @@ using Dshm_ControlApp_WpfUi.Views.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Nefarius.DsHidMini.ControlApp.MVVM;
 using System.IO;
 using System.Reflection;
 using System.Windows.Threading;
+using Wpf.Ui;
 
 namespace Dshm_ControlApp_WpfUi
 {
@@ -42,7 +44,8 @@ namespace Dshm_ControlApp_WpfUi
 
                 services.AddSingleton<DevicesPage>();
                 services.AddSingleton<DevicesViewModel>();
-                services.AddSingleton<DataPage>();
+                services.AddSingleton<ProfileEditorPage>();
+                services.AddSingleton<ProfileEditorViewModel>();
                 services.AddSingleton<DataViewModel>();
                 services.AddSingleton<SettingsPage>();
                 services.AddSingleton<SettingsViewModel>();

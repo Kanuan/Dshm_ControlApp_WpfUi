@@ -4,15 +4,16 @@
 // All Rights Reserved.
 
 using Dshm_ControlApp_WpfUi.ViewModels.Pages;
+using Nefarius.DsHidMini.ControlApp.MVVM;
 using Wpf.Ui.Controls;
 
 namespace Dshm_ControlApp_WpfUi.Views.Pages
 {
-    public partial class DataPage : INavigableView<DataViewModel>
+    public partial class ProfileEditorPage : INavigableView<ProfileEditorViewModel>
     {
-        public DataViewModel ViewModel { get; }
+        public ProfileEditorViewModel ViewModel { get; }
 
-        public DataPage(DataViewModel viewModel)
+        public ProfileEditorPage(ProfileEditorViewModel viewModel)
         {
             ViewModel = viewModel;
             DataContext = this;

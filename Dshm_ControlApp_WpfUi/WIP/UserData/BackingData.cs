@@ -310,7 +310,9 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             {
                 private byte DEFAULT_duration = 0xFF;
                 private byte DEFAULT_intervalDuration = 0xFF;
-                private byte DEFAULT_intervalPortionON = 0xFF;
+                private byte DEFAULT_intervalPortionON = 0xFE;
+                private byte intervalPortionON;
+
                 //private byte DEFAULT_intervalPortionOFF = 0x00;
 
                 [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
@@ -320,10 +322,16 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
 
                 public byte Duration { get; set; }
                 public byte IntervalDuration { get; set; }
-                public byte IntervalPortionON { get; set; }
+                public byte IntervalPortionON
+                {
+                    get => intervalPortionON; set
+                    {
+                        intervalPortionON = (value < 254) ? value : (byte)254;
+                    }
+                }
                 public byte IntervalPortionOFF
                 {
-                    get => (byte)(256 - IntervalPortionON);
+                    get => (byte)(254 - IntervalPortionON);
                 }
                 public singleLEDCustoms(int ledIndex)
                 {

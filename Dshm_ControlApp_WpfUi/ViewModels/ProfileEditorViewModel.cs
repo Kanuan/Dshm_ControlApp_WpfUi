@@ -11,111 +11,175 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using Wpf.Ui;
+using Wpf.Ui.Controls;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
 
-    internal partial class ProfileEditorViewModel : ObservableObject
+    public partial class ProfileEditorViewModel : ObservableObject, INavigationAware
     {
         // ----------------------------------------------------------- FIELDS
 
-        private readonly ObservableAsPropertyHelper<VMGroupsContainer> selectedProfileVMGroups;
+        [ObservableProperty] public List<ProfileViewModel> _profilesViewModels;
+        [ObservableProperty] public ProfileViewModel? _selectedProfileVM = null;
+        [ObservableProperty] bool _isEditing = false;
 
         // ----------------------------------------------------------- PROPERTIES
 
-        [ObservableProperty] public List<ProfileData> _profiles;
-        [ObservableProperty] public ProfileData? _selectedProfile = null;
+        public List<ProfileData> ProfilesDatas => TestViewModel.UserDataManager.Profiles;
 
-        public VMGroupsContainer? SelectedProfileVMGroups => selectedProfileVMGroups.Value;
-
-        public readonly List<SettingsModes> settingsModesList = new List<SettingsModes>
-        {
-            SettingsModes.Global,
-            SettingsModes.Profile,
-            SettingsModes.Custom,
-        };
-        public List<SettingsModes> SettingsModesList => settingsModesList;
-
-        public List<ProfileData> ListOfProfiles => TestViewModel.UserDataManager.Profiles;
-
+        private readonly ISnackbarService _snackbarService;
 
         // ----------------------------------------------------------- CONSTRUCTOR
 
-        public ProfileEditorViewModel()
+        public ProfileEditorViewModel(ISnackbarService snackbarService)
         {
-            Profiles = new List<ProfileData>(TestViewModel.UserDataManager.Profiles);
-
-            //selectedProfileVMGroups = this.
-            //    WhenAnyValue(x => x.SelectedProfile)
-            //    .Select(VMGroups => SelectedProfile != null ? SelectedProfile.GetProfileVMGroupsContainer() : null)
-            //    .ToProperty(this, nameof(SelectedProfileVMGroups));
-
-            //this.
-            //    WhenAnyValue(x => x.SelectedProfile)
-            //    .Where(x => SelectedProfile != null)
-            //    .Subscribe(x => LockProfileIfDefault());
-
-            CreateProfileCommand = ReactiveCommand.Create(OnAddProfileButtonPressed);
-            DeleteProfileCommand = ReactiveCommand.Create<ProfileData>(OnDeleteProfileButtonPressed);
-            SetProfileAsGlobalCommand = ReactiveCommand.Create<ProfileData>(OnSetAsGlobalButtonPressed);
-            SaveChangesCommand = ReactiveCommand.Create(OnSaveButtonPressed);
-            CancelChangesCommand = ReactiveCommand.Create(OnCancelButtonPressed);
+            _snackbarService = snackbarService;
+            UpdateProfileList();
         }
+     
 
         public void UpdateProfileList()
         {
-            Profiles = new List<ProfileData>(TestViewModel.UserDataManager.Profiles);
+            List<ProfileViewModel> newList = new();
+            foreach(ProfileData prof in ProfilesDatas)
+            {
+                newList.Add(new(prof) { IsGlobal = (prof == TestViewModel.UserDataManager.GlobalProfile)});
+            }
+            ProfilesViewModels = newList;
         }
 
-        public void LockProfileIfDefault()
+
+        // ---------------------------------------- Methods
+
+        partial void OnIsEditingChanged(bool value)
         {
-            SelectedProfileVMGroups.AllowEditing = (SelectedProfile == ProfileData.DefaultProfile) ? false : true;
+            if(SelectedProfileVM != null)
+            {
+                SelectedProfileVM.VmGroupsCont.AllowEditing = value;
+            }
+        }
+
+        public void OnNavigatedFrom() 
+        {
+            if(IsEditing && SelectedProfileVM != null)
+            {
+                CancelChangesToProfile();
+                ShowSnackbarMessage("Canceled profile changes.", "", ControlAppearance.Caution, new SymbolIcon(SymbolRegular.ErrorCircle24), 2);
+            }
+        }
+
+        public void OnNavigatedTo()
+        {
+        }
+
+        private void ShowSnackbarMessage(string title, string message, ControlAppearance appearance, SymbolIcon symbol, int timeSpanInSeconds)
+        {
+            _snackbarService.Show(
+                title,
+                message,
+                appearance,
+                symbol,
+                TimeSpan.FromSeconds(timeSpanInSeconds)
+            );
+        }
+
+        [RelayCommand]
+        private void EnableEditingOfSelectedProfile()
+        {
+            if (SelectedProfileVM._profileData == ProfileData.DefaultProfile)
+            {
+                ShowSnackbarMessage("ControlApp's default profile can't be modified.", "", ControlAppearance.Info, new SymbolIcon(SymbolRegular.Info24), 2);
+            }
+            else
+            {
+                IsEditing = true;
+            }
+        }
+
+        [RelayCommand]
+        private void SaveChangesToProfile()
+        {
+            SelectedProfileVM.SaveChanges();
+            ShowSnackbarMessage("Profile updated.", "", ControlAppearance.Info, new SymbolIcon(SymbolRegular.ErrorCircle24), 2);
+            IsEditing = false;
+        }
+
+        [RelayCommand]
+        private void CancelChangesToProfile()
+        {
+            SelectedProfileVM.CancelChanges();
+            IsEditing = false;
         }
 
 
-        // ---------------------------------------- ReactiveCommands
 
-        public ReactiveCommand<Unit, Unit> SaveChangesCommand { get; }
-        public ReactiveCommand<Unit, Unit> CancelChangesCommand { get; }
-        public ReactiveCommand<ProfileData, Unit> SetProfileAsGlobalCommand { get; }
-        public ReactiveCommand<Unit, Unit> CreateProfileCommand { get; }
-        public ReactiveCommand<ProfileData, Unit> DeleteProfileCommand { get; }
-
-        // ---------------------------------------- Commands
-
-        private void OnSetAsGlobalButtonPressed(ProfileData? obj)
+        [RelayCommand]
+        private void SetprofileAsGlobal(ProfileViewModel? obj)
         {
             if (obj != null)
             {
-                TestViewModel.UserDataManager.GlobalProfile = obj;
+                TestViewModel.UserDataManager.GlobalProfile = obj._profileData;
+                ShowSnackbarMessage("Global profile updated.", "", ControlAppearance.Info, new SymbolIcon(SymbolRegular.Checkmark24), 2);
             }
             TestViewModel.UserDataManager.SaveControlAppSettingsToDisk();
+            UpdateProfileList();
         }
 
-        private void OnAddProfileButtonPressed()
+        [RelayCommand]
+        private void CreateProfile()
         {
             TestViewModel.UserDataManager.CreateNewProfile("New profile");
             UpdateProfileList();
         }
 
-        private void OnDeleteProfileButtonPressed(ProfileData? obj)
+        [RelayCommand]
+        private void DeleteProfile(ProfileViewModel? obj)
         {
             if (obj == null) return;
-            TestViewModel.UserDataManager.DeleteProfile(obj);
+            TestViewModel.UserDataManager.DeleteProfile(obj._profileData);
             UpdateProfileList();
         }
-
-        private void OnSaveButtonPressed()
-        {
-            SelectedProfileVMGroups.SaveAllChangesToBackingData(SelectedProfile.DataContainer);
-            TestViewModel.UserDataManager.SaveProfileToDisk(SelectedProfile);
+            
         }
 
-        private void OnCancelButtonPressed()
+        public partial class ProfileViewModel : ObservableObject
         {
-            SelectedProfileVMGroups.LoadDatasToAllGroups(SelectedProfile.DataContainer);
-        }
+            ControllersUserData _userDataManager = TestViewModel.UserDataManager;
 
-    }
+            public readonly ProfileData _profileData;
+
+            [ObservableProperty] private string _name;
+            [ObservableProperty] private VMGroupsContainer _vmGroupsCont;
+            [ObservableProperty] private bool _isGlobal = false;
+
+
+            public ProfileViewModel(ProfileData data)
+            {
+                _profileData = data;
+                _name = data.ProfileName;
+                _vmGroupsCont = data.GetProfileVMGroupsContainer();
+            }
+
+            [RelayCommand]
+            public void SaveChanges()
+            {
+                if(_name == null)
+                {
+                    _name = "User Profile";
+                }
+                _profileData.ProfileName = _name;
+                VmGroupsCont.SaveAllChangesToBackingData(_profileData.DataContainer);
+                TestViewModel.UserDataManager.SaveProfileToDisk(_profileData);
+            }
+
+        [RelayCommand]
+        public void CancelChanges()
+            {
+                VmGroupsCont.LoadDatasToAllGroups(_profileData.DataContainer);
+                Name = _profileData.ProfileName;
+            }
+        }
 
 }

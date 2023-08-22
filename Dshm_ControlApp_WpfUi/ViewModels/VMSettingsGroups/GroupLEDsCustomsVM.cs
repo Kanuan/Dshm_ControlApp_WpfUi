@@ -5,10 +5,12 @@ using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System.Text.Json.Serialization;
 using System.Windows;
+using static Nefarius.DsHidMini.ControlApp.MVVM.GroupLEDsCustomsVM;
+using static Nefarius.DsHidMini.ControlApp.UserData.BackingData_LEDs.All4LEDsCustoms;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
-    public class GroupLEDsCustomsVM : GroupSettingsVM
+    public partial class GroupLEDsCustomsVM : GroupSettingsVM
     {
         private BackingData_LEDs _tempBackingData = new();
 
@@ -23,129 +25,35 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public bool IsLedN1Enabled
-        {
-            get => _tempBackingData.LEDsCustoms.LED_x_Customs[0].IsLedEnabled;
-            set
-            {
-                _tempBackingData.LEDsCustoms.LED_x_Customs[0].IsLedEnabled = value;
-                this.OnPropertyChanged(nameof(IsLedN1Enabled));
-            }
-        }
-        public bool IsLedN2Enabled
-        {
-            get => _tempBackingData.LEDsCustoms.LED_x_Customs[1].IsLedEnabled;
-            set
-            {
-                _tempBackingData.LEDsCustoms.LED_x_Customs[1].IsLedEnabled = value;
-                this.OnPropertyChanged(nameof(IsLedN1Enabled));
-            }
-        }
-        public bool IsLedN3Enabled
-        {
-            get => _tempBackingData.LEDsCustoms.LED_x_Customs[2].IsLedEnabled;
-            set
-            {
-                _tempBackingData.LEDsCustoms.LED_x_Customs[2].IsLedEnabled = value;
-                this.OnPropertyChanged(nameof(IsLedN1Enabled));
-            }
-        }
-        public bool IsLedN4Enabled
-        {
-            get => _tempBackingData.LEDsCustoms.LED_x_Customs[3].IsLedEnabled;
-            set
-            {
-                _tempBackingData.LEDsCustoms.LED_x_Customs[3].IsLedEnabled = value;
-                this.OnPropertyChanged(nameof(IsLedN1Enabled));
-            }
-        }
+        [ObservableProperty] int _currentLEDCustomsIndex = 0;
 
-        //[ObservableProperty] public BackingData_LEDs.All4LEDsCustoms.singleLEDCustoms CurrentLEDCustoms { get; set; }
+        [ObservableProperty] LED_VM? _selectedLED_VM = null;
 
+        [ObservableProperty] private LED_VM[]? _leds_VM = new LED_VM[] { new (1), new (2), new (3), new (4), };
 
-        public bool IsCurrentLedEnabled
-        { 
-            get => _tempBackingData.LEDsCustoms.LED_x_Customs[CurrentLEDCustomsIndex].IsLedEnabled;
-            set
-            {
-                _tempBackingData.LEDsCustoms.LED_x_Customs[CurrentLEDCustomsIndex].IsLedEnabled = value;
-                this.OnPropertyChanged(nameof(IsCurrentLedEnabled));
-            }
-        }
-        public bool UseLEDEffectsInIndexLED
+        partial void OnCurrentLEDCustomsIndexChanged(int value)
         {
-            get => _tempBackingData.LEDsCustoms.LED_x_Customs[CurrentLEDCustomsIndex].UseLEDEffects;
-            set
-            {
-                _tempBackingData.LEDsCustoms.LED_x_Customs[CurrentLEDCustomsIndex].UseLEDEffects = value;
-                this.OnPropertyChanged(nameof(UseLEDEffectsInIndexLED));
-            }
-        }
-
-        public byte IndexLEDDuration
-        {
-            get => _tempBackingData.LEDsCustoms.LED_x_Customs[CurrentLEDCustomsIndex].Duration;
-            set
-            {
-                _tempBackingData.LEDsCustoms.LED_x_Customs[CurrentLEDCustomsIndex].Duration = value;
-                this.OnPropertyChanged(nameof(IndexLEDDuration));
-            }
-        }
-        public byte IndexLEDIntervalDuration
-        {
-            get => _tempBackingData.LEDsCustoms.LED_x_Customs[CurrentLEDCustomsIndex].IntervalDuration;
-            set
-            {
-                _tempBackingData.LEDsCustoms.LED_x_Customs[CurrentLEDCustomsIndex].IntervalDuration = value;
-                this.OnPropertyChanged(nameof(IndexLEDIntervalDuration));
-            }
-        }
-        public byte IndexLEDIntervalPortionON
-        {
-            get => _tempBackingData.LEDsCustoms.LED_x_Customs[CurrentLEDCustomsIndex].IntervalPortionON;
-            set
-            {
-                _tempBackingData.LEDsCustoms.LED_x_Customs[CurrentLEDCustomsIndex].IntervalPortionON = value;
-                this.OnPropertyChanged(nameof(IndexLEDIntervalPortionON));
-                this.OnPropertyChanged(nameof(IndexLEDIntervalPortionOFF));
-            }
-        }
-        public byte IndexLEDIntervalPortionOFF
-        {
-            get => _tempBackingData.LEDsCustoms.LED_x_Customs[CurrentLEDCustomsIndex].IntervalPortionOFF;
-            set
-            {
-                //_tempBackingData.LEDsCustoms.LED_x_Customs[CurrentLEDCustomsIndex].IntervalPortionOFF = value;
-                this.OnPropertyChanged(nameof(IndexLEDIntervalPortionOFF));
-            }
-        }
-
-        private int currentLEDIndex = 1;
-        public int CurrentLEDCustomsIndex
-        {
-            get => currentLEDIndex;
-            set
-            {
-                currentLEDIndex = value;
-                this.OnPropertyChanged(nameof(CurrentLEDCustomsIndex));
-                this.OnPropertyChanged(nameof(IsCurrentLedEnabled));
-                this.OnPropertyChanged(nameof(UseLEDEffectsInIndexLED));
-                this.OnPropertyChanged(nameof(IndexLEDDuration));
-                this.OnPropertyChanged(nameof(IndexLEDIntervalDuration));
-                this.OnPropertyChanged(nameof(IndexLEDIntervalPortionON));
-
-            }
+            SelectedLED_VM = Leds_VM[value];
         }
 
         public GroupLEDsCustomsVM(BackingDataContainer backingDataContainer) : base(backingDataContainer)
         {
+            Leds_VM[0].singleLEDCustoms = _tempBackingData.LEDsCustoms.LED_x_Customs[0];
+            Leds_VM[1].singleLEDCustoms = _tempBackingData.LEDsCustoms.LED_x_Customs[1];
+            Leds_VM[2].singleLEDCustoms = _tempBackingData.LEDsCustoms.LED_x_Customs[2];
+            Leds_VM[3].singleLEDCustoms = _tempBackingData.LEDsCustoms.LED_x_Customs[3];
+            SelectedLED_VM = Leds_VM[0];
         }
 
         public override void ResetGroupToOriginalDefaults()
         {
             _tempBackingData.ResetToDefault();
-            CurrentLEDCustomsIndex = 0;
+
             this.OnPropertyChanged(string.Empty);
+            foreach(LED_VM ledVM in Leds_VM)
+            {
+                ledVM.RaisePropertyChangedForAll();
+            } 
         }
 
         public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
@@ -166,8 +74,85 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         public void LoadSettingsFromBackingData(BackingData_LEDs dataTarget)
         {
             BackingData_LEDs.CopySettings(_tempBackingData, dataTarget);
-            CurrentLEDCustomsIndex = 0;
+
             this.OnPropertyChanged(string.Empty);
+            foreach (LED_VM ledVM in Leds_VM)
+            {
+                ledVM.RaisePropertyChangedForAll();
+            }
+        }
+
+        public partial class LED_VM : ObservableObject
+        {
+            public singleLEDCustoms singleLEDCustoms;
+
+            [ObservableProperty] int _ledOrder = 0;
+            public bool IsEnabled
+            {
+                get => singleLEDCustoms.IsLedEnabled;
+                set
+                {
+                    singleLEDCustoms.IsLedEnabled = value;
+                    this.OnPropertyChanged(nameof(IsEnabled));
+                }
+            }
+            public bool UseEffects
+            {
+                get => singleLEDCustoms.UseLEDEffects;
+                set
+                {
+                    singleLEDCustoms.UseLEDEffects = value;
+                    this.OnPropertyChanged(nameof(UseEffects));
+                }
+            }
+            public byte Duration
+            {
+                get => singleLEDCustoms.Duration;
+                set
+                {
+                    singleLEDCustoms.Duration = value;
+                    this.OnPropertyChanged(nameof(Duration));
+                }
+            }
+            public byte IntervalDuration
+            {
+                get => singleLEDCustoms.IntervalDuration;
+                set
+                {
+                    singleLEDCustoms.IntervalDuration = value;
+                    this.OnPropertyChanged(nameof(IntervalDuration));
+                }
+            }
+            public string IntervalPortionON
+            {
+                get => singleLEDCustoms.IntervalPortionON.ToString();
+                set
+                {
+                    byte.TryParse(value, out byte valueInNumber);
+                    singleLEDCustoms.IntervalPortionON = valueInNumber;
+                    this.OnPropertyChanged(nameof(IntervalPortionON));
+                    this.OnPropertyChanged(nameof(IntervalPortionOFF));
+                }
+            }
+            public byte IntervalPortionOFF
+            {
+                get => singleLEDCustoms.IntervalPortionOFF;
+                set
+                {
+                    //singleLEDCustoms.IntervalPortionOFF = value;
+                    this.OnPropertyChanged(nameof(IntervalPortionOFF));
+                }
+            }
+
+            public LED_VM(int ledOrder)
+            {
+                _ledOrder = ledOrder;
+            }
+
+            public void RaisePropertyChangedForAll()
+            {
+                this.OnPropertyChanged(string.Empty);
+            }
         }
 
     }

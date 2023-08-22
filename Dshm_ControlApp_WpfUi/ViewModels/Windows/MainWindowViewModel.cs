@@ -5,7 +5,6 @@
 
 using Nefarius.DsHidMini.ControlApp.MVVM;
 using System.Collections.ObjectModel;
-using Wpf.Ui.Common;
 using Wpf.Ui.Controls;
 
 namespace Dshm_ControlApp_WpfUi.ViewModels.Windows
@@ -28,7 +27,7 @@ namespace Dshm_ControlApp_WpfUi.ViewModels.Windows
             {
                 Content = "Profiles",
                 Icon = new SymbolIcon { Symbol = SymbolRegular.DocumentOnePage20 },
-                TargetPageType = typeof(Views.Pages.DataPage)
+                TargetPageType = typeof(Views.Pages.ProfileEditorPage)
             },
         };
 

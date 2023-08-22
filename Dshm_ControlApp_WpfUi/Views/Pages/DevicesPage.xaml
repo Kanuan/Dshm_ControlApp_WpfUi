@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:Dshm_ControlApp_WpfUi.Views.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    xmlns:viewuserctrls="clr-namespace:Nefarius.DsHidMini.ControlApp.Views.UserControls"
+    xmlns:viewuserctrls="clr-namespace:Nefarius.DsHidMini.ControlApp.Views.UserControls" xmlns:helpers="clr-namespace:Nefarius.DsHidMini.ControlApp.Helpers.WPF"
     Title="DevicesPage"
     ScrollViewer.CanContentScroll="False"
     d:DataContext="{d:DesignInstance local:DevicesPage,
@@ -20,6 +20,10 @@
     >
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <helpers:BooleanToVisibilityConverter 
+                x:Key="BoolToVisConverterVisOrHid" 
+                True="Visible" 
+                False="Hidden" />
     </Page.Resources>
     
     <DockPanel VerticalAlignment="Stretch">
@@ -90,109 +94,109 @@
             </ListView>
         </DockPanel>
 
-
-        <DockPanel DockPanel.Dock="Right" DataContext="{Binding ViewModel.SelectedDevice}">
-            <DockPanel DockPanel.Dock="Bottom">
-                <UniformGrid
+        <ui:Card DockPanel.Dock="Right" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
+            <DockPanel  Visibility="{Binding ViewModel.AnyDeviceSelected, Converter={StaticResource BoolToVisConverterVisOrHid}}">
+                <DockPanel DockPanel.Dock="Bottom" DataContext="{Binding ViewModel.SelectedDevice}">
+                    <UniformGrid
                     Columns="2">
-                    <ui:Button Content="Apply changes" HorizontalAlignment="Stretch" Command="{Binding ApplyChangesCommand}" />
-                    <ui:Button Content="Cancel" HorizontalAlignment="Stretch" Command="{Binding RevertChangesCommand}"/>
-                </UniformGrid>
-                
-            </DockPanel>
+                        <ui:Button Content="Apply changes" HorizontalAlignment="Stretch" Command="{Binding ApplyChangesCommand}" />
+                        <ui:Button Content="Cancel" HorizontalAlignment="Stretch" Command="{Binding RevertChangesCommand}"/>
+                    </UniformGrid>
 
-            <TabControl>
-                <TabItem
+                </DockPanel>
+
+                <TabControl DataContext="{Binding ViewModel.SelectedDevice}"  VerticalAlignment="Stretch">
+                    <TabItem
                     Header="Info">
-                    <!-- Device info -->
-                    <DockPanel VerticalAlignment="Stretch" LastChildFill="False" HorizontalAlignment="Stretch">
-                        <DockPanel DockPanel.Dock="Top">
-                            <DockPanel DockPanel.Dock="Top" >
-                                <ui:TextBlock DockPanel.Dock="Left" Text="DEVICE NAME" HorizontalAlignment="Left"/>
-                                <ui:TextBlock DockPanel.Dock="Right" Text="{Binding DisplayName}" HorizontalAlignment="Left"/>
-                            </DockPanel>
+                        <!-- Device info -->
+                        <DockPanel LastChildFill="False" HorizontalAlignment="Stretch">
                             <DockPanel DockPanel.Dock="Top">
-                                <ui:TextBlock DockPanel.Dock="Left" Text="Battery status:"/>
-                                <ui:TextBlock DockPanel.Dock="Right" Text="{Binding BatteryStatusInText}"  HorizontalAlignment="Right"/>
+                                <DockPanel DockPanel.Dock="Top" >
+                                    <ui:TextBlock DockPanel.Dock="Left" Text="DEVICE NAME" HorizontalAlignment="Left"/>
+                                    <ui:TextBlock DockPanel.Dock="Right" Text="{Binding DisplayName}" HorizontalAlignment="Left"/>
+                                </DockPanel>
+                                <DockPanel DockPanel.Dock="Top">
+                                    <ui:TextBlock DockPanel.Dock="Left" Text="Battery status:"/>
+                                    <ui:TextBlock DockPanel.Dock="Right" Text="{Binding BatteryStatusInText}"  HorizontalAlignment="Right"/>
+                                </DockPanel>
+                                <DockPanel DockPanel.Dock="Top">
+                                    <ui:TextBlock DockPanel.Dock="Left" Text="Device address:"/>
+                                    <ui:TextBlock DockPanel.Dock="Right" Text="{Binding DeviceAddressFriendly, Mode=OneWay}"/>
+                                </DockPanel>
+                                <DockPanel DockPanel.Dock="Top">
+                                    <ui:TextBlock DockPanel.Dock="Left" Text="Current HID Device Mode:"/>
+                                    <ComboBox DockPanel.Dock="Right" SelectedIndex="{Binding HidEmulationMode, Mode=OneWay}" IsEnabled="False">
+                                        <ComboBoxItem Content="Unkown"/>
+                                        <ComboBoxItem Content="SDF (PCSX2)"/>
+                                        <ComboBoxItem Content="GPJ (Generic DirectInput)"/>
+                                        <ComboBoxItem Content="SXS (Steam, RPCS3)"/>
+                                        <ComboBoxItem Content="DS4Windows"/>
+                                        <ComboBoxItem Content="XInput"/>
+                                    </ComboBox>
+                                </DockPanel>
+                                <DockPanel DockPanel.Dock="Top">
+                                    <ui:TextBlock DockPanel.Dock="Left" Text="Xinput slot #:"/>
+                                    <ui:TextBlock DockPanel.Dock="Right"/>
+                                </DockPanel>
                             </DockPanel>
-                            <DockPanel DockPanel.Dock="Top">
-                                <ui:TextBlock DockPanel.Dock="Left" Text="Device address:"/>
-                                <ui:TextBlock DockPanel.Dock="Right" Text="{Binding DeviceAddressFriendly, Mode=OneWay}"/>
+
+
+
+                            <DockPanel DockPanel.Dock="Bottom">
+                                <DockPanel DockPanel.Dock="Top">
+                                    <ui:TextBlock DockPanel.Dock="Left" Text="Instance ID:"/>
+                                    <ui:TextBox DockPanel.Dock="Right" Text="{Binding InstanceId, Mode=OneWay}"/>
+                                </DockPanel>
+                                <DockPanel DockPanel.Dock="Top">
+                                    <ui:TextBlock DockPanel.Dock="Left" Text="Last connected wirelessly:"/>
+                                    <ui:TextBox DockPanel.Dock="Right" Text="{Binding LastConnected, Mode=OneWay}"/>
+                                </DockPanel>
+                                <DockPanel DockPanel.Dock="Top">
+                                    <ui:TextBlock DockPanel.Dock="Left" Text="Paired to (host address):" VerticalAlignment="Center"/>
+                                    <ui:TextBox DockPanel.Dock="Right" Text="{Binding HostAddress, Mode=OneWay}"/>
+                                </DockPanel>
+                                <CheckBox DockPanel.Dock="Top" Content="Auto-pair device to this PC's BT when connecting via cable" IsChecked="{Binding AutoPairDeviceWhenCabled}"/>
+                                <DockPanel DockPanel.Dock="Top">
+                                    <ui:Button Content="Pair device to this PC" DockPanel.Dock="Left"/>
+                                    <ui:Button Content="Pair Device to custom MAC:" DockPanel.Dock="Left"/>
+                                    <ui:TextBox DockPanel.Dock="Right"/>
+                                </DockPanel>
                             </DockPanel>
-                            <DockPanel DockPanel.Dock="Top">
-                                <ui:TextBlock DockPanel.Dock="Left" Text="Current HID Device Mode:"/>
-                                <ComboBox DockPanel.Dock="Right" SelectedIndex="{Binding HidEmulationMode, Mode=OneWay}" IsEnabled="False">
-                                    <ComboBoxItem Content="Unkown"/>
-                                    <ComboBoxItem Content="SDF (PCSX2)"/>
-                                    <ComboBoxItem Content="GPJ (Generic DirectInput)"/>
-                                    <ComboBoxItem Content="SXS (Steam, RPCS3)"/>
-                                    <ComboBoxItem Content="DS4Windows"/>
-                                    <ComboBoxItem Content="XInput"/>
-                                </ComboBox>
-                            </DockPanel>
-                            <DockPanel DockPanel.Dock="Top">
-                                <ui:TextBlock DockPanel.Dock="Left" Text="Xinput slot #:"/>
-                                <ui:TextBlock DockPanel.Dock="Right"/>
-                            </DockPanel>
+
                         </DockPanel>
 
 
-
-                        <DockPanel DockPanel.Dock="Bottom">
-                            <DockPanel DockPanel.Dock="Top">
-                                <ui:TextBlock DockPanel.Dock="Left" Text="Instance ID:"/>
-                                <ui:TextBox DockPanel.Dock="Right" Text="{Binding InstanceId, Mode=OneWay}"/>
-                            </DockPanel>
-                            <DockPanel DockPanel.Dock="Top">
-                                <ui:TextBlock DockPanel.Dock="Left" Text="Last connected wirelessly:"/>
-                                <ui:TextBox DockPanel.Dock="Right" Text="{Binding LastConnected, Mode=OneWay}"/>
-                            </DockPanel>
-                            <DockPanel DockPanel.Dock="Top">
-                                <ui:TextBlock DockPanel.Dock="Left" Text="Paired to (host address):" VerticalAlignment="Center"/>
-                                <ui:TextBox DockPanel.Dock="Right" Text="{Binding HostAddress, Mode=OneWay}"/>
-                            </DockPanel>
-                            <CheckBox DockPanel.Dock="Top" Content="Auto-pair device to this PC's BT when connecting via cable" IsChecked="{Binding AutoPairDeviceWhenCabled}"/>
-                            <DockPanel DockPanel.Dock="Top">
-                                <ui:Button Content="Pair device to this PC" DockPanel.Dock="Left"/>
-                                <ui:Button Content="Pair Device to custom MAC:" DockPanel.Dock="Left"/>
-                                <ui:TextBox DockPanel.Dock="Right"/>
-                            </DockPanel>
-                        </DockPanel>
-
-                    </DockPanel>
-
-
-                </TabItem>
-                <TabItem
+                    </TabItem>
+                    <TabItem
                     Header="Configure">
-                    <!-- Device settings -->
+                        <!-- Device settings -->
 
 
-                    <DockPanel LastChildFill="True">
+                        <DockPanel LastChildFill="True">
 
 
-                        <ui:Card DockPanel.Dock="Top" Margin="5">
-                            <!--Top settings mode choose-->
-                            <DockPanel DockPanel.Dock="Top" LastChildFill="True">
-                                <ui:TextBlock
+                            <ui:Card DockPanel.Dock="Top" Margin="5" VerticalAlignment="Stretch" >
+                                <!--Top settings mode choose-->
+                                <DockPanel DockPanel.Dock="Top" LastChildFill="True" VerticalAlignment="Stretch">
+                                    <ui:TextBlock
 				                    DockPanel.Dock="Left"
 				                    Text="Settings mode: "
                                     VerticalAlignment="Center"
 			                    />
-                                                    <ComboBox
+                                    <ComboBox
 				                    DockPanel.Dock="Left"
 				                    x:Name="SettingsModeSelection_ComboBox"
 				                    VerticalAlignment="Center"
 				                    ItemsSource="{Binding SettingsModesList}"
 				                    SelectedItem="{Binding CurrentDeviceSettingsMode}"
 			                    />
-                                                    <Label
+                                    <Label
 				                    Visibility="{Binding IsProfileSelectorVisible, Converter={StaticResource BoolToVis}}"
 				                    DockPanel.Dock="Left"
 				                    Content="->"
 				                    VerticalContentAlignment="Center"
 			                    />
-                                                    <ComboBox
+                                    <ComboBox
 				                    DockPanel.Dock="Left"
 				                    Visibility="{Binding IsProfileSelectorVisible, Converter={StaticResource BoolToVis}}"
 				                    x:Name="ProfileSelection_ComboBox"
@@ -200,25 +204,28 @@
 				                    ItemsSource="{Binding ListOfProfiles}"
 				                    SelectedItem="{Binding SelectedProfile}"
 			                    />
-                            </DockPanel>
-                        </ui:Card>
-                  
-
-                        <viewuserctrls:DeviceSettingsEditor Margin="0,10,0,0" Height="auto" DockPanel.Dock="Top" VerticalAlignment="Stretch" DataContext="{Binding SelectedGroupsVM}"/>
-                        
-                        
-                        
+                                </DockPanel>
+                            </ui:Card>
 
 
-
-                    </DockPanel>
+                            <viewuserctrls:DeviceSettingsEditor Margin="0,10,0,0" Height="auto" DockPanel.Dock="Top" VerticalAlignment="Stretch" DataContext="{Binding SelectedGroupsVM}"/>
 
 
 
 
-                </TabItem>
-            </TabControl>
-            
-        </DockPanel>
+
+
+                        </DockPanel>
+
+
+
+
+                    </TabItem>
+                </TabControl>
+
+            </DockPanel>
+        </ui:Card>
+        
+
     </DockPanel>
 </Page>

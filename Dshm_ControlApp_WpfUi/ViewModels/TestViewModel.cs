@@ -1,4 +1,6 @@
-﻿using FontAwesome5;
+﻿using Dshm_ControlApp_WpfUi.ViewModels.Pages;
+using Dshm_ControlApp_WpfUi;
+using FontAwesome5;
 using Nefarius.DsHidMini.ControlApp.Drivers;
 using Nefarius.DsHidMini.ControlApp.UserData;
 using Nefarius.Utilities.Bluetooth;
@@ -14,7 +16,7 @@ using System.Drawing;
 using System.Net.NetworkInformation;
 using System.Reactive;
 using System.Reactive.Linq;
-using Wpf.Ui.Common;
+using Wpf.Ui.Controls;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
@@ -23,7 +25,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         // ------------------------------------------------------ FIELDS
 
         internal static ControllersUserData UserDataManager = new ControllersUserData();
-        internal static ProfileEditorViewModel vm = new ProfileEditorViewModel();
+        internal static ProfileEditorViewModel vm = App.GetService<ProfileEditorViewModel>();
         private readonly PnPDevice _device;
         private DeviceSpecificData deviceUserData;
         public readonly List<SettingsModes> settingsModesList = new List<SettingsModes>

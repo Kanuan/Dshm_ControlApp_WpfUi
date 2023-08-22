@@ -45,26 +45,12 @@
 					<!-- Index 2: LEDs custom simple -->
 					<TabItem Visibility="Hidden" VerticalContentAlignment="Center" Width="50">
 						<ContentControl MaxWidth="120">
-							<Grid>
-								<Grid.RowDefinitions>
-									<RowDefinition/>
-									<RowDefinition/>
-								</Grid.RowDefinitions>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition/>
-									<ColumnDefinition/>
-									<ColumnDefinition/>
-									<ColumnDefinition/>
-								</Grid.ColumnDefinitions>
-								<Label Content="1" Grid.Column="0"/>
-								<Label Content="2" Grid.Column="1"/>
-								<Label Content="3" Grid.Column="2"/>
-								<Label Content="4" Grid.Column="3"/>
-								<CheckBox Grid.Row="1" Grid.Column="0" IsChecked="{Binding IsLedN1Enabled}"/>
-                                <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding IsLedN2Enabled}"/>
-                                <CheckBox Grid.Row="1" Grid.Column="2" IsChecked="{Binding IsLedN3Enabled}"/>
-                                <CheckBox Grid.Row="1" Grid.Column="3" IsChecked="{Binding IsLedN4Enabled}"/>
-							</Grid>
+                            <UniformGrid Columns="4">
+                                <CheckBox IsChecked="{Binding Leds_VM[0].IsEnabled}"/>
+                                <CheckBox IsChecked="{Binding Leds_VM[1].IsEnabled}"/>
+                                <CheckBox IsChecked="{Binding Leds_VM[2].IsEnabled}"/>
+                                <CheckBox IsChecked="{Binding Leds_VM[3].IsEnabled}"/>
+							</UniformGrid>
 						</ContentControl>
 						<!-- Index 3: LEDs custom advanced -->
 					</TabItem>
@@ -80,16 +66,16 @@
                                 <TabItem Header="4" Width="50"/>
 							</TabControl>
 							<!-- LED fine tuning -->
-							<DockPanel>
+							<DockPanel DataContext="{Binding SelectedLED_VM}">
 								<ui:ToggleSwitch
 									DockPanel.Dock="Top"
 									Content="Enable LED"
-									IsChecked="{Binding IsCurrentLedEnabled}"/>
+									IsChecked="{Binding IsEnabled}"/>
 								<ui:ToggleSwitch
 									x:Name="UseLEDEffects_Checkbox"
 									DockPanel.Dock="Top"
 									Content="Use advanced effects"
-									IsChecked="{Binding UseLEDEffectsInIndexLED}"/>
+									IsChecked="{Binding UseEffects}"/>
 								<Grid
 									DockPanel.Dock="Top"
 									IsEnabled="{Binding IsChecked, ElementName=UseLEDEffects_Checkbox}"
@@ -102,7 +88,8 @@
 									</Grid.RowDefinitions>
 									<Grid.ColumnDefinitions>
 										<ColumnDefinition/>
-										<ColumnDefinition/>
+										<ColumnDefinition Width="3*"/>
+                                        <ColumnDefinition/>
 									</Grid.ColumnDefinitions>
 									<TextBlock
 										Grid.Row="0" Grid.Column="0"
@@ -110,28 +97,35 @@
 										TextWrapping="Wrap"
 										HorizontalAlignment="Left"
 										VerticalAlignment="Center"/>
-									<ui:NumberBox
+									<Slider
 										Grid.Row="0" Grid.Column="1"
 										Minimum="0"
 										Maximum="255"
-										ClipToBounds="True"
 										VerticalAlignment="Center"
-										Value="{Binding IndexLEDDuration}"/>
-									<TextBlock
+										Value="{Binding Duration}"/>
+                                    <TextBlock
+                                        Grid.Row="0"
+                                        Grid.Column="2"
+                                        Text="{Binding Duration}"/>
+                                    <TextBlock
 										Grid.Row="1" Grid.Column="0"
 										Text="Interval duration:"
 										TextWrapping="Wrap"
 										HorizontalAlignment="Left"
 										VerticalAlignment="Center"/>
-                                    <ui:NumberBox
+                                    <Slider
 										Grid.Row="1" Grid.Column="1"
 										Minimum="0"
 										Maximum="255"
 										ClipToBounds="True"
 										VerticalAlignment="Center"
-										Value="{Binding IndexLEDIntervalDuration}"
+										Value="{Binding IntervalDuration}"
 						/>
-									<TextBlock
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="2"
+                                        Text="{Binding IntervalDuration}"/>
+                                    <TextBlock
 										Grid.Row="2" Grid.Column="0"
 										Text="Interval ON portion:"
 										TextWrapping="Wrap"
@@ -140,26 +134,35 @@
 									<ui:NumberBox
 										Grid.Row="2" Grid.Column="1"
 										Minimum="0"
-										Maximum="255"
+										Maximum="254"
 										ClipToBounds="True"
+                                        ToolTip="{Binding Value, RelativeSource={RelativeSource Self}}"
 										VerticalAlignment="Center"
-										Value="{Binding IndexLEDIntervalPortionON}"
+										Value="{Binding IntervalPortionON}"
 						/>
-									<TextBlock
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="2"
+                                        Text="{Binding IntervalPortionON}"/>
+                                    <TextBlock
 										Grid.Row="3" Grid.Column="0"
 										Text="Interval OFF portion:"
 										TextWrapping="Wrap"
 										HorizontalAlignment="Left"
 										VerticalAlignment="Center"/>
-									<ui:NumberBox
+									<Slider
 										Grid.Row="3" Grid.Column="1"
 										Minimum="0"
-										Maximum="255"
+										Maximum="254"
 										ClipToBounds="True"
 										VerticalAlignment="Center"
-										Value="{Binding IndexLEDIntervalPortionOFF}"
+										Value="{Binding IntervalPortionOFF}"
 						/>
-								</Grid>
+                                    <TextBlock
+                                        Grid.Row="3"
+                                        Grid.Column="2"
+                                        Text="{Binding IntervalPortionOFF}"/>
+                                </Grid>
 							</DockPanel>
 						</StackPanel>
 					</TabItem>

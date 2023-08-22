@@ -10,6 +10,7 @@ using Nefarius.DsHidMini.ControlApp.MVVM;
 using Nefarius.Utilities.DeviceManagement.PnP;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using Wpf.Ui;
 using Wpf.Ui.Controls;
 
 namespace Dshm_ControlApp_WpfUi.Views.Windows
@@ -29,7 +30,7 @@ namespace Dshm_ControlApp_WpfUi.Views.Windows
             IContentDialogService contentDialogService
         )
         {
-            Wpf.Ui.Appearance.Watcher.Watch(this);
+            Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
 
             ViewModel = viewModel;
             DataContext = this;

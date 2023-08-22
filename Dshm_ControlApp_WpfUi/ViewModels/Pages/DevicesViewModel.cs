@@ -18,7 +18,7 @@ namespace Dshm_ControlApp_WpfUi.ViewModels.Pages
         /// <summary>
         ///     Currently selected device, if any.
         /// </summary>
-        [ObservableProperty] private TestViewModel _selectedDevice;
+        [ObservableProperty] private TestViewModel? _selectedDevice;
 
         /// <summary>
         ///     Is a device currently selected.
@@ -28,7 +28,12 @@ namespace Dshm_ControlApp_WpfUi.ViewModels.Pages
         /// <summary>
         ///     Are there devices connected.
         /// </summary>
-        public bool HasNoDevices => Devices.Count == 0;
+        [ObservableProperty] private bool _anyDeviceSelected = false;
+
+        partial void OnSelectedDeviceChanged(TestViewModel? value)
+        {
+            AnyDeviceSelected = (value != null);
+        }
 
         /*
         /// <summary>
