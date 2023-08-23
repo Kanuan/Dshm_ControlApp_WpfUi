@@ -15,7 +15,7 @@
     d:DesignWidth="800"
     ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
     ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-    ExtendsContentIntoTitleBar="False"
+    ExtendsContentIntoTitleBar="True"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     WindowCornerPreference="Round"
     WindowStartupLocation="CenterScreen"
@@ -27,30 +27,33 @@
             Modifiers="Control" />-->
     </ui:FluentWindow.InputBindings>
 
-    <Grid>
+    <DockPanel>
         <ui:TitleBar
             x:Name="TitleBar"
             Title="{Binding ViewModel.ApplicationTitle}"
             Grid.Row="0"
-            CloseWindowByDoubleClickOnIcon="True">
+            DockPanel.Dock="Top"
+            CloseWindowByDoubleClickOnIcon="False">
             <ui:TitleBar.Icon>
                 <ui:ImageIcon Source="pack://application:,,,/Assets/wpfui-icon-256.png" />
             </ui:TitleBar.Icon>
         </ui:TitleBar>
-
-        <ui:NavigationView
+        <Grid DockPanel.Dock="Top">
+            <ui:NavigationView
             x:Name="NavigationView"
             Padding="10,0,10,0"
             FooterMenuItemsSource="{Binding ViewModel.FooterMenuItems, Mode=OneWay}"
+            DockPanel.Dock="Top"
             FrameMargin="0"
             IsBackButtonVisible="Collapsed"
             IsPaneToggleVisible="False"
             MenuItemsSource="{Binding ViewModel.MenuItems, Mode=OneWay}"
             OpenPaneLength="100"
-            PaneDisplayMode="LeftFluent"
-            TitleBar="{Binding ElementName=TitleBar, Mode=OneWay}">
+            PaneDisplayMode="Left"
+            
+            >
 
-            <!--<ui:NavigationView.AutoSuggestBox>
+                <!--<ui:NavigationView.AutoSuggestBox>
                 <ui:AutoSuggestBox x:Name="AutoSuggestBox" PlaceholderText="Search">
                     <ui:AutoSuggestBox.Icon>
                         <ui:IconSourceElement>
@@ -59,13 +62,21 @@
                     </ui:AutoSuggestBox.Icon>
                 </ui:AutoSuggestBox>
             </ui:NavigationView.AutoSuggestBox>-->
-            <ui:NavigationView.ContentOverlay>
-                <Grid>
-                    <ui:SnackbarPresenter x:Name="SnackbarPresenter" />
-                </Grid>
-            </ui:NavigationView.ContentOverlay>
-        </ui:NavigationView>
+                <ui:NavigationView.ContentOverlay>
+                    <Grid>
+                        <ui:SnackbarPresenter Margin="0" x:Name="SnackbarPresenter" />
+                    </Grid>
+                </ui:NavigationView.ContentOverlay>
+            </ui:NavigationView>
 
-        <ContentPresenter x:Name="RootContentDialog" Grid.Row="0" />
-    </Grid>
+            <ContentPresenter x:Name="RootContentDialog" Grid.Row="0" />
+        </Grid>
+
+        
+        
+        
+
+
+
+    </DockPanel>
 </ui:FluentWindow>

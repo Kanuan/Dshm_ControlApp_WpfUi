@@ -205,6 +205,7 @@
 			<!-- Quick disconnect combo selection -->
 			<DockPanel
 				DockPanel.Dock="Top"
+                LastChildFill="False"
 					>
 				<!-- DataContext="{Binding QuickDisconnectCombo}" -->
 				<Label
@@ -212,19 +213,21 @@
 				Content="Quick disconnect combo (3s):"
 				VerticalAlignment="Center"/>
 				<!-- Change ComboBox later so it's binding to a enum -->
-				<ComboBox
+                <ComboBox
 					Width="80"
 					DockPanel.Dock="Left"
 					ItemsSource="{Binding Source={wpf:EnumBindingSource {x:Type devmvvm:ControlApp_ComboButtons}}}"
 					SelectedItem="{Binding QuickDisconnectComboButton1}"
 					IsEnabled="{Binding IsChecked,ElementName=EnableQuickDisconnectComboCheckbox}"
+                    Text="{Binding QuickDisconnectComboButton1}"
 						/>
-				<ComboBox
+                <ComboBox
 					Width="80"
 					DockPanel.Dock="Left"
 					ItemsSource="{Binding Source={wpf:EnumBindingSource {x:Type devmvvm:ControlApp_ComboButtons}}}"
 					SelectedItem="{Binding QuickDisconnectComboButton2}"
 					IsEnabled="{Binding IsChecked,ElementName=EnableQuickDisconnectComboCheckbox}"
+                    Text="{Binding QuickDisconnectComboButton2}"
 						/>
 				<ComboBox
 					Width="80"
@@ -232,6 +235,7 @@
 					ItemsSource="{Binding Source={wpf:EnumBindingSource {x:Type devmvvm:ControlApp_ComboButtons}}}"
 					SelectedItem="{Binding QuickDisconnectComboButton3}"
 					IsEnabled="{Binding IsChecked,ElementName=EnableQuickDisconnectComboCheckbox}"
+                    Text="{Binding QuickDisconnectComboButton3}"
 						/>
 			</DockPanel>
 		</DockPanel>
@@ -354,6 +358,7 @@
 				IsChecked="{Binding IsVariableRightEmulToggleComboEnabled}"/>
             <DockPanel
 				DockPanel.Dock="Top"
+                LastChildFill="False"
 					>
 				<!-- DataContext="{Binding VariableRightEmulToggleCombo}" -->
 				<Label
@@ -367,6 +372,7 @@
 					ItemsSource="{Binding Source={wpf:EnumBindingSource {x:Type devmvvm:ControlApp_ComboButtons}}}"
 					SelectedItem="{Binding VarRightEmul_ToggleComboButton1}"
 					IsEnabled="{Binding IsChecked,ElementName=EnableQuickDisconnectComboCheckbox}"
+                    Text="{Binding VarRightEmul_ToggleComboButton1}"
 						/>
 				<ComboBox
 					Width="80"
@@ -374,6 +380,7 @@
 					ItemsSource="{Binding Source={wpf:EnumBindingSource {x:Type devmvvm:ControlApp_ComboButtons}}}"
 					SelectedItem="{Binding VarRightEmul_ToggleComboButton2}"
 					IsEnabled="{Binding IsChecked,ElementName=EnableQuickDisconnectComboCheckbox}"
+                    Text="{Binding VarRightEmul_ToggleComboButton2}"
 						/>
 				<ComboBox
 					Width="80"
@@ -381,6 +388,7 @@
 					ItemsSource="{Binding Source={wpf:EnumBindingSource {x:Type devmvvm:ControlApp_ComboButtons}}}"
 					SelectedItem="{Binding VarRightEmul_ToggleComboButton3}"
 					IsEnabled="{Binding IsChecked,ElementName=EnableQuickDisconnectComboCheckbox}"
+                    Text="{Binding VarRightEmul_ToggleComboButton3}"
 						/>
 			</DockPanel>
 			<!-- Rumble motors disablers -->

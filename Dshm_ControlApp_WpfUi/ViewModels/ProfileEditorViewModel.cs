@@ -22,7 +22,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         // ----------------------------------------------------------- FIELDS
 
         [ObservableProperty] public List<ProfileViewModel> _profilesViewModels;
-        [ObservableProperty] public ProfileViewModel? _selectedProfileVM = null;
+        [ObservableProperty] private ProfileViewModel? _selectedProfileVM = null;
         [ObservableProperty] bool _isEditing = false;
 
         // ----------------------------------------------------------- PROPERTIES
