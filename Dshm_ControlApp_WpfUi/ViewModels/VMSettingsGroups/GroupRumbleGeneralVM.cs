@@ -12,52 +12,62 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
        
         public override SettingsModeGroups Group { get; } = SettingsModeGroups.RumbleGeneral;
 
-        public bool IsVariableLightRumbleEmulationEnabled
+        public bool IsAltModeEnabled
         {
-            get => _tempBackingData.IsVariableLightRumbleEmulationEnabled;
+            get => _tempBackingData.IsAltRumbleModeEnabled;
             set
             {
-                _tempBackingData.IsVariableLightRumbleEmulationEnabled = value;
-                this.OnPropertyChanged(nameof(IsVariableLightRumbleEmulationEnabled));
+                _tempBackingData.IsAltRumbleModeEnabled = value;
+                this.OnPropertyChanged(nameof(IsAltModeEnabled));
             }
         }
 
-        public bool IsVariableRightEmulToggleComboEnabled
+        public bool IsAltModeToggleButtonComboEnabled
         {
-            get => _tempBackingData.IsVariableRightEmulToggleComboEnabled;
+            get => _tempBackingData.IsAltModeToggleButtonComboEnabled;
             set
             {
-                _tempBackingData.IsVariableRightEmulToggleComboEnabled = value;
-                this.OnPropertyChanged(nameof(IsVariableRightEmulToggleComboEnabled));
+                _tempBackingData.IsAltModeToggleButtonComboEnabled = value;
+                this.OnPropertyChanged(nameof(IsAltModeToggleButtonComboEnabled));
             }
         }
 
-        public ControlApp_ComboButtons VarRightEmul_ToggleComboButton1
+        public bool AlwaysStartInNormal
         {
-            get => _tempBackingData.VariableRightEmulToggleCombo.Button1;
+            get => _tempBackingData.IsAltModeToggleButtonComboEnabled;
             set
             {
-                _tempBackingData.VariableRightEmulToggleCombo.Button1 = value;
-                this.OnPropertyChanged(nameof(VarRightEmul_ToggleComboButton1));
+                _tempBackingData.IsAltModeToggleButtonComboEnabled = value;
+                this.OnPropertyChanged(nameof(IsAltModeToggleButtonComboEnabled));
             }
         }
 
-        public ControlApp_ComboButtons VarRightEmul_ToggleComboButton2
+        public ControlApp_ComboButtons AltModeToggleButttonCombo_Button1
         {
-            get => _tempBackingData.VariableRightEmulToggleCombo.Button2;
+            get => _tempBackingData.AltModeToggleButtonCombo.Button1;
             set
             {
-                _tempBackingData.VariableRightEmulToggleCombo.Button2 = value;
-                this.OnPropertyChanged(nameof(VarRightEmul_ToggleComboButton2));
+                _tempBackingData.AltModeToggleButtonCombo.Button1 = value;
+                this.OnPropertyChanged(nameof(AltModeToggleButttonCombo_Button1));
             }
         }
-        public ControlApp_ComboButtons VarRightEmul_ToggleComboButton3
+
+        public ControlApp_ComboButtons AltModeToggleButttonCombo_Button2
         {
-            get => _tempBackingData.VariableRightEmulToggleCombo.Button3;
+            get => _tempBackingData.AltModeToggleButtonCombo.Button2;
             set
             {
-                _tempBackingData.VariableRightEmulToggleCombo.Button3 = value;
-                this.OnPropertyChanged(nameof(VarRightEmul_ToggleComboButton3));
+                _tempBackingData.AltModeToggleButtonCombo.Button2 = value;
+                this.OnPropertyChanged(nameof(AltModeToggleButttonCombo_Button2));
+            }
+        }
+        public ControlApp_ComboButtons AltModeToggleButttonCombo_Button3
+        {
+            get => _tempBackingData.AltModeToggleButtonCombo.Button3;
+            set
+            {
+                _tempBackingData.AltModeToggleButtonCombo.Button3 = value;
+                this.OnPropertyChanged(nameof(AltModeToggleButttonCombo_Button3));
             }
         }
 

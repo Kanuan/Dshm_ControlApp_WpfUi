@@ -40,8 +40,8 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
 
         public static readonly ProfileData DefaultProfile = new()
         {
-            ProfileName = "DSHM XInput",
-            DiskFileName = "Default_DSHM_XInput",
+            ProfileName = "XInput (Default)",
+            DiskFileName = "DSHM_Default",
             ProfileGuid = DefaultGuid,
             DataContainer = new(),
         };
@@ -73,17 +73,17 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             DeviceMac = deviceMac;
         }
 
-        public void SaveToDSHM(DSHM_Format_Settings dshmContextData)
-        {
-            DatasContainter.modesUniqueData.SaveToDSHMSettings(dshmContextData);
-            DatasContainter.ledsData.SaveToDSHMSettings(dshmContextData);
-            DatasContainter.wirelessData.SaveToDSHMSettings(dshmContextData);
-            DatasContainter.sticksData.SaveToDSHMSettings(dshmContextData);
-            DatasContainter.rumbleGeneralData.SaveToDSHMSettings(dshmContextData);
-            DatasContainter.outRepData.SaveToDSHMSettings(dshmContextData);
-            DatasContainter.leftRumbleRescaleData.SaveToDSHMSettings(dshmContextData);
-            DatasContainter.rightVariableEmulData.SaveToDSHMSettings(dshmContextData);
-        }
+        //public void SaveToDSHM(DSHM_Format_Settings dshmContextData)
+        //{
+        //    DatasContainter.modesUniqueData.SaveToDSHMSettings(dshmContextData);
+        //    DatasContainter.ledsData.SaveToDSHMSettings(dshmContextData);
+        //    DatasContainter.wirelessData.SaveToDSHMSettings(dshmContextData);
+        //    DatasContainter.sticksData.SaveToDSHMSettings(dshmContextData);
+        //    DatasContainter.rumbleGeneralData.SaveToDSHMSettings(dshmContextData);
+        //    DatasContainter.outRepData.SaveToDSHMSettings(dshmContextData);
+        //    DatasContainter.leftRumbleRescaleData.SaveToDSHMSettings(dshmContextData);
+        //    DatasContainter.rightVariableEmulData.SaveToDSHMSettings(dshmContextData);
+        //}
     }
     internal class ControllersUserData
     {
@@ -99,6 +99,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             {
                 new JsonStringEnumConverter(),
                 new DshmCustomJsonConverter(),
+                //new DshmCustomContextNameJsonConverter(),
 
             }
         };
@@ -122,7 +123,6 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
         // ----------------------------------------------------------- AUTO-PROPERTIES
 
         private ControlAppGeneralSettings controlAppSettings { get; set; } = new();
-        public DeviceSpecificData NewControllersDefault { get; set; } = new("0123456789"); //"Global"
         public List<DeviceSpecificData> Devices { get; set; } = new();
 
         // ----------------------------------------------------------- PROPERTIES
@@ -314,13 +314,13 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
 
         public void UpdateDsHidMiniSettings()
         {
-            var dshm_data = new DshmMainDataContainer();
+            var dshmSettings = new DshmSettings();
             
-            GlobalProfile.DataContainer.ConvertAllToDSHM(dshm_data.Global);
+            GlobalProfile.DataContainer.ConvertAllToDSHM(dshmSettings.Global);
            
             foreach(DeviceSpecificData dev in Devices)
             {
-                var temp = new DSHMDeviceCustomSettings();
+                var temp = new DshmDeviceSettings();
                 temp.DeviceAddress = dev.DeviceMac;
                 temp.CustomSettings.DisableAutoPairing = !dev.AutoPairWhenCabled;
                 switch (dev.SettingsMode)
@@ -344,10 +344,10 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
                     default:
                         break; ;
                 }
-                dshm_data.Devices.Add(temp);
+                dshmSettings.Devices.Add(temp);
             }
             
-            string profileJson = JsonSerializer.Serialize(dshm_data, ControlAppJsonSerializerOptions);
+            string profileJson = JsonSerializer.Serialize(dshmSettings, ControlAppJsonSerializerOptions);
 
             System.IO.Directory.CreateDirectory(DshmFolderFullPath);
             System.IO.File.WriteAllText($@"{DshmFolderFullPath}DsHidMini.json", profileJson);

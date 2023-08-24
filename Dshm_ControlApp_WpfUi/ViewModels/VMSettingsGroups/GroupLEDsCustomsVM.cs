@@ -12,7 +12,13 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
     public partial class GroupLEDsCustomsVM : GroupSettingsVM
     {
-        private BackingData_LEDs _tempBackingData = new();
+        private BackingDataContainer _backingDataContainer = new();
+
+        private BackingData_LEDs _tempBackingData
+        {
+            get => _backingDataContainer.ledsData;
+            set => _backingDataContainer.ledsData = value;
+        }
 
         public override SettingsModeGroups Group { get; } = SettingsModeGroups.LEDsControl;
         public int LEDMode

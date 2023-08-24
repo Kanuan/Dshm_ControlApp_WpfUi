@@ -99,7 +99,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             rightVariableEmulData.ResetToDefault();
         }
 
-        public void ConvertAllToDSHM(DSHM_Format_Settings dshm_data)
+        public void ConvertAllToDSHM(DshmCustomSettings dshm_data)
         {
             modesUniqueData.SaveToDSHMSettings(dshm_data);
             ledsData.SaveToDSHMSettings(dshm_data);
@@ -115,35 +115,12 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
                 dshm_data.ContextSettings.DeadZoneLeft.Apply = false;
                 dshm_data.ContextSettings.DeadZoneRight.Apply = false;
             }
-
-            //DSHM_Format_ContextSpecificSettings modeContext = dshm_data;
-            switch (modesUniqueData.SettingsContext)
-            {
-                case SettingsContext.SDF:
-                    dshm_data.SDF = dshm_data.ContextSettings;
-                    break;
-                case SettingsContext.GPJ:
-                    dshm_data.GPJ = dshm_data.ContextSettings;
-                    break;
-                case SettingsContext.SXS:
-                    dshm_data.SXS = dshm_data.ContextSettings;
-                    break;
-                case SettingsContext.DS4W:
-                    dshm_data.DS4Windows = dshm_data.ContextSettings;
-                    break;
-                case SettingsContext.XInput:
-                    dshm_data.XInput = dshm_data.ContextSettings;
-                    break;
-                default:
-                    break;
-            }
-            dshm_data.ContextSettings = null;
         }
     }
 
     public abstract class SettingsBackingData
     {
-        public abstract void SaveToDSHMSettings(DSHM_Format_Settings dshmContextSettings);
+        public abstract void SaveToDSHMSettings(DshmCustomSettings dshmContextSettings);
     }
 
     public class BackingData_ModesUnique : SettingsBackingData
@@ -182,11 +159,12 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
         }
 
 
-        public override void SaveToDSHMSettings(DSHM_Format_Settings dshmContextSettings)
+        public override void SaveToDSHMSettings(DshmCustomSettings dshmContextSettings)
         {
             if (SettingsContext != SettingsContext.General)
             {
                 dshmContextSettings.HIDDeviceMode = SaveLoadUtils.Get_DSHM_HIDDeviceMode_From_ControlApp[SettingsContext];
+                dshmContextSettings.ContextSettings.HIDDeviceMode = dshmContextSettings.HIDDeviceMode;
             }
 
             dshmContextSettings.ContextSettings.PressureExposureMode = dshmContextSettings.ContextSettings.PressureExposureMode =
@@ -228,15 +206,15 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             destiny.LEDsCustoms.CopyLEDsCustoms(source.LEDsCustoms);
         }
 
-        public override void SaveToDSHMSettings(DSHM_Format_Settings dshmContextSettings)
+        public override void SaveToDSHMSettings(DshmCustomSettings dshmContextSettings)
         {
-            DSHM_Format_Settings.AllLEDSettings dshm_AllLEDsSettings = dshmContextSettings.ContextSettings.LEDSettings;
+            DshmCustomSettings.AllLEDSettings dshm_AllLEDsSettings = dshmContextSettings.ContextSettings.LEDSettings;
 
             dshm_AllLEDsSettings.Mode = SaveLoadUtils.Get_DSHM_LEDModes_From_ControlApp[this.LEDMode];
 
             var dshm_Customs = dshm_AllLEDsSettings.CustomPatterns;
 
-            var dshm_singleLED = new DSHM_Format_Settings.SingleLEDCustoms[]
+            var dshm_singleLED = new DshmCustomSettings.SingleLEDCustoms[]
             { dshm_Customs.Player1, dshm_Customs.Player2,dshm_Customs.Player3,dshm_Customs.Player4, };
 
 
@@ -390,7 +368,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             destiny.WirelessIdleDisconnectTime = source.WirelessIdleDisconnectTime;
         }
 
-        public override void SaveToDSHMSettings(DSHM_Format_Settings dshmContextSettings)
+        public override void SaveToDSHMSettings(DshmCustomSettings dshmContextSettings)
         {
             dshmContextSettings.DisableWirelessIdleTimeout = !this.IsWirelessIdleDisconnectEnabled;
             dshmContextSettings.WirelessIdleTimeoutPeriodMs = this.WirelessIdleDisconnectTime * 60 * 1000;
@@ -415,11 +393,11 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             destiny.RightStickData.CopyStickDataFromOtherStick(source.RightStickData);
         }
 
-        public override void SaveToDSHMSettings(DSHM_Format_Settings dshmContextSettings)
+        public override void SaveToDSHMSettings(DshmCustomSettings dshmContextSettings)
         {
-            DSHM_Format_Settings.DeadZoneSettings dshmLeftDZSettings = dshmContextSettings.ContextSettings.DeadZoneLeft;
-            DSHM_Format_Settings.DeadZoneSettings dshmRightDZSettings = dshmContextSettings.ContextSettings.DeadZoneRight;
-            DSHM_Format_Settings.AxesFlipping axesFlipping = dshmContextSettings.ContextSettings.FlipAxis;
+            DshmCustomSettings.DeadZoneSettings dshmLeftDZSettings = dshmContextSettings.ContextSettings.DeadZoneLeft;
+            DshmCustomSettings.DeadZoneSettings dshmRightDZSettings = dshmContextSettings.ContextSettings.DeadZoneRight;
+            DshmCustomSettings.AxesFlipping axesFlipping = dshmContextSettings.ContextSettings.FlipAxis;
 
 
             dshmLeftDZSettings.Apply = this.LeftStickData.IsDeadZoneEnabled;
@@ -482,64 +460,37 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
         };
 
         // -------------------------------------------- DEFAULT SETTINGS END
-        private bool isVariableLightRumbleEmulationEnabled;
-        private bool isLeftMotorDisabled;
-        private bool isRightMotorDisabled;
-        private bool isVariableRightEmulToggleComboEnabled;
-        private ButtonsCombo variableRightEmulToggleCombo = new();
+        public bool IsAltRumbleModeEnabled { get; set; }
+        public bool IsLeftMotorDisabled { get; set; }
+        
+        public bool IsRightMotorDisabled { get; set; }
 
-        public bool IsVariableLightRumbleEmulationEnabled
-        {
-            get => isVariableLightRumbleEmulationEnabled;
-            set
-            {
-                if (value) isLeftMotorDisabled = isRightMotorDisabled = false;
-                isVariableLightRumbleEmulationEnabled = value;
-            }
-        }
-        public bool IsLeftMotorDisabled
-        {
-            get => isLeftMotorDisabled;
-            set
-            {
-                if (value) isVariableLightRumbleEmulationEnabled = false;
-                isLeftMotorDisabled = value;
-            }
-        }
-        public bool IsRightMotorDisabled
-        {
-            get => isRightMotorDisabled;
-            set
-            {
-                if (value) isVariableLightRumbleEmulationEnabled = false;
-                isRightMotorDisabled = value;
-            }
-        }
-        public bool IsVariableRightEmulToggleComboEnabled { get => isVariableRightEmulToggleComboEnabled; set => isVariableRightEmulToggleComboEnabled = value; }
-        public ButtonsCombo VariableRightEmulToggleCombo { get => variableRightEmulToggleCombo; set => variableRightEmulToggleCombo = value; }
+        public bool AlwaysStartInAltMode { get; set; }
+        public bool IsAltModeToggleButtonComboEnabled { get; set; }
+        public ButtonsCombo AltModeToggleButtonCombo { get; set; } = new();
         public void ResetToDefault()
         {
-            isVariableLightRumbleEmulationEnabled = DEFAULT_isVariableLightRumbleEmulationEnabled;
-            isLeftMotorDisabled = DEFAULT_isLeftMotorDisabled;
-            isRightMotorDisabled = DEFAULT_isRightMotorDisabled;
-            isVariableRightEmulToggleComboEnabled = DEFAULT_isVariableRightEmulToggleComboEnabled;
-            variableRightEmulToggleCombo = new(DEFAULT_VariableRightEmuToggleCombo);
+            IsAltRumbleModeEnabled = DEFAULT_isVariableLightRumbleEmulationEnabled;
+            IsLeftMotorDisabled = DEFAULT_isLeftMotorDisabled;
+            IsRightMotorDisabled = DEFAULT_isRightMotorDisabled;
+            AlwaysStartInAltMode = DEFAULT_isVariableRightEmulToggleComboEnabled;
+            AltModeToggleButtonCombo = new(DEFAULT_VariableRightEmuToggleCombo);
         }
 
         public static void CopySettings(BackingData_RumbleGeneral destiny, BackingData_RumbleGeneral source)
         {
-            destiny.isVariableLightRumbleEmulationEnabled = source.IsVariableLightRumbleEmulationEnabled;
-            destiny.isLeftMotorDisabled = source.IsLeftMotorDisabled;
-            destiny.isRightMotorDisabled = source.IsRightMotorDisabled;
-            destiny.isVariableRightEmulToggleComboEnabled = source.IsVariableRightEmulToggleComboEnabled;
-            destiny.variableRightEmulToggleCombo.copyCombo(source.VariableRightEmulToggleCombo);
+            destiny.IsAltRumbleModeEnabled = source.IsAltRumbleModeEnabled;
+            destiny.IsLeftMotorDisabled = source.IsLeftMotorDisabled;
+            destiny.IsRightMotorDisabled = source.IsRightMotorDisabled;
+            destiny.AlwaysStartInAltMode = source.IsAltModeToggleButtonComboEnabled;
+            destiny.AltModeToggleButtonCombo.copyCombo(source.AltModeToggleButtonCombo);
         }
 
-        public override void SaveToDSHMSettings(DSHM_Format_Settings dshmContextSettings)
+        public override void SaveToDSHMSettings(DshmCustomSettings dshmContextSettings)
         {
-            DSHM_Format_Settings.AllRumbleSettings dshmRumbleSettings = dshmContextSettings.ContextSettings.RumbleSettings;
+            DshmCustomSettings.AllRumbleSettings dshmRumbleSettings = dshmContextSettings.ContextSettings.RumbleSettings;
 
-            dshmRumbleSettings.SMToBMConversion.Enabled = this.IsVariableLightRumbleEmulationEnabled;
+            dshmRumbleSettings.SMToBMConversion.Enabled = this.IsAltRumbleModeEnabled;
             dshmRumbleSettings.DisableBM = this.IsLeftMotorDisabled;
             dshmRumbleSettings.DisableSM = this.IsLeftMotorDisabled;
         }
@@ -555,29 +506,25 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
 
         // -------------------------------------------- DEFAULT SETTINGS END
 
-        private bool isOutputReportRateControlEnabled;
-        private int maxOutputRate;
-        private bool isOutputReportDeduplicatorEnabled;
-
-        public bool IsOutputReportRateControlEnabled { get => isOutputReportRateControlEnabled; set => isOutputReportRateControlEnabled = value; }
-        public int MaxOutputRate { get => maxOutputRate; set => maxOutputRate = value; }
-        public bool IsOutputReportDeduplicatorEnabled { get => isOutputReportDeduplicatorEnabled; set => isOutputReportDeduplicatorEnabled = value; }
+        public bool IsOutputReportRateControlEnabled { get; set; }
+        public int MaxOutputRate { get; set; }
+        public bool IsOutputReportDeduplicatorEnabled { get; set; }
 
         public void ResetToDefault()
         {
-            isOutputReportRateControlEnabled = DEFAULT_isOutputReportRateControlEnabled;
-            maxOutputRate = DEFAULT_maxOutputRate;
-            isOutputReportDeduplicatorEnabled = DEFAULT_isOutputReportDeduplicatorEnabled;
+            IsOutputReportRateControlEnabled = DEFAULT_isOutputReportRateControlEnabled;
+            MaxOutputRate = DEFAULT_maxOutputRate;
+            IsOutputReportDeduplicatorEnabled = DEFAULT_isOutputReportDeduplicatorEnabled;
         }
 
         public static void CopySettings(BackingData_OutRepControl destiny, BackingData_OutRepControl source)
         {
-            destiny.isOutputReportDeduplicatorEnabled = source.IsOutputReportDeduplicatorEnabled;
-            destiny.isOutputReportRateControlEnabled = source.IsOutputReportRateControlEnabled;
-            destiny.maxOutputRate = source.MaxOutputRate;
+            destiny.IsOutputReportDeduplicatorEnabled = source.IsOutputReportDeduplicatorEnabled;
+            destiny.IsOutputReportRateControlEnabled = source.IsOutputReportRateControlEnabled;
+            destiny.MaxOutputRate = source.MaxOutputRate;
         }
 
-        public override void SaveToDSHMSettings(DSHM_Format_Settings dshmContextSettings)
+        public override void SaveToDSHMSettings(DshmCustomSettings dshmContextSettings)
         {
             dshmContextSettings.IsOutputRateControlEnabled = this.IsOutputReportRateControlEnabled;
             dshmContextSettings.OutputRateControlPeriodMs = (byte)this.MaxOutputRate;
@@ -593,13 +540,12 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
         public const int DEFAULT_leftMotorStrRescalingUpperRange = 255;
         public const int DEFAULT_leftMotorStrRescalingLowerRange = 64;
 
-        // -------------------------------------------- DEFAULT LEFT MOTOR RESCALING GROUP SETTINGS END
+        // -------------------------------------------- DEFAULT SETTINGS END
 
-        private bool isLeftMotorStrRescalingEnabled;
         private int leftMotorStrRescalingUpperRange;
         private int leftMotorStrRescalingLowerRange;
 
-        public bool IsLeftMotorStrRescalingEnabled { get => isLeftMotorStrRescalingEnabled; set => isLeftMotorStrRescalingEnabled = value; }
+        public bool IsLeftMotorStrRescalingEnabled { get; set; }
         public int LeftMotorStrRescalingUpperRange
         {
             get => leftMotorStrRescalingUpperRange;
@@ -622,7 +568,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
 
         public void ResetToDefault()
         {
-            isLeftMotorStrRescalingEnabled = DEFAULT_isLeftMotorStrRescalingEnabled;
+            IsLeftMotorStrRescalingEnabled = DEFAULT_isLeftMotorStrRescalingEnabled;
             leftMotorStrRescalingUpperRange = DEFAULT_leftMotorStrRescalingUpperRange;
             leftMotorStrRescalingLowerRange = DEFAULT_leftMotorStrRescalingLowerRange;
         }
@@ -635,14 +581,14 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
 
         public static void CopySettings(BackingData_LeftRumbleRescale destiny, BackingData_LeftRumbleRescale source)
         {
-            destiny.isLeftMotorStrRescalingEnabled = source.IsLeftMotorStrRescalingEnabled;
+            destiny.IsLeftMotorStrRescalingEnabled = source.IsLeftMotorStrRescalingEnabled;
             destiny.leftMotorStrRescalingLowerRange = source.LeftMotorStrRescalingLowerRange;
             destiny.leftMotorStrRescalingUpperRange = source.LeftMotorStrRescalingUpperRange;
         }
 
-        public override void SaveToDSHMSettings(DSHM_Format_Settings dshmContextSettings)
+        public override void SaveToDSHMSettings(DshmCustomSettings dshmContextSettings)
         {
-            DSHM_Format_Settings.BMStrRescaleSettings dshmLeftRumbleRescaleSettings = dshmContextSettings.ContextSettings.RumbleSettings.BMStrRescale;
+            DshmCustomSettings.BMStrRescaleSettings dshmLeftRumbleRescaleSettings = dshmContextSettings.ContextSettings.RumbleSettings.BMStrRescale;
 
             dshmLeftRumbleRescaleSettings.Enabled = this.IsLeftMotorStrRescalingEnabled;
             dshmLeftRumbleRescaleSettings.MinValue = (byte)this.LeftMotorStrRescalingLowerRange;
@@ -663,13 +609,13 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
 
         // -------------------------------------------- DEFAULT SETTINGS END
 
+        public int ForcedRightMotorHeavyThreshold { get; set; }
+        public int ForcedRightMotorLightThreshold { get; set; }
+        public bool IsForcedRightMotorHeavyThreasholdEnabled { get; set; }
+        public bool IsForcedRightMotorLightThresholdEnabled { get; set; }
 
         private int rightRumbleConversionUpperRange;
         private int rightRumbleConversionLowerRange;
-        private bool isForcedRightMotorLightThresholdEnabled;
-        private bool isForcedRightMotorHeavyThreasholdEnabled;
-        private int forcedRightMotorLightThreshold;
-        private int forcedRightMotorHeavyThreshold;
 
         public int RightRumbleConversionUpperRange
         {
@@ -689,19 +635,16 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
                 rightRumbleConversionLowerRange = tempInt;
             }
         }
-        public int ForcedRightMotorHeavyThreshold { get => forcedRightMotorHeavyThreshold; set => forcedRightMotorHeavyThreshold = value; }
-        public int ForcedRightMotorLightThreshold { get => forcedRightMotorLightThreshold; set => forcedRightMotorLightThreshold = value; }
-        public bool IsForcedRightMotorHeavyThreasholdEnabled { get => isForcedRightMotorHeavyThreasholdEnabled; set => isForcedRightMotorHeavyThreasholdEnabled = value; }
-        public bool IsForcedRightMotorLightThresholdEnabled { get => isForcedRightMotorLightThresholdEnabled; set => isForcedRightMotorLightThresholdEnabled = value; }
+
 
         public void ResetToDefault()
         {
             rightRumbleConversionUpperRange = DEFAULT_rightRumbleConversionUpperRange;
             rightRumbleConversionLowerRange = DEFAULT_rightRumbleConversionLowerRange;
-            isForcedRightMotorLightThresholdEnabled = DEFAULT_isForcedRightMotorLightThresholdEnabled;
-            isForcedRightMotorHeavyThreasholdEnabled = DEFAULT_isForcedRightMotorHeavyThreasholdEnabled;
-            forcedRightMotorLightThreshold = DEFAULT_forcedRightMotorLightThreshold;
-            forcedRightMotorHeavyThreshold = DEFAULT_forcedRightMotorHeavyThreshold;
+            IsForcedRightMotorLightThresholdEnabled = DEFAULT_isForcedRightMotorLightThresholdEnabled;
+            IsForcedRightMotorHeavyThreasholdEnabled = DEFAULT_isForcedRightMotorHeavyThreasholdEnabled;
+            ForcedRightMotorLightThreshold = DEFAULT_forcedRightMotorLightThreshold;
+            ForcedRightMotorHeavyThreshold = DEFAULT_forcedRightMotorHeavyThreshold;
         }
 
         public static void CopySettings(BackingData_VariablaRightRumbleEmulAdjusts destiny, BackingData_VariablaRightRumbleEmulAdjusts source)
@@ -723,10 +666,10 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             rightRumbleConversionUpperRange = 255;
         }
 
-        public override void SaveToDSHMSettings(DSHM_Format_Settings dshmContextSettings)
+        public override void SaveToDSHMSettings(DshmCustomSettings dshmContextSettings)
         {
-            DSHM_Format_Settings.SMToBMConversionSettings dshmSMConversionSettings = dshmContextSettings.ContextSettings.RumbleSettings.SMToBMConversion;
-            DSHM_Format_Settings.ForcedSMSettings dshmForcedSMSettings = dshmContextSettings.ContextSettings.RumbleSettings.ForcedSM;
+            DshmCustomSettings.SMToBMConversionSettings dshmSMConversionSettings = dshmContextSettings.ContextSettings.RumbleSettings.SMToBMConversion;
+            DshmCustomSettings.ForcedSMSettings dshmForcedSMSettings = dshmContextSettings.ContextSettings.RumbleSettings.ForcedSM;
 
             // Right rumble conversion rescaling adjustment
             dshmSMConversionSettings.RescaleMinValue = (byte)this.RightRumbleConversionLowerRange;

@@ -6,11 +6,13 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Nefarius.DsHidMini.ControlApp.MVVM;
-using static Nefarius.DsHidMini.ControlApp.DSHM_Settings.DSHM_Format_Settings;
+using static Nefarius.DsHidMini.ControlApp.DSHM_Settings.DshmCustomSettings;
+using Newtonsoft.Json.Linq;
+using System.Windows.Navigation;
 
 namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
 {
-    public class DSHM_Format_Settings
+    public class DshmCustomSettings
     {
         public DSHM_HidDeviceModes? HIDDeviceMode { get; set; }// = DSHM_HidDeviceModes.DS4Windows;
         public bool? DisableAutoPairing { get; set; } = false; // false
@@ -26,14 +28,14 @@ namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
         public DSHM_QuickDisconnectCombo? QuickDisconnectCombo { get; set; }// = DSHM_QuickDisconnectCombo.PS_R1_L1
 
         [JsonIgnore]
-        public DSHM_Format_ContextSpecificSettings ContextSettings { get; set; } = new();
-        public DSHM_Format_ContextSpecificSettings SDF { get; set; }
-        public DSHM_Format_ContextSpecificSettings GPJ { get; set; }
-        public DSHM_Format_ContextSpecificSettings SXS { get; set; }
-        public DSHM_Format_ContextSpecificSettings DS4Windows { get; set; }
-        public DSHM_Format_ContextSpecificSettings XInput { get; set; }
+        public Dshm_ModeSpecificSettings ContextSettings { get; set; } = new();
+        public Dshm_ModeSpecificSettings? SDF => HIDDeviceMode == DSHM_HidDeviceModes.SDF ? ContextSettings : null;
+        public Dshm_ModeSpecificSettings? GPJ => HIDDeviceMode == DSHM_HidDeviceModes.GPJ ? ContextSettings : null;
+        public Dshm_ModeSpecificSettings? SXS => HIDDeviceMode == DSHM_HidDeviceModes.SXS ? ContextSettings : null;
+        public Dshm_ModeSpecificSettings? DS4Windows => HIDDeviceMode == DSHM_HidDeviceModes.DS4Windows ? ContextSettings : null;
+        public Dshm_ModeSpecificSettings? XInput => HIDDeviceMode == DSHM_HidDeviceModes.XInput ? ContextSettings : null;
 
-        public DSHM_Format_Settings()
+            public DshmCustomSettings()
         {
 
         }
@@ -116,8 +118,10 @@ namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
         }
     }
 
-    public class DSHM_Format_ContextSpecificSettings
+    public class Dshm_ModeSpecificSettings
     {
+        [JsonIgnore]
+        public DSHM_HidDeviceModes? HIDDeviceMode { get; set; }
         public DSHM_PressureModes? PressureExposureMode { get; set; }// = DSHM_PressureModes.Default;
         public DSHM_DPadExposureModes? DPadExposureMode { get; set; }// = DSHM_DPadExposureModes.Default;
         public DeadZoneSettings DeadZoneLeft { get; set; } = new();
@@ -130,28 +134,28 @@ namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
     /// <summary>
     /// WIP: Json-serializalying an object from this class and saving it to disk results in a file with the appropriate contents to be loaded by the DsHidMini v3 driver
     /// </summary>
-    public class DshmMainDataContainer
+    public class DshmSettings
     {
-        public DSHM_Format_Settings Global { get; set; } = new();
-        public List<DSHMDeviceCustomSettings> Devices { get; set; } = new();
+        public DshmCustomSettings Global { get; set; } = new();
+        public List<DshmDeviceSettings> Devices { get; set; } = new();
     }
 
-    public class DSHMDeviceCustomSettings
+    public class DshmDeviceSettings
     {
         public string DeviceAddress { get; set; }
-        public DSHM_Format_Settings CustomSettings { get; set; } = new();
+        public DshmCustomSettings CustomSettings { get; set; } = new();
 
     }
 
-    public class DshmCustomJsonConverter : JsonConverter<DshmMainDataContainer>
+    public class DshmCustomJsonConverter : JsonConverter<DshmSettings>
     {
-        public override DshmMainDataContainer Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override DshmSettings Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             throw new NotImplementedException();
         }
 
         public override void Write(
-        Utf8JsonWriter writer, DshmMainDataContainer instance, JsonSerializerOptions options)
+        Utf8JsonWriter writer, DshmSettings instance, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
                 writer.WritePropertyName(nameof(instance.Global));
@@ -162,20 +166,44 @@ namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
 
                 writer.WritePropertyName(nameof(instance.Devices));
                 writer.WriteStartObject();
-                    foreach (DSHMDeviceCustomSettings device in instance.Devices)
+                    foreach (DshmDeviceSettings device in instance.Devices)
                     {
                         if (string.IsNullOrEmpty(device.DeviceAddress?.Trim()))
                             throw new JsonException("Expected non-null, non-empty Name");
                         writer.WritePropertyName(device.DeviceAddress);
 
                         var serializedCustomSettings = JsonSerializer.Serialize(device.CustomSettings, options);
-                        writer.WriteRawValue(serializedCustomSettings);
+                writer.WriteRawValue(serializedCustomSettings);
     }
                 writer.WriteEndObject();
 
             writer.WriteEndObject();
 
 }
+    }
+
+    public class DshmCustomContextNameJsonConverter : JsonConverter<Dshm_ModeSpecificSettings>
+    {
+        public override Dshm_ModeSpecificSettings Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Write(
+        Utf8JsonWriter writer, Dshm_ModeSpecificSettings instance, JsonSerializerOptions options)
+        {
+            if(!string.IsNullOrEmpty(instance.HIDDeviceMode.ToString()?.Trim()))
+            {
+                writer.WriteStartObject();
+                writer.WritePropertyName(instance.HIDDeviceMode.ToString());
+
+                JsonSerializerOptions options2 = new();
+                var serializedCustomSettings = JsonSerializer.Serialize(instance, options2);
+                writer.WriteRawValue(serializedCustomSettings);
+                writer.WriteEndObject();
+            }
+
+        }
     }
 }
 
