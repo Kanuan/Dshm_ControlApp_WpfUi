@@ -40,34 +40,21 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public GroupRumbleLeftRescaleVM(BackingDataContainer backingDataContainer) : base(backingDataContainer) { }
-
-        public override void ResetGroupToOriginalDefaults()
+        public GroupRumbleLeftRescaleVM(BackingDataContainer backingDataContainer) : base(backingDataContainer)
         {
-            _tempBackingData.ResetToDefault();
-            this.OnPropertyChanged(string.Empty);
+            _myInterface = _tempBackingData;
         }
 
         public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
         {
-            SaveSettingsToBackingData(dataContainerSource.leftRumbleRescaleData);
+            BackingData_LeftRumbleRescale.CopySettings(dataContainerSource.leftRumbleRescaleData, _tempBackingData);
         }
 
-        public void SaveSettingsToBackingData(BackingData_LeftRumbleRescale dataSource)
-        {
-            BackingData_LeftRumbleRescale.CopySettings(dataSource, _tempBackingData);
-        }
-
-        public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
-        {
-            LoadSettingsFromBackingData(dataContainerSource.leftRumbleRescaleData);
-        }
-
-        public void LoadSettingsFromBackingData(BackingData_LeftRumbleRescale dataTarget)
-        {
-            BackingData_LeftRumbleRescale.CopySettings(_tempBackingData, dataTarget);
-            this.OnPropertyChanged(string.Empty);
-        }
+        //public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
+        //{
+        //    BackingData_LeftRumbleRescale.CopySettings(_tempBackingData, dataContainerSource.leftRumbleRescaleData);
+        //    NotifyAllPropertiesHaveChanged();
+        //}
     }
 
 

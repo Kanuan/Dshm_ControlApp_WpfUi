@@ -19,9 +19,9 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             get => _tempBackingData.RightRumbleConversionUpperRange;
             set
             {
-                _tempBackingData.RightRumbleConversionUpperRange = value;
+                int tempInt = (value < _tempBackingData.RightRumbleConversionLowerRange) ? _tempBackingData.RightRumbleConversionLowerRange + 1 : value;
+                _tempBackingData.RightRumbleConversionUpperRange = tempInt;
                 this.OnPropertyChanged(nameof(RightRumbleConversionUpperRange));
-
             }
         }
         public int RightRumbleConversionLowerRange
@@ -29,7 +29,8 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             get => _tempBackingData.RightRumbleConversionLowerRange;
             set
             {
-                _tempBackingData.RightRumbleConversionLowerRange = value;
+                int tempInt = (value > _tempBackingData.RightRumbleConversionUpperRange) ? (byte)(_tempBackingData.RightRumbleConversionUpperRange - 1) : value;
+                _tempBackingData.RightRumbleConversionLowerRange = tempInt;
                 this.OnPropertyChanged(nameof(RightRumbleConversionLowerRange));
             }
         }
@@ -70,32 +71,21 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public GroupRumbleRightConversionAdjustsVM(BackingDataContainer backingDataContainer) : base(backingDataContainer) { }
-        public override void ResetGroupToOriginalDefaults()
+        public GroupRumbleRightConversionAdjustsVM(BackingDataContainer backingDataContainer) : base(backingDataContainer)
         {
-            _tempBackingData.ResetToDefault();
-            this.OnPropertyChanged(string.Empty);
+            _myInterface = _tempBackingData;
         }
 
         public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
         {
-            SaveSettingsToBackingData(dataContainerSource.rightVariableEmulData);
-        }
-        public void SaveSettingsToBackingData(BackingData_VariablaRightRumbleEmulAdjusts dataSource)
-        {
-            BackingData_VariablaRightRumbleEmulAdjusts.CopySettings(dataSource, _tempBackingData);
+            BackingData_VariablaRightRumbleEmulAdjusts.CopySettings(dataContainerSource.rightVariableEmulData, _tempBackingData);
         }
 
-        public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
-        {
-            LoadSettingsFromBackingData(dataContainerSource.rightVariableEmulData);
-        }
-
-        public void LoadSettingsFromBackingData(BackingData_VariablaRightRumbleEmulAdjusts dataTarget)
-        {
-            BackingData_VariablaRightRumbleEmulAdjusts.CopySettings(_tempBackingData, dataTarget);
-            this.OnPropertyChanged(string.Empty);
-        }
+        //public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
+        //{
+        //    BackingData_VariablaRightRumbleEmulAdjusts.CopySettings(_tempBackingData, dataContainerSource.rightVariableEmulData);
+        //    NotifyAllPropertiesHaveChanged();
+        //}
     }
 
 

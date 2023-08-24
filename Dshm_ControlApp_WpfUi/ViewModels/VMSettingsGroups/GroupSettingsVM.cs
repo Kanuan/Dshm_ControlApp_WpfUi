@@ -77,6 +77,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             {
                 group.SaveSettingsToBackingDataContainer(dataContainer);
             }
+
         }
 
         public void LoadDatasToAllGroups(BackingDataContainer dataContainer)
@@ -108,8 +109,9 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             { SettingsModeGroups.Unique_SXS, "SXS mode specific settings" },
             { SettingsModeGroups.Unique_DS4W, "DS4W mode specific settings" },
             { SettingsModeGroups.Unique_XInput, "GPJ mode specific settings" },
-
         };
+
+        protected IBackingData _myInterface;
 
         [ObservableProperty] public bool _isGroupLocked = false;
 
@@ -117,57 +119,29 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         public string Header { get; }
 
-        public abstract void ResetGroupToOriginalDefaults();
+        [RelayCommand]
+        public void ResetGroupToOriginalDefaults()
+        {
+            _myInterface.ResetToDefault();
+            NotifyAllPropertiesHaveChanged();
+        }
 
-        public abstract void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource);
+        public virtual void NotifyAllPropertiesHaveChanged()
+        {
+            this.OnPropertyChanged(string.Empty);
+        }
+
+        public void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
+        {
+            _myInterface.CopySettingsFromContainer(dataContainerSource);
+        }
+
         public abstract void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource);
 
         public GroupSettingsVM(BackingDataContainer backingDataContainer)
         {
             if (DictGroupHeader.TryGetValue(Group, out string groupHeader)) Header = groupHeader;
             LoadSettingsFromBackingDataContainer(backingDataContainer);
-            ResetGroupToDefaultsCommand = ReactiveCommand.Create(ResetGroupToOriginalDefaults);
         }
-
-        public ReactiveCommand<Unit, Unit> ResetGroupToDefaultsCommand { get; }
-
-    }
-
-    public class TemplateSelector
-    {
-        //public Control Build(object param)
-        //{
-        //    string templateName = SettingsGroupToTemplateDict[(SettingsModeGroups)param];
-
-        //    Avalonia.Application.Current.Resources.TryGetResource(templateName, null,out var tempResource);
-        //    var resultingCtrl = ((IDataTemplate)tempResource).Build(0);
-
-        //    return resultingCtrl;
-        //}
-
-        public bool Match(object data)
-        {
-            // Check if we can accept the provided data
-            return data is SettingsModeGroups;
-        }
-
-        private static Dictionary<SettingsModeGroups, string> SettingsGroupToTemplateDict = new()
-        {
-            { SettingsModeGroups.LEDsControl, "Template_LEDsSettings" },
-            { SettingsModeGroups.WirelessSettings, "Template_WirelessSettings" },
-            { SettingsModeGroups.SticksDeadzone, "Template_SticksDeadZone" },
-            { SettingsModeGroups.RumbleGeneral, "Template_RumbleBasicFunctions" },
-            { SettingsModeGroups.OutputReportControl, "Template_OutputRateControl" },
-            { SettingsModeGroups.RumbleLeftStrRescale, "Template_RumbleHeavyStrRescale" },
-            { SettingsModeGroups.RumbleRightConversion, "Template_RumbleVariableLightEmuTuning" },
-            { SettingsModeGroups.Unique_All, "Template_Unique_All" },
-            { SettingsModeGroups.Unique_Global, "Template_ToDo" },
-            { SettingsModeGroups.Unique_General, "Template_ToDo" },
-            { SettingsModeGroups.Unique_SDF, "Template_SDF_GPJ_PressureButtons" },
-            { SettingsModeGroups.Unique_GPJ, "Template_SDF_GPJ_PressureButtons" },
-            { SettingsModeGroups.Unique_SXS, "Template_ToDo" },
-            { SettingsModeGroups.Unique_DS4W, "Template_ToDo" },
-            { SettingsModeGroups.Unique_XInput, "Template_ToDo" },
-        };
     }
 }

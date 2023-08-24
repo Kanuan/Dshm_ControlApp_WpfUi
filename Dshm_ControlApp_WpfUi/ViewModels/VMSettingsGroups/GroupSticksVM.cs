@@ -12,8 +12,6 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         private BackingData_Sticks _tempBackingData = new();
 
         public override SettingsModeGroups Group { get; } = SettingsModeGroups.SticksDeadzone;
-
-        public ObservableAsPropertyHelper<bool> isGroupLockedToPreventDS4WConflicts;
         
         public bool ApplyLeftStickDeadZone
         {
@@ -98,34 +96,18 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         public GroupSticksVM(BackingDataContainer backingDataContainer) : base(backingDataContainer)
         {
-
-
-        }
-
-        public override void ResetGroupToOriginalDefaults()
-        {
-            _tempBackingData.ResetToDefault();
-            this.OnPropertyChanged(string.Empty);
+            _myInterface = _tempBackingData;
         }
 
         public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
         {
-            SaveSettingsToBackingData(dataContainerSource.sticksData);
-        }
-        public void SaveSettingsToBackingData(BackingData_Sticks dataSource)
-        {
-            BackingData_Sticks.CopySettings(dataSource, _tempBackingData);
+            BackingData_Sticks.CopySettings(dataContainerSource.sticksData, _tempBackingData);
         }
 
-        public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
-        {
-            LoadSettingsFromBackingData(dataContainerSource.sticksData);
-        }
-
-        public void LoadSettingsFromBackingData(BackingData_Sticks dataTarget)
-        {
-            BackingData_Sticks.CopySettings(_tempBackingData, dataTarget);
-            this.OnPropertyChanged(string.Empty);
-        }
+        //public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
+        //{
+        //    BackingData_Sticks.CopySettings(_tempBackingData, dataContainerSource.sticksData);
+        //    NotifyAllPropertiesHaveChanged();
+        //}
     }
 }

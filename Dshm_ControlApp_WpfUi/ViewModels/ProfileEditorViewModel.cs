@@ -88,6 +88,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         [RelayCommand]
         private void EnableEditingOfSelectedProfile()
         {
+            if (SelectedProfileVM == null) return;
             if (SelectedProfileVM._profileData == ProfileData.DefaultProfile)
             {
                 ShowSnackbarMessage("ControlApp's default profile can't be modified.", "", ControlAppearance.Info, new SymbolIcon(SymbolRegular.Info24), 2);

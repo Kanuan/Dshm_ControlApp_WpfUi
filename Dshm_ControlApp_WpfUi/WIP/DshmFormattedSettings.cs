@@ -64,6 +64,7 @@ namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
             public byte? RescaleMinValue { get; set; }// = 1;
             public byte? RescaleMaxValue { get; set; }// = 160;
             public bool? IsSMToBMConversionToggleComboEnabled { get; set; }// = false;
+            public DSHM_QuickDisconnectCombo? ToggleSMtoBMConversionCombo { get; set; }// = DSHM_QuickDisconnectCombo.PS_R1_L1
 
         }
 

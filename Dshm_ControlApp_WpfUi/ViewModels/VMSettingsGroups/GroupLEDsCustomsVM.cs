@@ -12,13 +12,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
     public partial class GroupLEDsCustomsVM : GroupSettingsVM
     {
-        private BackingDataContainer _backingDataContainer = new();
-
-        private BackingData_LEDs _tempBackingData
-        {
-            get => _backingDataContainer.ledsData;
-            set => _backingDataContainer.ledsData = value;
-        }
+        private BackingData_LEDs _tempBackingData = new();
 
         public override SettingsModeGroups Group { get; } = SettingsModeGroups.LEDsControl;
         public int LEDMode
@@ -49,44 +43,29 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             Leds_VM[2].singleLEDCustoms = _tempBackingData.LEDsCustoms.LED_x_Customs[2];
             Leds_VM[3].singleLEDCustoms = _tempBackingData.LEDsCustoms.LED_x_Customs[3];
             SelectedLED_VM = Leds_VM[0];
+            base._myInterface = _tempBackingData;
         }
 
-        public override void ResetGroupToOriginalDefaults()
+        public override void NotifyAllPropertiesHaveChanged()
         {
-            _tempBackingData.ResetToDefault();
-
-            this.OnPropertyChanged(string.Empty);
-            foreach(LED_VM ledVM in Leds_VM)
-            {
-                ledVM.RaisePropertyChangedForAll();
-            } 
-        }
-
-        public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
-        {
-            SaveSettingsToBackingData(dataContainerSource.ledsData);
-        }
-
-        public void SaveSettingsToBackingData(BackingData_LEDs dataSource)
-        {
-            BackingData_LEDs.CopySettings(dataSource, _tempBackingData);
-        }
-
-        public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
-        {
-            LoadSettingsFromBackingData(dataContainerSource.ledsData);
-        }
-
-        public void LoadSettingsFromBackingData(BackingData_LEDs dataTarget)
-        {
-            BackingData_LEDs.CopySettings(_tempBackingData, dataTarget);
-
-            this.OnPropertyChanged(string.Empty);
+            base.NotifyAllPropertiesHaveChanged();
             foreach (LED_VM ledVM in Leds_VM)
             {
                 ledVM.RaisePropertyChangedForAll();
             }
         }
+
+        public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
+        {
+            BackingData_LEDs.CopySettings(dataContainerSource.ledsData, _tempBackingData);
+        }
+
+        //public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
+        //{
+        //    BackingData_LEDs.CopySettings(_tempBackingData, dataContainerSource.ledsData);
+        //    NotifyAllPropertiesHaveChanged();
+        //}
+
 
         public partial class LED_VM : ObservableObject
         {
@@ -120,24 +99,23 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
                     this.OnPropertyChanged(nameof(Duration));
                 }
             }
-            public byte IntervalDuration
+            public int IntervalDuration
             {
                 get => singleLEDCustoms.IntervalDuration;
                 set
                 {
                     singleLEDCustoms.IntervalDuration = value;
+                    
                     this.OnPropertyChanged(nameof(IntervalDuration));
                 }
             }
-            public string IntervalPortionON
+            public int IntervalPortionON
             {
-                get => singleLEDCustoms.IntervalPortionON.ToString();
+                get => singleLEDCustoms.IntervalPortionON;
                 set
                 {
-                    byte.TryParse(value, out byte valueInNumber);
-                    singleLEDCustoms.IntervalPortionON = valueInNumber;
+                    singleLEDCustoms.IntervalPortionON = (byte)value;
                     this.OnPropertyChanged(nameof(IntervalPortionON));
-                    this.OnPropertyChanged(nameof(IntervalPortionOFF));
                 }
             }
             public byte IntervalPortionOFF
@@ -145,7 +123,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
                 get => singleLEDCustoms.IntervalPortionOFF;
                 set
                 {
-                    //singleLEDCustoms.IntervalPortionOFF = value;
+                    singleLEDCustoms.IntervalPortionOFF = value;
                     this.OnPropertyChanged(nameof(IntervalPortionOFF));
                 }
             }

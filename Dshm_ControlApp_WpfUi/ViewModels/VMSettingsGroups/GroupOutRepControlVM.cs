@@ -40,34 +40,21 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public GroupOutRepControlVM(BackingDataContainer backingDataContainer) : base(backingDataContainer) { }
-
-        public override void ResetGroupToOriginalDefaults()
+        public GroupOutRepControlVM(BackingDataContainer backingDataContainer) : base(backingDataContainer)
         {
-            _tempBackingData.ResetToDefault();
-            this.OnPropertyChanged(string.Empty);
+            base._myInterface = _tempBackingData;
         }
 
         public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
         {
-            SaveSettingsToBackingData(dataContainerSource.outRepData);
+            BackingData_OutRepControl.CopySettings(dataContainerSource.outRepData, _tempBackingData);
         }
 
-        public void SaveSettingsToBackingData(BackingData_OutRepControl dataSource)
-        {
-            BackingData_OutRepControl.CopySettings(dataSource, _tempBackingData);
-        }
-
-        public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
-        {
-            LoadSettingsFromBackingData(dataContainerSource.outRepData);
-        }
-
-        public void LoadSettingsFromBackingData(BackingData_OutRepControl dataTarget)
-        {
-            BackingData_OutRepControl.CopySettings(_tempBackingData, dataTarget);
-            this.OnPropertyChanged(string.Empty);
-        }
+        //public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
+        //{
+        //    BackingData_OutRepControl.CopySettings(_tempBackingData, dataContainerSource.outRepData);
+        //    NotifyAllPropertiesHaveChanged();
+        //}
     }
 
 

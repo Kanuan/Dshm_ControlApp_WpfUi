@@ -2,12 +2,18 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:devmvvm="clr-namespace:Nefarius.DsHidMini.ControlApp.MVVM"
+    xmlns:helpers="clr-namespace:Nefarius.DsHidMini.ControlApp.Helpers.WPF"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:wpf="clr-namespace:Nefarius.DsHidMini.ControlApp.Util.WPF">
     <!--  Add Resources Here  -->
     <!--  LED Group  DataContext="{Binding $parent[DockPanel].DataContext}" Settings  -->
     <wpf:VisibilityPerHidModeConverter x:Key="VisibilityPerHIDModeConverterKey" />
+    <helpers:BooleanToVisibilityConverter
+        x:Key="BoolToVisConverter_TCollapsed_FVisible"
+        False="Visible"
+        True="Collapsed" />
+    <BooleanToVisibilityConverter x:Key="BoolToVis" />
     <DataTemplate x:Key="Template_LEDsSettings" DataType="{x:Type devmvvm:GroupLEDsCustomsVM}">
         <ContentControl>
             <Grid>
@@ -144,8 +150,8 @@
                                         ClipToBounds="True"
                                         Maximum="254"
                                         Minimum="0"
-                                        ToolTip="{Binding Value, RelativeSource={RelativeSource Self}}"
-                                        Value="{Binding IntervalPortionON}" />
+                                        Text="{Binding IntervalPortionON}"
+                                        ToolTip="{Binding Value, RelativeSource={RelativeSource Self}}" />
                                     <TextBlock
                                         Grid.Row="2"
                                         Grid.Column="2"
@@ -355,10 +361,13 @@
     </DataTemplate>
 
     <!--  Rumble template  -->
-    <DataTemplate x:Key="Template_RumbleBasicFunctions">
+    <DataTemplate x:Key="Template_RumbleBasicFunctions" DataType="devmvvm:GroupRumbleGeneralVM">
         <DockPanel>
-            <ui:ToggleSwitch Content="Switch to alternative mode" DockPanel.Dock="Top" />
-            <DockPanel>
+            <ui:ToggleSwitch
+                Content="Enable alternative mode"
+                DockPanel.Dock="Top"
+                IsChecked="{Binding IsAltModeEnabled}" />
+            <DockPanel Visibility="{Binding IsAltModeEnabled, Converter={StaticResource BoolToVisConverter_TCollapsed_FVisible}}">
                 <!--  Rumble motors disablers  -->
                 <ui:ToggleSwitch
                     Content="Disable left motor (heavy)"
@@ -369,9 +378,9 @@
                     DockPanel.Dock="Top"
                     IsChecked="{Binding IsRightMotorDisabled}" />
             </DockPanel>
-            <DockPanel>
+            <DockPanel Visibility="{Binding IsAltModeEnabled, Converter={StaticResource BoolToVis}}">
                 <!--  Variable light rumble emulation enabler  -->
-                <ui:ToggleSwitch DockPanel.Dock="Top" IsChecked="{Binding IsVariableLightRumbleEmulationEnabled}">
+                <ui:ToggleSwitch DockPanel.Dock="Top" IsChecked="{Binding sss}">
                     <TextBlock Text="Start with variable right rumble emulation enabled" TextWrapping="Wrap" />
                 </ui:ToggleSwitch>
                 <ui:ToggleSwitch

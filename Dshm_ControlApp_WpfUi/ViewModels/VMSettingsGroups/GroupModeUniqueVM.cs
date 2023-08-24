@@ -116,33 +116,18 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         public GroupModeUniqueVM(BackingDataContainer backingDataContainer) : base(backingDataContainer)
         {
+            base._myInterface = _tempBackingData;
         }
 
-        public override void ResetGroupToOriginalDefaults()
-        {
-            _tempBackingData.ResetToDefault();
-            this.OnPropertyChanged(string.Empty);
-        }
-
-        public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
-        {
-            LoadSettingsFromBackingData(dataContainerSource.modesUniqueData);
-        }
-
-        public void LoadSettingsFromBackingData(BackingData_ModesUnique dataTarget)
-        {
-            BackingData_ModesUnique.CopySettings(_tempBackingData, dataTarget);
-            this.OnPropertyChanged(string.Empty);
-        }
+        //public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
+        //{
+        //    BackingData_ModesUnique.CopySettings(_tempBackingData, dataContainerSource.modesUniqueData);
+        //    NotifyAllPropertiesHaveChanged();
+        //}
 
         public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
         {
-            SaveSettingsToBackingData(dataContainerSource.modesUniqueData);
-        }
-
-        public void SaveSettingsToBackingData(BackingData_ModesUnique dataSource)
-        {
-            BackingData_ModesUnique.CopySettings(dataSource, _tempBackingData);
+            BackingData_ModesUnique.CopySettings(dataContainerSource.modesUniqueData, _tempBackingData);
         }
     }
 }

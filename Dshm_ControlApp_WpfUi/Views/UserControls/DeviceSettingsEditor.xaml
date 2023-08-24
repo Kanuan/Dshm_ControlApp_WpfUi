@@ -1,110 +1,129 @@
-﻿<UserControl x:Class="Nefarius.DsHidMini.ControlApp.Views.UserControls.DeviceSettingsEditor"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Nefarius.DsHidMini.ControlApp.MVVM"
-             xmlns:helpers="clr-namespace:Nefarius.DsHidMini.ControlApp.Helpers.WPF"
-             xmlns:super="clr-namespace:Nefarius.DsHidMini.ControlApp.Util.WPF"
-             mc:Ignorable="d" 
-             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-             d:DesignHeight="450" d:DesignWidth="400"
-             d:DataContext="{d:DesignInstance local:VMGroupsContainer,
-                                IsDesignTimeCreatable=False}"
-             >
+﻿<UserControl
+    x:Class="Nefarius.DsHidMini.ControlApp.Views.UserControls.DeviceSettingsEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:Nefarius.DsHidMini.ControlApp.Helpers.WPF"
+    xmlns:local="clr-namespace:Nefarius.DsHidMini.ControlApp.MVVM"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:super="clr-namespace:Nefarius.DsHidMini.ControlApp.Util.WPF"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    d:DataContext="{d:DesignInstance local:VMGroupsContainer,
+                                     IsDesignTimeCreatable=False}"
+    d:DesignHeight="450"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
     <UserControl.Resources>
-        <helpers:SettingsGroupsDataTemplateSelector x:Key="GroupSettingsTemplateSelector"/>
-        <super:BooleanToReverseConverter x:Key="BooleanToReverseConverterKey"/>
+        <helpers:SettingsGroupsDataTemplateSelector x:Key="GroupSettingsTemplateSelector" />
+        <super:BooleanToReverseConverter x:Key="BooleanToReverseConverterKey" />
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
-        <helpers:BooleanToVisibilityConverter 
-                x:Key="InvertedBooleanToVisibilityConverter" 
-                True="Collapsed" 
-                False="Visible" />
-        <helpers:BooleanToVisibilityConverter 
-                x:Key="NormalBooleanToVisibilityConverter" 
-                True="Visible" 
-                False="Collapsed" />
+        <helpers:BooleanToVisibilityConverter
+            x:Key="InvertedBooleanToVisibilityConverter"
+            False="Visible"
+            True="Collapsed" />
+        <helpers:BooleanToVisibilityConverter
+            x:Key="NormalBooleanToVisibilityConverter"
+            False="Collapsed"
+            True="Visible" />
 
         <DataTemplate x:Key="ModeSetting" DataType="{x:Type local:GroupSettingsVM}">
-            <ui:Card DockPanel.Dock="Top" Margin="10,0,10,5">
+            <ui:Card Margin="10,0,10,5" DockPanel.Dock="Top">
                 <DockPanel>
-                    <!-- Outer settings container with override button -->
-                    <Grid DockPanel.Dock="Top" Margin="0,0,0,20">
+                    <!--  Outer settings container with override button  -->
+                    <Grid Margin="0,0,0,20" DockPanel.Dock="Top">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="6*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="6*" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <ui:TextBlock
-				            Text="{Binding Header}"  FontTypography="Subtitle"
-				            Grid.Column="1"
-				            VerticalAlignment="Center"
-				            HorizontalAlignment="Center"/>
-                                    <ui:DropDownButton 
-				            Grid.Column="2"
-				            Content="..."
-				            Visibility="{Binding IsGroupLocked, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"
-				            HorizontalAlignment="Right">
-                            <ui:DropDownButton.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="Add" />
-                                    <MenuItem Header="Remove" />
-                                    <MenuItem Header="Send" />
-                                    <MenuItem Header="Hello" />
-                                </ContextMenu>
-                            </ui:DropDownButton.ContextMenu>
+                            Grid.Column="1"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontTypography="Subtitle"
+                            Text="{Binding Header}" />
+                        <ui:DropDownButton
+                            Grid.Column="2"
+                            HorizontalAlignment="Right"
+                            Content="..."
+                            Visibility="{Binding IsGroupLocked, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                            <ui:DropDownButton.Flyout>
+                                <Menu>
+                                    <MenuItem Command="{Binding ResetGroupToOriginalDefaultsCommand}" Header="Reset to default" />
+                                </Menu>
+                            </ui:DropDownButton.Flyout>
                         </ui:DropDownButton>
                     </Grid>
-                    <!-- Internal settings group specific containter -->
+                    <!--  Internal settings group specific containter  -->
                     <ContentControl
-					DockPanel.Dock="Top"
-					HorizontalAlignment="Stretch"
-					Visibility="{Binding IsGroupLocked, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"
-					Content="{Binding }"
-        ContentTemplateSelector="{StaticResource GroupSettingsTemplateSelector}">
-                    </ContentControl>
-                    <!-- Warning when settings are locked for specific mode -->
+                        HorizontalAlignment="Stretch"
+                        Content="{Binding}"
+                        ContentTemplateSelector="{StaticResource GroupSettingsTemplateSelector}"
+                        DockPanel.Dock="Top"
+                        Visibility="{Binding IsGroupLocked, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
+                    <!--  Warning when settings are locked for specific mode  -->
                     <ui:InfoBar
-					    DockPanel.Dock="Top"
-					    IsOpen="{Binding IsGroupLocked}"
-                        Severity="Informational"
                         Title="Settings locked"
-                        Message="Settings locked by another option to prevent conflitcs"
+                        DockPanel.Dock="Top"
                         IsClosable="False"
-                        >
-                    </ui:InfoBar>
+                        IsOpen="{Binding IsGroupLocked}"
+                        Message="Settings locked by another option to prevent conflitcs"
+                        Severity="Informational" />
                 </DockPanel>
             </ui:Card>
         </DataTemplate>
         <Style x:Key="SetGroupItem" TargetType="ContentControl">
-            <Setter Property="DockPanel.Dock" Value="Top"/>
-            <Setter Property="Margin" Value="0,2,0,0"/>
-            <Setter Property="ContentTemplate" Value="{StaticResource ModeSetting}"/>
+            <Setter Property="DockPanel.Dock" Value="Top" />
+            <Setter Property="Margin" Value="0,2,0,0" />
+            <Setter Property="ContentTemplate" Value="{StaticResource ModeSetting}" />
         </Style>
     </UserControl.Resources>
     <ui:DynamicScrollViewer>
-        <DockPanel IsEnabled="{Binding AllowEditing}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" LastChildFill="True">
+        <DockPanel
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            IsEnabled="{Binding AllowEditing}"
+            LastChildFill="True">
 
-            <!-- Mode unique settings -->
-            <ContentControl Style="{StaticResource SetGroupItem}" Content="{Binding GroupModeUnique}"/>
+            <!--  Mode unique settings  -->
+            <ContentControl Content="{Binding GroupModeUnique}" Style="{StaticResource SetGroupItem}" />
 
-            <!-- Mode Settings groups -->
-            <ContentControl Style="{StaticResource SetGroupItem}"  Content="{Binding GroupWireless}"/>
-            <ContentControl Style="{StaticResource SetGroupItem}"  Content="{Binding GroupLEDsControl}"/>
-            
-            <ContentControl Style="{StaticResource SetGroupItem}"  Content="{Binding GroupSticksDZ}"/>
-            <ContentControl Style="{StaticResource SetGroupItem}"  Content="{Binding GroupRumbleGeneral}"/>
+            <!--  Mode Settings groups  -->
+            <ContentControl Content="{Binding GroupWireless}" Style="{StaticResource SetGroupItem}" />
+            <ContentControl Content="{Binding GroupLEDsControl}" Style="{StaticResource SetGroupItem}" />
 
-            
-            <!-- Advanced options -->
+            <ContentControl Content="{Binding GroupSticksDZ}" Style="{StaticResource SetGroupItem}" />
+            <ContentControl Content="{Binding GroupRumbleGeneral}" Style="{StaticResource SetGroupItem}" />
 
-            <ui:CardExpander Margin="10" DockPanel.Dock="Top" Header="Advanced settings">
+
+            <!--  Advanced options  -->
+
+            <ui:CardExpander
+                Margin="10"
+                DockPanel.Dock="Top"
+                Header="Advanced settings">
                 <ui:CardExpander.Content>
                     <DockPanel>
-                        <ui:InfoBar DockPanel.Dock="Top" Margin="10" Severity="Error" IsClosable="False" IsOpen="True" Title="Advanced/complex settings ahead!" Message=" Don't change them unless you really know what you are doing (documentation on the website)" />
-                        <ContentControl DockPanel.Dock="Top"  Style="{StaticResource SetGroupItem}"  Content="{Binding GroupOutRepControl}"/>
-                        <ContentControl DockPanel.Dock="Top" Style="{StaticResource SetGroupItem}"  Content="{Binding GroupRumbleLeftRescale}"/>
-                        <ContentControl DockPanel.Dock="Top" Style="{StaticResource SetGroupItem}"  Content="{Binding GroupRumbleRightConversion}"/>
+                        <ui:InfoBar
+                            Title="Advanced/complex settings ahead!"
+                            Margin="10"
+                            DockPanel.Dock="Top"
+                            IsClosable="False"
+                            IsOpen="True"
+                            Message=" Don't change them unless you really know what you are doing (documentation on the website)"
+                            Severity="Error" />
+                        <ContentControl
+                            Content="{Binding GroupOutRepControl}"
+                            DockPanel.Dock="Top"
+                            Style="{StaticResource SetGroupItem}" />
+                        <ContentControl
+                            Content="{Binding GroupRumbleLeftRescale}"
+                            DockPanel.Dock="Top"
+                            Style="{StaticResource SetGroupItem}" />
+                        <ContentControl
+                            Content="{Binding GroupRumbleRightConversion}"
+                            DockPanel.Dock="Top"
+                            Style="{StaticResource SetGroupItem}" />
                     </DockPanel>
                 </ui:CardExpander.Content>
             </ui:CardExpander>
