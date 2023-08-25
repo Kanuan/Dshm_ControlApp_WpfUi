@@ -158,6 +158,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
         {
             Profiles = LoadProfilesFromDisk();
             Devices = LoadDevicesFromDisk();
+            FixDevicesWithBlankProfiles();
             LoadControlAppSettingsFromDisk();
             //SaveAllProfilesToDisk(Profiles);
         }

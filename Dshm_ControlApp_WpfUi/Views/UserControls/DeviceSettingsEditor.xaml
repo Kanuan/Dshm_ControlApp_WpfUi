@@ -42,16 +42,12 @@
                             VerticalAlignment="Center"
                             FontTypography="Subtitle"
                             Text="{Binding Header}" />
-                        <ui:DropDownButton
+                        <ui:Button
                             Grid.Column="2"
                             HorizontalAlignment="Right"
-                            Visibility="{Binding IsGroupLocked, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
-                            <ui:DropDownButton.Flyout>
-                                <Menu>
-                                    <MenuItem Command="{Binding ResetGroupToOriginalDefaultsCommand}" Header="Reset to default" />
-                                </Menu>
-                            </ui:DropDownButton.Flyout>
-                        </ui:DropDownButton>
+                            Command="{Binding ResetGroupToOriginalDefaultsCommand}"
+                            Content="Reset"
+                            Visibility="{Binding IsGroupLocked, Converter={StaticResource InvertedBooleanToVisibilityConverter}}" />
                     </Grid>
                     <!--  Internal settings group specific containter  -->
                     <ContentControl

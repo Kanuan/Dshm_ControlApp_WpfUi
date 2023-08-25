@@ -119,7 +119,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         protected IBackingData _myInterface;
 
-        [ObservableProperty] public bool _isGroupLocked = false;
+        [ObservableProperty] private bool _isGroupLocked = false;
 
         public string Header { get; }
 

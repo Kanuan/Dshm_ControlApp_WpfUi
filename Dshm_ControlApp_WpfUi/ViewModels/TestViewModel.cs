@@ -227,33 +227,31 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
             AutoPairDeviceWhenCabled = deviceUserData.AutoPairWhenCabled;
 
+
+
             //DisplayName = DeviceAddress;
-
-            // Loads device' specific custom settings from its BackingDataContainer into the Settings Groups VM
-            DeviceCustomsVM = new(deviceUserData.DatasContainter);
-
-            // Checks if the Profile GUID the controller is set to use actually exists in the list of disk profiles and loads it if so
-            if (UserDataManager.GetProfile(deviceUserData.GuidOfProfileToUse) == null)
-            {
-                deviceUserData.GuidOfProfileToUse = ProfileData.DefaultGuid;
-            }
-            SelectedProfile = UserDataManager.GetProfile(deviceUserData.GuidOfProfileToUse);
-
-            CurrentDeviceSettingsMode = deviceUserData.SettingsMode;
-
-            this.WhenAnyValue(x => x.CurrentDeviceSettingsMode, x => x.SelectedProfile)
-                .Subscribe(x => UpdateEditor());
+            RefreshDeviceSettings();
         }
 
 
         // ------------------------------------------------------ METHODS
 
-        public void ChangeProfileForDevice(ProfileData profile)
-        {
-            deviceUserData.GuidOfProfileToUse = profile.ProfileGuid;
-            //ProfileCustomsVM = profile.GetProfileVMGroupsContainer();
-        }
+        [ObservableProperty] private ProfileData? _selectedProfile;
 
+        [ObservableProperty] public List<ProfileData> _listOfProfiles;
+
+        public void RefreshDeviceSettings()
+        {
+            ListOfProfiles = UserDataManager.Profiles;
+            // Loads device' specific custom settings from its BackingDataContainer into the Settings Groups VM
+            DeviceCustomsVM = new(deviceUserData.DatasContainter);
+            SelectedProfile = UserDataManager.GetProfile(deviceUserData.GuidOfProfileToUse);
+            CurrentDeviceSettingsMode = deviceUserData.SettingsMode;
+            SelectedGroupsVM = UserDataManager.GlobalProfile.GetProfileVMGroupsContainer();
+            IsProfileSelectorVisible = CurrentDeviceSettingsMode == SettingsModes.Profile;
+            UpdateEditor();
+
+        }
         public void UpdateEditor()
         {
             switch (CurrentDeviceSettingsMode)
@@ -272,12 +270,6 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             SelectedGroupsVM.AllowEditing = CurrentDeviceSettingsMode == SettingsModes.Custom;
             IsProfileSelectorVisible = CurrentDeviceSettingsMode == SettingsModes.Profile;
         }
-
-        [ObservableProperty] private ProfileData? _selectedProfile;
-
-        public List<ProfileData> ListOfProfiles => UserDataManager.Profiles;
-
-        // ---------------------------------------- Commands
 
         [RelayCommand]
         private void ApplyChanges()

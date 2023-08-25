@@ -15,7 +15,7 @@ using Wpf.Ui.Controls;
 
 namespace Dshm_ControlApp_WpfUi.Views.Windows
 {
-    public partial class MainWindow
+    public partial class MainWindow : INavigationWindow
     {
         private readonly DeviceNotificationListener _listener = new DeviceNotificationListener();
 
@@ -23,25 +23,27 @@ namespace Dshm_ControlApp_WpfUi.Views.Windows
         public MainWindowViewModel ViewModel { get; }
 
         public MainWindow(
-            MainWindowViewModel viewModel,
+            MainWindowViewModel viewModel, //
             INavigationService navigationService,
             IServiceProvider serviceProvider,
             ISnackbarService snackbarService,
             IContentDialogService contentDialogService
         )
         {
-            Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
+ 
 
             ViewModel = viewModel;
             DataContext = this;
 
+            Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
+
             InitializeComponent();
 
-            navigationService.SetNavigationControl(NavigationView);
+            navigationService.SetNavigationControl(RootNavigation);
             snackbarService.SetSnackbarPresenter(SnackbarPresenter);
             contentDialogService.SetContentPresenter(RootContentDialog);
 
-            NavigationView.SetServiceProvider(serviceProvider);
+            
 
 
         }
@@ -99,5 +101,23 @@ namespace Dshm_ControlApp_WpfUi.Views.Windows
             }));
         }
 
+        #region INavigationWindow methods
+
+        public INavigationView GetNavigation() => RootNavigation;
+
+        public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
+
+        public void SetPageService(IPageService pageService) =>
+            RootNavigation.SetPageService(pageService);
+
+        public void ShowWindow() => Show();
+
+        public void CloseWindow() => Close();
+
+        public void SetServiceProvider(IServiceProvider serviceProvider)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion INavigationWindow methods
     }
 }

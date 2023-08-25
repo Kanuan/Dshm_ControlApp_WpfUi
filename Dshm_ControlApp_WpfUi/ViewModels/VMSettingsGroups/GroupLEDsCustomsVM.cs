@@ -101,29 +101,29 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
             public int IntervalDuration
             {
-                get => singleLEDCustoms.IntervalDuration;
+                get => singleLEDCustoms.CycleDuration;
                 set
                 {
-                    singleLEDCustoms.IntervalDuration = value;
+                    singleLEDCustoms.CycleDuration = value;
                     
                     this.OnPropertyChanged(nameof(IntervalDuration));
                 }
             }
             public int IntervalPortionON
             {
-                get => singleLEDCustoms.IntervalPortionON;
+                get => singleLEDCustoms.OnPeriodCycles;
                 set
                 {
-                    singleLEDCustoms.IntervalPortionON = (byte)value;
+                    singleLEDCustoms.OnPeriodCycles = (byte)value;
                     this.OnPropertyChanged(nameof(IntervalPortionON));
                 }
             }
             public byte IntervalPortionOFF
             {
-                get => singleLEDCustoms.IntervalPortionOFF;
+                get => singleLEDCustoms.OffPeriodCycles;
                 set
                 {
-                    singleLEDCustoms.IntervalPortionOFF = value;
+                    singleLEDCustoms.OffPeriodCycles = value;
                     this.OnPropertyChanged(nameof(IntervalPortionOFF));
                 }
             }

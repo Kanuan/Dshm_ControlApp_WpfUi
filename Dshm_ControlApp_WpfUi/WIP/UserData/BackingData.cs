@@ -269,29 +269,17 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
                     dshm_Customs.LEDFlags |= (byte)(1 << (1 + i));
                 }
 
-                switch (this.LEDMode)
+                if(this.LEDMode == ControlApp_LEDsModes.CustomPattern)
                 {
-                    case ControlApp_LEDsModes.CustomPattern:
-                        dshm_singleLED[i].EnabledFlags = singleLEDCustoms.UseLEDEffects ? (byte)0x10 : (byte)0x00;
-                        dshm_singleLED[i].Duration = singleLEDCustoms.Duration;
-                        dshm_singleLED[i].IntervalDuration = (byte)singleLEDCustoms.IntervalDuration; // FIX THIS
-                        dshm_singleLED[i].IntervalPortionOn = singleLEDCustoms.IntervalPortionON;
-                        dshm_singleLED[i].IntervalPortionOff = singleLEDCustoms.IntervalPortionOFF;
-                        break;
-                    case ControlApp_LEDsModes.CustomStatic:
-                        dshm_singleLED[i].EnabledFlags = 0x10; // false
-                        /*
-                        dshm_singleLED[i].Duration = null;
-                        dshm_singleLED[i].IntervalDuration = null;
-                        dshm_singleLED[i].IntervalPortionOn = null;
-                        dshm_singleLED[i].IntervalPortionOff = null;
-                        */
-                        break;
-                    case ControlApp_LEDsModes.BatteryIndicatorPlayerIndex:
-                    case ControlApp_LEDsModes.BatteryIndicatorBarGraph:
-                    default:
-                        dshm_singleLED[i] = null;
-                        break;
+                    dshm_singleLED[i].Duration = singleLEDCustoms.Duration;
+                    dshm_singleLED[i].CycleDuration1 = (byte)(singleLEDCustoms.CycleDuration >> 4); // FIX THIS
+                    dshm_singleLED[i].CycleDuration0 = (byte)(singleLEDCustoms.CycleDuration & 0xFF);
+                    dshm_singleLED[i].OffPeriodCycles = singleLEDCustoms.OffPeriodCycles;
+                    dshm_singleLED[i].OnPeriodCycles = singleLEDCustoms.OnPeriodCycles;
+                }
+                else
+                {
+                    dshm_singleLED[i] = null;
                 }
             }
         }
@@ -333,9 +321,9 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
                 public bool UseLEDEffects { get; set; } = false;
 
                 public byte Duration { get; set; } = 0x00;
-                public int IntervalDuration { get; set; } = 0x4000;
-                public byte IntervalPortionON { get; set; } = 0xFF;
-                public byte IntervalPortionOFF { get; set; } = 0xFF;
+                public int CycleDuration { get; set; } = 0x4000;
+                public byte OnPeriodCycles { get; set; } = 0xFF;
+                public byte OffPeriodCycles { get; set; } = 0xFF;
                 public singleLEDCustoms(int ledIndex)
                 {
                     this.LEDIndex = ledIndex;
@@ -352,8 +340,8 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
                     this.IsLedEnabled = copySource.IsLedEnabled;
                     this.UseLEDEffects = copySource.UseLEDEffects;
                     this.Duration = copySource.Duration;
-                    this.IntervalDuration = copySource.IntervalDuration;
-                    this.IntervalPortionON = copySource.IntervalPortionON;
+                    this.CycleDuration = copySource.CycleDuration;
+                    this.OnPeriodCycles = copySource.OnPeriodCycles;
                 }
             }
         }

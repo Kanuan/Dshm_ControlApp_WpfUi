@@ -5,10 +5,11 @@
 
 using Nefarius.DsHidMini.ControlApp.MVVM;
 using System.Collections.ObjectModel;
+using Wpf.Ui.Controls;
 
 namespace Dshm_ControlApp_WpfUi.ViewModels.Pages
 {
-    public partial class DevicesViewModel : ObservableObject
+    public partial class DevicesViewModel : ObservableObject, INavigationAware
     {
         /// <summary>
         ///     List of detected devices.
@@ -33,6 +34,19 @@ namespace Dshm_ControlApp_WpfUi.ViewModels.Pages
         partial void OnSelectedDeviceChanged(TestViewModel? value)
         {
             AnyDeviceSelected = (value != null);
+        }
+
+        public void OnNavigatedTo()
+        {
+            foreach(TestViewModel device in Devices)
+            {
+                device.RefreshDeviceSettings();
+            }
+        }
+
+        public void OnNavigatedFrom()
+        {
+            //throw new NotImplementedException();
         }
 
         /*

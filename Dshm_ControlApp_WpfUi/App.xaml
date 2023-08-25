@@ -9,11 +9,11 @@
     Startup="OnStartup">
     <Application.Resources>
         <ResourceDictionary>
-            <wpf:VisibilityPerHidModeConverter x:Key="VisibilityPerHIDModeConverterKey"/>
+            <wpf:VisibilityPerHidModeConverter x:Key="VisibilityPerHIDModeConverterKey" />
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/GroupSettingsTemplates.xaml"/>
-                <ui:ThemesDictionary Theme="Dark" />
+                <ui:ThemesDictionary Theme="Light" />
                 <ui:ControlsDictionary />
+                <ResourceDictionary Source="Resourcess/GroupSettingsTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

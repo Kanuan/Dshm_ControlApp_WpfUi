@@ -88,10 +88,10 @@ namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
         public class SingleLEDCustoms
         {
             public byte? Duration { get; set; }// = 255;
-            public byte? IntervalDuration { get; set; }// = 255;
-            public byte? EnabledFlags { get; set; }// = 0x10;
-            public byte? IntervalPortionOff { get; set; }// = 0;
-            public byte? IntervalPortionOn { get; set; }// = 255;
+            public byte? CycleDuration1 { get; set; }// = 255;
+            public byte? CycleDuration0 { get; set; }// = 0x10;
+            public byte? OffPeriodCycles { get; set; }// = 0;
+            public byte? OnPeriodCycles { get; set; }// = 255;
         }
 
         public class AllLEDSettings

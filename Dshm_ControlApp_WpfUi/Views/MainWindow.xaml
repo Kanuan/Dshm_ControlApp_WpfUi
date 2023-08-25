@@ -32,26 +32,27 @@
             x:Name="TitleBar"
             Title="{Binding ViewModel.ApplicationTitle}"
             Grid.Row="0"
-            DockPanel.Dock="Top"
-            CloseWindowByDoubleClickOnIcon="False">
+            CloseWindowByDoubleClickOnIcon="False"
+            DockPanel.Dock="Top">
             <ui:TitleBar.Icon>
                 <ui:ImageIcon Source="pack://application:,,,/Assets/wpfui-icon-256.png" />
             </ui:TitleBar.Icon>
         </ui:TitleBar>
         <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="23*"/>
+                <ColumnDefinition Width="9*"/>
+            </Grid.ColumnDefinitions>
             <ui:NavigationView
-            x:Name="NavigationView"
-            Padding="10,0,10,0"
-            FooterMenuItemsSource="{Binding ViewModel.FooterMenuItems, Mode=OneWay}"
-            DockPanel.Dock="Top"
-            FrameMargin="0"
-            IsBackButtonVisible="Collapsed"
-            IsPaneToggleVisible="False"
-            MenuItemsSource="{Binding ViewModel.MenuItems, Mode=OneWay}"
-            OpenPaneLength="100"
-            PaneDisplayMode="Left"
-            
-            >
+                x:Name="RootNavigation"
+                Padding="10,0,10,0"
+                FooterMenuItemsSource="{Binding ViewModel.FooterMenuItems, Mode=OneWay}"
+                FrameMargin="0"
+                IsBackButtonVisible="Collapsed"
+                IsPaneToggleVisible="False"
+                MenuItemsSource="{Binding ViewModel.MenuItems, Mode=OneWay}"
+                OpenPaneLength="100"
+                PaneDisplayMode="Left" Grid.ColumnSpan="2">
 
                 <!--<ui:NavigationView.AutoSuggestBox>
                 <ui:AutoSuggestBox x:Name="AutoSuggestBox" PlaceholderText="Search">
@@ -64,17 +65,17 @@
             </ui:NavigationView.AutoSuggestBox>-->
                 <ui:NavigationView.ContentOverlay>
                     <Grid>
-                        <ui:SnackbarPresenter Margin="0" x:Name="SnackbarPresenter" />
+                        <ui:SnackbarPresenter x:Name="SnackbarPresenter" Margin="0" />
                     </Grid>
                 </ui:NavigationView.ContentOverlay>
             </ui:NavigationView>
 
-            <ContentPresenter x:Name="RootContentDialog" Grid.Row="0" />
+            <ContentPresenter x:Name="RootContentDialog" Grid.Row="0" Grid.ColumnSpan="2" />
         </Grid>
 
-        
-        
-        
+
+
+
 
 
 

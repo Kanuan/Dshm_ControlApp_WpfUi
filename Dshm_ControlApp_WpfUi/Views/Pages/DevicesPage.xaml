@@ -3,12 +3,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:Nefarius.DsHidMini.ControlApp.Helpers.WPF"
     xmlns:local="clr-namespace:Dshm_ControlApp_WpfUi.Views.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    xmlns:viewuserctrls="clr-namespace:Nefarius.DsHidMini.ControlApp.Views.UserControls" xmlns:helpers="clr-namespace:Nefarius.DsHidMini.ControlApp.Helpers.WPF"
+    xmlns:viewuserctrls="clr-namespace:Nefarius.DsHidMini.ControlApp.Views.UserControls"
     Title="DevicesPage"
-    ScrollViewer.CanContentScroll="False"
     d:DataContext="{d:DesignInstance local:DevicesPage,
                                      IsDesignTimeCreatable=False}"
     d:DesignHeight="450"
@@ -16,63 +16,76 @@
     ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
     ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-    mc:Ignorable="d"
-    >
+    ScrollViewer.CanContentScroll="False"
+    mc:Ignorable="d">
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
-        <helpers:BooleanToVisibilityConverter 
-                x:Key="BoolToVisConverterVisOrHid" 
-                True="Visible" 
-                False="Hidden" />
+        <helpers:BooleanToVisibilityConverter
+            x:Key="BoolToVisConverterVisOrHid"
+            False="Hidden"
+            True="Visible" />
     </Page.Resources>
-    
+
     <DockPanel VerticalAlignment="Stretch">
-        <DockPanel DockPanel.Dock="Left" Width="250" MaxWidth="250">
-            <ui:TextBlock 
+        <DockPanel
+            Width="250"
+            MaxWidth="250"
+            DockPanel.Dock="Left">
+            <ui:TextBlock
+                HorizontalAlignment="Center"
                 DockPanel.Dock="Top"
-                Text="DsHidMini Devices"
-                HorizontalAlignment="Center"/>
+                Text="DsHidMini Devices" />
             <ListView
-            DockPanel.Dock="Top"
-            VerticalAlignment="Stretch"
-            HorizontalAlignment="Stretch"
-            ItemsSource="{Binding ViewModel.Devices}"
-            SelectedItem="{Binding ViewModel.SelectedDevice}"
-            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-            >
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                DockPanel.Dock="Top"
+                ItemsSource="{Binding ViewModel.Devices}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectedItem="{Binding ViewModel.SelectedDevice}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ui:Card Padding="2">
                             <Viewbox Margin="10,0,0,0">
                                 <Grid Height="30">
                                     <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
+                                        <RowDefinition />
+                                        <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="120"/>
-                                        <ColumnDefinition Width="20"/>
-                                        <ColumnDefinition Width="20"/>
-                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="120" />
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="20" />
+                                        <ColumnDefinition Width="20" />
                                     </Grid.ColumnDefinitions>
-                                    <!--BatteryIcon-->
-                                    <Viewbox Grid.Column="0" >
-                                        <ui:TextBlock Text="{Binding DisplayName}"/>
+                                    <!--  BatteryIcon  -->
+                                    <Viewbox Grid.Column="0">
+                                        <ui:TextBlock Text="{Binding DisplayName}" />
                                     </Viewbox>
-                                    <Viewbox Grid.Column="2" Grid.RowSpan="2" Stretch="None" >
-                                        <ui:SymbolIcon Symbol="{Binding ConnectionTypeIcon}"/>
+                                    <Viewbox
+                                        Grid.RowSpan="2"
+                                        Grid.Column="2"
+                                        Stretch="None">
+                                        <ui:SymbolIcon Symbol="{Binding ConnectionTypeIcon}" />
                                     </Viewbox>
-                                    <Viewbox  Grid.Column="1" Grid.RowSpan="2"  Stretch="None" >
+                                    <Viewbox
+                                        Grid.RowSpan="2"
+                                        Grid.Column="1"
+                                        Stretch="None">
                                         <ui:SymbolIcon Symbol="{Binding BatteryIcon}">
                                             <ui:SymbolIcon.LayoutTransform>
-                                                <RotateTransform Angle="270"/>
+                                                <RotateTransform Angle="270" />
                                             </ui:SymbolIcon.LayoutTransform>
                                         </ui:SymbolIcon>
                                     </Viewbox>
 
-                                    <Button Grid.Column="3" Grid.RowSpan="2" Padding="0" VerticalAlignment="Stretch" Command="{Binding RestartDeviceCommand}">
+                                    <Button
+                                        Grid.RowSpan="2"
+                                        Grid.Column="3"
+                                        Padding="0"
+                                        VerticalAlignment="Stretch"
+                                        Command="{Binding RestartDeviceCommand}">
                                         <Button.Content>
-                                            <Viewbox Stretch="None" >
+                                            <Viewbox Stretch="None">
                                                 <ui:SymbolIcon Symbol="Power24" />
 
                                             </Viewbox>
@@ -87,56 +100,75 @@
                             </Viewbox>
                         </ui:Card>
 
-                        
-                        
+
+
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
         </DockPanel>
 
-        <ui:Card DockPanel.Dock="Right" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
-            <DockPanel  Visibility="{Binding ViewModel.AnyDeviceSelected, Converter={StaticResource BoolToVisConverterVisOrHid}}">
-                <DockPanel DockPanel.Dock="Bottom" DataContext="{Binding ViewModel.SelectedDevice}">
-                    <UniformGrid
-                    Columns="2">
-                        <ui:Button Content="Apply changes" HorizontalAlignment="Stretch" Command="{Binding ApplyChangesCommand}" />
-                        <ui:Button Content="Cancel" HorizontalAlignment="Stretch" Command="{Binding RevertChangesCommand}"/>
+        <ui:Card
+            VerticalAlignment="Stretch"
+            VerticalContentAlignment="Stretch"
+            DockPanel.Dock="Right">
+            <DockPanel Visibility="{Binding ViewModel.AnyDeviceSelected, Converter={StaticResource BoolToVisConverterVisOrHid}}">
+                <DockPanel DataContext="{Binding ViewModel.SelectedDevice}" DockPanel.Dock="Bottom">
+                    <UniformGrid Columns="2">
+                        <ui:Button
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding ApplyChangesCommand}"
+                            Content="Apply changes" />
+                        <ui:Button
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding RevertChangesCommand}"
+                            Content="Cancel" />
                     </UniformGrid>
 
                 </DockPanel>
 
-                <TabControl DataContext="{Binding ViewModel.SelectedDevice}"  VerticalAlignment="Stretch">
-                    <TabItem
-                    Header="Info">
-                        <!-- Device info -->
-                        <DockPanel LastChildFill="False" HorizontalAlignment="Stretch">
+                <TabControl VerticalAlignment="Stretch" DataContext="{Binding ViewModel.SelectedDevice}">
+                    <TabItem Header="Info">
+                        <!--  Device info  -->
+                        <DockPanel HorizontalAlignment="Stretch" LastChildFill="False">
                             <DockPanel DockPanel.Dock="Top">
-                                <DockPanel DockPanel.Dock="Top" >
-                                    <ui:TextBlock DockPanel.Dock="Left" Text="DEVICE NAME" HorizontalAlignment="Left"/>
-                                    <ui:TextBlock DockPanel.Dock="Right" Text="{Binding DisplayName}" HorizontalAlignment="Left"/>
+                                <DockPanel DockPanel.Dock="Top">
+                                    <ui:TextBlock
+                                        HorizontalAlignment="Left"
+                                        DockPanel.Dock="Left"
+                                        Text="DEVICE NAME" />
+                                    <ui:TextBlock
+                                        HorizontalAlignment="Left"
+                                        DockPanel.Dock="Right"
+                                        Text="{Binding DisplayName}" />
                                 </DockPanel>
                                 <DockPanel DockPanel.Dock="Top">
-                                    <ui:TextBlock DockPanel.Dock="Left" Text="Battery status:"/>
-                                    <ui:TextBlock DockPanel.Dock="Right" Text="{Binding BatteryStatusInText}"  HorizontalAlignment="Right"/>
+                                    <ui:TextBlock DockPanel.Dock="Left" Text="Battery status:" />
+                                    <ui:TextBlock
+                                        HorizontalAlignment="Right"
+                                        DockPanel.Dock="Right"
+                                        Text="{Binding BatteryStatusInText}" />
                                 </DockPanel>
                                 <DockPanel DockPanel.Dock="Top">
-                                    <ui:TextBlock DockPanel.Dock="Left" Text="Device address:"/>
-                                    <ui:TextBlock DockPanel.Dock="Right" Text="{Binding DeviceAddressFriendly, Mode=OneWay}"/>
+                                    <ui:TextBlock DockPanel.Dock="Left" Text="Device address:" />
+                                    <ui:TextBlock DockPanel.Dock="Right" Text="{Binding DeviceAddressFriendly, Mode=OneWay}" />
                                 </DockPanel>
                                 <DockPanel DockPanel.Dock="Top">
-                                    <ui:TextBlock DockPanel.Dock="Left" Text="Current HID Device Mode:"/>
-                                    <ComboBox DockPanel.Dock="Right" SelectedIndex="{Binding HidEmulationMode, Mode=OneWay}" IsEnabled="False">
-                                        <ComboBoxItem Content="Unkown"/>
-                                        <ComboBoxItem Content="SDF (PCSX2)"/>
-                                        <ComboBoxItem Content="GPJ (Generic DirectInput)"/>
-                                        <ComboBoxItem Content="SXS (Steam, RPCS3)"/>
-                                        <ComboBoxItem Content="DS4Windows"/>
-                                        <ComboBoxItem Content="XInput"/>
+                                    <ui:TextBlock DockPanel.Dock="Left" Text="Current HID Device Mode:" />
+                                    <ComboBox
+                                        DockPanel.Dock="Right"
+                                        IsEnabled="False"
+                                        SelectedIndex="{Binding HidEmulationMode, Mode=OneWay}">
+                                        <ComboBoxItem Content="Unkown" />
+                                        <ComboBoxItem Content="SDF (PCSX2)" />
+                                        <ComboBoxItem Content="GPJ (Generic DirectInput)" />
+                                        <ComboBoxItem Content="SXS (Steam, RPCS3)" />
+                                        <ComboBoxItem Content="DS4Windows" />
+                                        <ComboBoxItem Content="XInput" />
                                     </ComboBox>
                                 </DockPanel>
                                 <DockPanel DockPanel.Dock="Top">
-                                    <ui:TextBlock DockPanel.Dock="Left" Text="Xinput slot #:"/>
-                                    <ui:TextBlock DockPanel.Dock="Right"/>
+                                    <ui:TextBlock DockPanel.Dock="Left" Text="Xinput slot #:" />
+                                    <ui:TextBlock DockPanel.Dock="Right" />
                                 </DockPanel>
                             </DockPanel>
 
@@ -144,22 +176,28 @@
 
                             <DockPanel DockPanel.Dock="Bottom">
                                 <DockPanel DockPanel.Dock="Top">
-                                    <ui:TextBlock DockPanel.Dock="Left" Text="Instance ID:"/>
-                                    <ui:TextBox DockPanel.Dock="Right" Text="{Binding InstanceId, Mode=OneWay}"/>
+                                    <ui:TextBlock DockPanel.Dock="Left" Text="Instance ID:" />
+                                    <ui:TextBox DockPanel.Dock="Right" Text="{Binding InstanceId, Mode=OneWay}" />
                                 </DockPanel>
                                 <DockPanel DockPanel.Dock="Top">
-                                    <ui:TextBlock DockPanel.Dock="Left" Text="Last connected wirelessly:"/>
-                                    <ui:TextBox DockPanel.Dock="Right" Text="{Binding LastConnected, Mode=OneWay}"/>
+                                    <ui:TextBlock DockPanel.Dock="Left" Text="Last connected wirelessly:" />
+                                    <ui:TextBox DockPanel.Dock="Right" Text="{Binding LastConnected, Mode=OneWay}" />
                                 </DockPanel>
                                 <DockPanel DockPanel.Dock="Top">
-                                    <ui:TextBlock DockPanel.Dock="Left" Text="Paired to (host address):" VerticalAlignment="Center"/>
-                                    <ui:TextBox DockPanel.Dock="Right" Text="{Binding HostAddress, Mode=OneWay}"/>
+                                    <ui:TextBlock
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Left"
+                                        Text="Paired to (host address):" />
+                                    <ui:TextBox DockPanel.Dock="Right" Text="{Binding HostAddress, Mode=OneWay}" />
                                 </DockPanel>
-                                <CheckBox DockPanel.Dock="Top" Content="Auto-pair device to this PC's BT when connecting via cable" IsChecked="{Binding AutoPairDeviceWhenCabled}"/>
+                                <CheckBox
+                                    Content="Auto-pair device to this PC's BT when connecting via cable"
+                                    DockPanel.Dock="Top"
+                                    IsChecked="{Binding AutoPairDeviceWhenCabled}" />
                                 <DockPanel DockPanel.Dock="Top">
-                                    <ui:Button Content="Pair device to this PC" DockPanel.Dock="Left"/>
-                                    <ui:Button Content="Pair Device to custom MAC:" DockPanel.Dock="Left"/>
-                                    <ui:TextBox DockPanel.Dock="Right"/>
+                                    <ui:Button Content="Pair device to this PC" DockPanel.Dock="Left" />
+                                    <ui:Button Content="Pair Device to custom MAC:" DockPanel.Dock="Left" />
+                                    <ui:TextBox DockPanel.Dock="Right" />
                                 </DockPanel>
                             </DockPanel>
 
@@ -167,48 +205,54 @@
 
 
                     </TabItem>
-                    <TabItem
-                    Header="Configure">
-                        <!-- Device settings -->
+                    <TabItem Header="Configure">
+                        <!--  Device settings  -->
 
 
                         <DockPanel LastChildFill="True">
 
 
-                            <ui:Card DockPanel.Dock="Top" Margin="5" VerticalAlignment="Stretch" >
-                                <!--Top settings mode choose-->
-                                <DockPanel DockPanel.Dock="Top" LastChildFill="True" VerticalAlignment="Stretch">
+                            <ui:Card
+                                Margin="5"
+                                VerticalAlignment="Stretch"
+                                DockPanel.Dock="Top">
+                                <!--  Top settings mode choose  -->
+                                <DockPanel
+                                    VerticalAlignment="Stretch"
+                                    DockPanel.Dock="Top"
+                                    LastChildFill="True">
                                     <ui:TextBlock
-				                    DockPanel.Dock="Left"
-				                    Text="Settings mode: "
-                                    VerticalAlignment="Center"
-			                    />
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Left"
+                                        Text="Settings mode: " />
                                     <ComboBox
-				                    DockPanel.Dock="Left"
-				                    x:Name="SettingsModeSelection_ComboBox"
-				                    VerticalAlignment="Center"
-				                    ItemsSource="{Binding SettingsModesList}"
-				                    SelectedItem="{Binding CurrentDeviceSettingsMode}"
-			                    />
+                                        x:Name="SettingsModeSelection_ComboBox"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Left"
+                                        ItemsSource="{Binding SettingsModesList}"
+                                        SelectedItem="{Binding CurrentDeviceSettingsMode}" />
                                     <Label
-				                    Visibility="{Binding IsProfileSelectorVisible, Converter={StaticResource BoolToVis}}"
-				                    DockPanel.Dock="Left"
-				                    Content="->"
-				                    VerticalContentAlignment="Center"
-			                    />
+                                        VerticalContentAlignment="Center"
+                                        Content="-&gt;"
+                                        DockPanel.Dock="Left"
+                                        Visibility="{Binding IsProfileSelectorVisible, Converter={StaticResource BoolToVis}}" />
                                     <ComboBox
-				                    DockPanel.Dock="Left"
-				                    Visibility="{Binding IsProfileSelectorVisible, Converter={StaticResource BoolToVis}}"
-				                    x:Name="ProfileSelection_ComboBox"
-				                    VerticalAlignment="Center"
-				                    ItemsSource="{Binding ListOfProfiles}"
-				                    SelectedItem="{Binding SelectedProfile}"
-			                    />
+                                        x:Name="ProfileSelection_ComboBox"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Left"
+                                        ItemsSource="{Binding ListOfProfiles}"
+                                        SelectedItem="{Binding SelectedProfile}"
+                                        Visibility="{Binding IsProfileSelectorVisible, Converter={StaticResource BoolToVis}}" />
                                 </DockPanel>
                             </ui:Card>
 
 
-                            <viewuserctrls:DeviceSettingsEditor Margin="0,10,0,0" Height="auto" DockPanel.Dock="Top" VerticalAlignment="Stretch" DataContext="{Binding SelectedGroupsVM}"/>
+                            <viewuserctrls:DeviceSettingsEditor
+                                Height="auto"
+                                Margin="0,10,0,0"
+                                VerticalAlignment="Stretch"
+                                DataContext="{Binding SelectedGroupsVM}"
+                                DockPanel.Dock="Top" />
 
 
 
@@ -225,7 +269,7 @@
 
             </DockPanel>
         </ui:Card>
-        
+
 
     </DockPanel>
 </Page>
