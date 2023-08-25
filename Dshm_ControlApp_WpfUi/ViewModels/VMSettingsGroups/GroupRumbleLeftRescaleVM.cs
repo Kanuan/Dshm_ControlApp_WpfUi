@@ -40,15 +40,15 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public GroupRumbleLeftRescaleVM(BackingDataContainer backingDataContainer) : base(backingDataContainer)
+        public GroupRumbleLeftRescaleVM() : base()
         {
             _myInterface = _tempBackingData;
         }
 
-        public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
-        {
-            BackingData_LeftRumbleRescale.CopySettings(dataContainerSource.leftRumbleRescaleData, _tempBackingData);
-        }
+        //public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
+        //{
+        //    BackingData_LeftRumbleRescale.CopySettings(dataContainerSource.leftRumbleRescaleData, _tempBackingData);
+        //}
 
         //public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
         //{

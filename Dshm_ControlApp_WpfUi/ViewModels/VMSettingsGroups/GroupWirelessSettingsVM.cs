@@ -69,21 +69,21 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public GroupWirelessSettingsVM(BackingDataContainer backingDataContainer) : base(backingDataContainer)
+        public GroupWirelessSettingsVM() : base()
         {
 
             _myInterface = _tempBackingData;
         }
 
-        public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
-        {
-            SaveSettingsToBackingData(dataContainerSource.wirelessData);
-        }
+        //public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
+        //{
+        //    SaveSettingsToBackingData(dataContainerSource.wirelessData);
+        //}
 
-        public void SaveSettingsToBackingData(BackingData_Wireless dataTarget)
-        {
-            BackingData_Wireless.CopySettings(dataTarget, _tempBackingData);
-        }
+        //public void SaveSettingsToBackingData(BackingData_Wireless dataTarget)
+        //{
+        //    BackingData_Wireless.CopySettings(dataTarget, _tempBackingData);
+        //}
 
         //public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
         //{

@@ -114,7 +114,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public GroupModeUniqueVM(BackingDataContainer backingDataContainer) : base(backingDataContainer)
+        public GroupModeUniqueVM() : base()
         {
             base._myInterface = _tempBackingData;
         }
@@ -125,9 +125,9 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         //    NotifyAllPropertiesHaveChanged();
         //}
 
-        public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
-        {
-            BackingData_ModesUnique.CopySettings(dataContainerSource.modesUniqueData, _tempBackingData);
-        }
+        //public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
+        //{
+        //    BackingData_ModesUnique.CopySettings(dataContainerSource.modesUniqueData, _tempBackingData);
+        //}
     }
 }

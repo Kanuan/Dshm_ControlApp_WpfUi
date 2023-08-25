@@ -71,15 +71,15 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public GroupRumbleRightConversionAdjustsVM(BackingDataContainer backingDataContainer) : base(backingDataContainer)
+        public GroupRumbleRightConversionAdjustsVM() : base()
         {
             _myInterface = _tempBackingData;
         }
 
-        public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
-        {
-            BackingData_VariablaRightRumbleEmulAdjusts.CopySettings(dataContainerSource.rightVariableEmulData, _tempBackingData);
-        }
+        //public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
+        //{
+        //    BackingData_VariablaRightRumbleEmulAdjusts.CopySettings(dataContainerSource.rightVariableEmulData, _tempBackingData);
+        //}
 
         //public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
         //{

@@ -36,7 +36,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             SelectedLED_VM = Leds_VM[value];
         }
 
-        public GroupLEDsCustomsVM(BackingDataContainer backingDataContainer) : base(backingDataContainer)
+        public GroupLEDsCustomsVM()
         {
             Leds_VM[0].singleLEDCustoms = _tempBackingData.LEDsCustoms.LED_x_Customs[0];
             Leds_VM[1].singleLEDCustoms = _tempBackingData.LEDsCustoms.LED_x_Customs[1];
@@ -55,10 +55,10 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
-        {
-            BackingData_LEDs.CopySettings(dataContainerSource.ledsData, _tempBackingData);
-        }
+        //public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
+        //{
+        //    BackingData_LEDs.CopySettings(dataContainerSource.ledsData, _tempBackingData);
+        //}
 
         //public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
         //{

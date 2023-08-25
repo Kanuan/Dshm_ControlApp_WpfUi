@@ -322,7 +322,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             {
                 try
                 {
-                    ((UsbPnPDevice)_device).CyclePort();
+                    (_device).RemoveAndSetup();
                 }
                 catch
                 {

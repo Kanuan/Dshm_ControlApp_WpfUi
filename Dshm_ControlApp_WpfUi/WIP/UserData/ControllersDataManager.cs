@@ -169,6 +169,18 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
 
         // ----------------------------------------------------------- METHODS
 
+        private void FixDevicesWithBlankProfiles()
+        {
+            foreach(DeviceSpecificData device in Devices)
+            {
+                if(GetProfile(device.GuidOfProfileToUse) == null)
+                {
+                    device.GuidOfProfileToUse = ProfileData.DefaultGuid;
+                    device.SettingsMode = SettingsModes.Global;
+                }
+            }
+        }
+
         private List<DeviceSpecificData> LoadDevicesFromDisk()
         {
 
@@ -370,10 +382,12 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
                 return;
             }
             Profiles.Remove(profile);
-            if(File.Exists($@"{ProfilesFolderFullPath}{profile.DiskFileName}"))
+            FixDevicesWithBlankProfiles();
+            if (File.Exists($@"{ProfilesFolderFullPath}{profile.DiskFileName}"))
             {
                 System.IO.File.Delete($@"{ProfilesFolderFullPath}{profile.DiskFileName}");
             }
+            UpdateDsHidMiniSettings();
         }
 
 

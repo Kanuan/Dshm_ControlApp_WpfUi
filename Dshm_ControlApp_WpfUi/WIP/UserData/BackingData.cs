@@ -279,7 +279,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
                         dshm_singleLED[i].IntervalPortionOff = singleLEDCustoms.IntervalPortionOFF;
                         break;
                     case ControlApp_LEDsModes.CustomStatic:
-                        dshm_singleLED[i].EnabledFlags = 0x00; // false
+                        dshm_singleLED[i].EnabledFlags = 0x10; // false
                         /*
                         dshm_singleLED[i].Duration = null;
                         dshm_singleLED[i].IntervalDuration = null;

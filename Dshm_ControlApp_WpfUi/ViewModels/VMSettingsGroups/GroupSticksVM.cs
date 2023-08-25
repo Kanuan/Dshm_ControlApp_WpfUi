@@ -94,15 +94,15 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         }
 
 
-        public GroupSticksVM(BackingDataContainer backingDataContainer) : base(backingDataContainer)
+        public GroupSticksVM() : base()
         {
             _myInterface = _tempBackingData;
         }
 
-        public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
-        {
-            BackingData_Sticks.CopySettings(dataContainerSource.sticksData, _tempBackingData);
-        }
+        //public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
+        //{
+        //    BackingData_Sticks.CopySettings(dataContainerSource.sticksData, _tempBackingData);
+        //}
 
         //public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
         //{

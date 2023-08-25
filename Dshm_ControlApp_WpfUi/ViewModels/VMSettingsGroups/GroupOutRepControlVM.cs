@@ -40,15 +40,15 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public GroupOutRepControlVM(BackingDataContainer backingDataContainer) : base(backingDataContainer)
+        public GroupOutRepControlVM() : base()
         {
             base._myInterface = _tempBackingData;
         }
 
-        public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
-        {
-            BackingData_OutRepControl.CopySettings(dataContainerSource.outRepData, _tempBackingData);
-        }
+        //public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
+        //{
+        //    BackingData_OutRepControl.CopySettings(dataContainerSource.outRepData, _tempBackingData);
+        //}
 
         //public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
         //{

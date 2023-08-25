@@ -92,10 +92,10 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
-        {
-            BackingData_RumbleGeneral.CopySettings(dataContainerSource.rumbleGeneralData, _tempBackingData);
-        }
+        //public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
+        //{
+        //    BackingData_RumbleGeneral.CopySettings(dataContainerSource.rumbleGeneralData, _tempBackingData);
+        //}
 
         //public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
         //{
@@ -103,7 +103,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         //    NotifyAllPropertiesHaveChanged();
         //}
 
-        public GroupRumbleGeneralVM(BackingDataContainer backingDataContainer) : base(backingDataContainer)
+        public GroupRumbleGeneralVM() : base()
         {
             _myInterface = _tempBackingData;
         }

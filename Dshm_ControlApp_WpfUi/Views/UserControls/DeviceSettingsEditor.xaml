@@ -45,7 +45,6 @@
                         <ui:DropDownButton
                             Grid.Column="2"
                             HorizontalAlignment="Right"
-                            Content="..."
                             Visibility="{Binding IsGroupLocked, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
                             <ui:DropDownButton.Flyout>
                                 <Menu>
