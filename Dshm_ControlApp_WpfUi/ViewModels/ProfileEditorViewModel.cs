@@ -124,7 +124,6 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
                 TestViewModel.UserDataManager.GlobalProfile = obj._profileData;
                 ShowSnackbarMessage("Global profile updated.", "", ControlAppearance.Info, new SymbolIcon(SymbolRegular.Checkmark24), 2);
             }
-            TestViewModel.UserDataManager.SaveControlAppSettingsToDisk();
             UpdateProfileList();
         }
 
@@ -172,7 +171,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
                 }
                 _profileData.ProfileName = _name;
                 VmGroupsCont.SaveAllChangesToBackingData(_profileData.DataContainer);
-                TestViewModel.UserDataManager.SaveProfileToDisk(_profileData);
+            TestViewModel.UserDataManager.SaveChangesAndUpdateDsHidMiniConfigFile();
             }
 
         [RelayCommand]

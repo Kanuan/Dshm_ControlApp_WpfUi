@@ -25,6 +25,8 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
+        protected override IBackingData _myInterface => _tempBackingData;
+
         [ObservableProperty] int _currentLEDCustomsIndex = 0;
 
         [ObservableProperty] LED_VM? _selectedLED_VM = null;
@@ -43,7 +45,6 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             Leds_VM[2].singleLEDCustoms = _tempBackingData.LEDsCustoms.LED_x_Customs[2];
             Leds_VM[3].singleLEDCustoms = _tempBackingData.LEDsCustoms.LED_x_Customs[3];
             SelectedLED_VM = Leds_VM[0];
-            base._myInterface = _tempBackingData;
         }
 
         public override void NotifyAllPropertiesHaveChanged()

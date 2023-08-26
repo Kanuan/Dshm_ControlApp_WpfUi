@@ -117,7 +117,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         public abstract SettingsModeGroups Group { get; }
 
-        protected IBackingData _myInterface;
+        protected abstract IBackingData _myInterface { get; }
 
         [ObservableProperty] private bool _isGroupLocked = false;
 

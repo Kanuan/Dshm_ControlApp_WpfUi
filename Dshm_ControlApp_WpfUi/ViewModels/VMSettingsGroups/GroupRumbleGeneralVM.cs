@@ -9,7 +9,8 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
     public class GroupRumbleGeneralVM : GroupSettingsVM
     {
         private BackingData_RumbleGeneral _tempBackingData = new();
-       
+        protected override IBackingData _myInterface => _tempBackingData;
+
         public override SettingsModeGroups Group { get; } = SettingsModeGroups.RumbleGeneral;
 
         public bool IsAltModeEnabled
@@ -105,7 +106,6 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         public GroupRumbleGeneralVM() : base()
         {
-            _myInterface = _tempBackingData;
         }
     }
 

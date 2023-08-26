@@ -8,6 +8,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
     public class GroupWirelessSettingsVM : GroupSettingsVM
     {
         private BackingData_Wireless _tempBackingData = new();
+        protected override IBackingData _myInterface => _tempBackingData;
 
         public override SettingsModeGroups Group { get; } = SettingsModeGroups.WirelessSettings;
 
@@ -72,29 +73,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         public GroupWirelessSettingsVM() : base()
         {
 
-            _myInterface = _tempBackingData;
         }
-
-        //public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
-        //{
-        //    SaveSettingsToBackingData(dataContainerSource.wirelessData);
-        //}
-
-        //public void SaveSettingsToBackingData(BackingData_Wireless dataTarget)
-        //{
-        //    BackingData_Wireless.CopySettings(dataTarget, _tempBackingData);
-        //}
-
-        //public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
-        //{
-        //    LoadSettingsFromBackingData(dataContainerSource.wirelessData);
-        //}
-
-        //public void LoadSettingsFromBackingData(BackingData_Wireless dataSource)
-        //{
-        //    BackingData_Wireless.CopySettings(_tempBackingData, dataSource);
-        //    this.OnPropertyChanged(string.Empty);
-        //}
     }
 
 

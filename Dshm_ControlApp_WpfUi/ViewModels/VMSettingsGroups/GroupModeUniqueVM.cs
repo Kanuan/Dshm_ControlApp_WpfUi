@@ -38,6 +38,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         public static List<ControlApp_DPADModes> ListOfDPadModes { get => listOfDPadModes; }
 
         private BackingData_ModesUnique _tempBackingData = new();
+        protected override IBackingData _myInterface => _tempBackingData;
 
         public override SettingsModeGroups Group { get; } = SettingsModeGroups.Unique_All;
 
@@ -116,7 +117,6 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         public GroupModeUniqueVM() : base()
         {
-            base._myInterface = _tempBackingData;
         }
 
         //public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)

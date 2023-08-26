@@ -286,9 +286,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             {
                 deviceUserData.GuidOfProfileToUse = SelectedProfile.ProfileGuid;
             }
-
-            UserDataManager.SaveDeviceSpecificDataToDisk(deviceUserData);
-            UserDataManager.UpdateDsHidMiniSettings();
+            UserDataManager.SaveChangesAndUpdateDsHidMiniConfigFile();
         }
 
         [RelayCommand]

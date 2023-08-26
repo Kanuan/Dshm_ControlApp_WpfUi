@@ -20,7 +20,7 @@ namespace Nefarius.DsHidMini.ControlApp.Util.App
         /// <summary>
         ///     JSON (and schema) file name holding global configuration values.
         /// </summary>
-        public static string GlobalConfigFileName => "DSHMC";
+        public static string GlobalConfigFileName => "ControlApp";
 
         /// <summary>
         ///     True if a log file should be generated, false otherwise.
