@@ -26,7 +26,9 @@ namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
         public bool? IsOutputDeduplicatorEnabled { get; set; }// = false;
         public double? WirelessIdleTimeoutPeriodMs { get; set; }// = 300000;
         public bool? IsQuickDisconnectComboEnabled { get; set; }// = true;
-        public DSHM_QuickDisconnectCombo? QuickDisconnectCombo { get; set; }// = DSHM_QuickDisconnectCombo.PS_R1_L1
+        public double? QuickDisconnectComboHoldTime { get; set; }// = 300000;
+        public ButtonCombo QuickDisconnectCombo { get; set; } = new();// = DSHM_QuickDisconnectCombo.PS_R1_L1
+
 
         [JsonIgnore]
         public Dshm_ModeSpecificSettings ContextSettings { get; set; } = new();
@@ -64,9 +66,16 @@ namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
             public bool? Enabled { get; set; }// = false;
             public byte? RescaleMinValue { get; set; }// = 1;
             public byte? RescaleMaxValue { get; set; }// = 160;
-            public bool? IsSMToBMConversionToggleComboEnabled { get; set; }// = false;
-            public DSHM_QuickDisconnectCombo? ToggleSMtoBMConversionCombo { get; set; }// = DSHM_QuickDisconnectCombo.PS_R1_L1
+            public ButtonCombo? ToggleSMtoBMConversionCombo { get; set; } = new(); // = DSHM_QuickDisconnectCombo.PS_R1_L1
+        }
 
+        public class ButtonCombo
+        {
+            public bool? IsEnabled { get; set; }
+            public double? HoldTime { get; set; }
+            public ControlApp_ComboButtons? Button1 { get; set; }
+            public ControlApp_ComboButtons? Button2 { get; set; }
+            public ControlApp_ComboButtons? Button3 { get; set; }
         }
 
         public class ForcedSMSettings

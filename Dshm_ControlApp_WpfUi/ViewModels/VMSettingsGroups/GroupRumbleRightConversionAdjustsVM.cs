@@ -1,8 +1,4 @@
-﻿using Nefarius.DsHidMini.ControlApp.DSHM_Settings;
-using Nefarius.DsHidMini.ControlApp.UserData;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
-using System;
+﻿using Nefarius.DsHidMini.ControlApp.UserData;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {

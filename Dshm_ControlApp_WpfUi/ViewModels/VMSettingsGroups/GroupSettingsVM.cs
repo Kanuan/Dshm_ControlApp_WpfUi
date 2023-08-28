@@ -1,15 +1,5 @@
-﻿using Nefarius.DsHidMini.ControlApp.DSHM_Settings;
-using Nefarius.DsHidMini.ControlApp.UserData;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using Nefarius.DsHidMini.ControlApp.UserData;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Reactive;
-using System.Text.Json.Serialization;
-using System.Windows;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
@@ -26,7 +16,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         [ObservableProperty] private GroupRumbleLeftRescaleVM _groupRumbleLeftRescale = new();
         [ObservableProperty] private GroupRumbleRightConversionAdjustsVM _groupRumbleRightConversion = new();
 
-        public VMGroupsContainer(BackingDataContainer dataContainer)
+        public VMGroupsContainer(BackingDataContainer? dataContainer = null)
         {
             groupSettingsList.Add(GroupModeUnique);
             groupSettingsList.Add(GroupLEDsControl);
@@ -37,16 +27,11 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             groupSettingsList.Add(GroupRumbleLeftRescale);
             groupSettingsList.Add(GroupRumbleRightConversion);
 
-            LoadDatasToAllGroups(dataContainer);
-
-            this.WhenAnyValue(
-                x => x.GroupModeUnique.Context,
-                x => x.GroupModeUnique.IsDS4LightbarTranslationEnabled)
-                .Subscribe(x => UpdateLockStateOfGroups());
+            if(dataContainer != null)
+                LoadDatasToAllGroups(dataContainer);
 
             // Duct tape for RaisePropertyChange(string.empty)
-            this.GroupModeUnique.PropertyChanged += UpdateLockStateOfGroupsIfEmptyStringOnPropertyChanged;
-
+            this.GroupModeUnique.PropertyChanged += ModeSettingsChanged;
         }
 
         private void UpdateLockStateOfGroups()
@@ -58,16 +43,22 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
             if (GroupModeUnique.Context == SettingsContext.DS4W)
             {
-                GroupSticksDZ.IsGroupLocked = true;
-                GroupLEDsControl.IsGroupLocked = GroupModeUnique.IsDS4LightbarTranslationEnabled;
+                GroupSticksDZ.IsGroupLocked = GroupModeUnique.PreventRemappingConflictsInDS4WMode;
+            }
+
+            if (GroupModeUnique.Context == SettingsContext.SXS)
+            {
+                GroupSticksDZ.IsGroupLocked = GroupModeUnique.PreventRemappingConflictsInSXSMode;
             }
         }
 
-        private void UpdateLockStateOfGroupsIfEmptyStringOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void ModeSettingsChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
-                case "":
+                case nameof(GroupModeUnique.Context):
+                case nameof(GroupModeUnique.PreventRemappingConflictsInSXSMode):
+                case nameof(GroupModeUnique.PreventRemappingConflictsInDS4WMode):
                     UpdateLockStateOfGroups();
                     break;
             }
@@ -88,6 +79,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             {
                 group.LoadSettingsFromBackingDataContainer(dataContainer);
             }
+
         }
     }
 
@@ -98,11 +90,11 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         {
             { SettingsModeGroups.LEDsControl, "LEDs control" },
             { SettingsModeGroups.WirelessSettings, "Wireless settings" },
-            { SettingsModeGroups.SticksDeadzone, "Sticks DeadZone (DZ)" },
+            { SettingsModeGroups.SticksDeadzone, "Sticks DeadZone" },
             { SettingsModeGroups.RumbleGeneral, "Rumble settings" },
             { SettingsModeGroups.OutputReportControl, "Output report control" },
             { SettingsModeGroups.RumbleLeftStrRescale, "Left motor (heavy) rescale" },
-            { SettingsModeGroups.RumbleRightConversion, "Variable light rumble emulation adjuster" },
+            { SettingsModeGroups.RumbleRightConversion, "Alternative rumble mode adjuster" },
             { SettingsModeGroups.Unique_All, "Mode specific settings" },
             { SettingsModeGroups.Unique_Global, "Default settings" },
             { SettingsModeGroups.Unique_General, "General settings" },
@@ -138,6 +130,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         public void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
         {
             _myInterface.CopySettingsFromContainer(dataContainerSource);
+            NotifyAllPropertiesHaveChanged();
         }
 
         public void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)

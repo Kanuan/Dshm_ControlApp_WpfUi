@@ -1,7 +1,4 @@
-﻿using Nefarius.DsHidMini.ControlApp.DSHM_Settings;
-using Nefarius.DsHidMini.ControlApp.UserData;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+﻿using Nefarius.DsHidMini.ControlApp.UserData;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
@@ -32,14 +29,23 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         }
         public bool IsQuickDisconnectComboEnabled
         {
-            get => _tempBackingData.IsQuickDisconnectComboEnabled;
+            get => _tempBackingData.QuickDisconnectCombo.IsEnabled;
             set
             {
-                _tempBackingData.IsQuickDisconnectComboEnabled = value;
+                _tempBackingData.QuickDisconnectCombo.IsEnabled = value;
                 this.OnPropertyChanged(nameof(IsQuickDisconnectComboEnabled));
             }
         }
 
+        public int QuickDisconnectComboHoldTime
+        {
+            get => _tempBackingData.QuickDisconnectCombo.HoldTime;
+            set
+            {
+                _tempBackingData.QuickDisconnectCombo.HoldTime = value;
+                this.OnPropertyChanged(nameof(QuickDisconnectComboHoldTime));
+            }
+        }
         public ControlApp_ComboButtons QuickDisconnectComboButton1
         {
             get => _tempBackingData.QuickDisconnectCombo.Button1;

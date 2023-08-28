@@ -14,6 +14,7 @@
         False="Visible"
         True="Collapsed" />
     <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
     <DataTemplate x:Key="Template_LEDsSettings" DataType="{x:Type devmvvm:GroupLEDsCustomsVM}">
         <ContentControl>
             <Grid>
@@ -27,13 +28,17 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <!--  LEDs mode selection  -->
-                <Label
+                <ui:ToggleSwitch
                     Grid.Row="0"
+                    Content="Allow apps and games to control LEDs"
+                    IsChecked="{Binding AllowLedsOverride}" />
+                <Label
+                    Grid.Row="1"
                     VerticalAlignment="Center"
-                    Content="LEDs mode:" />
+                    Content="LEDs control mode:" />
                 <ComboBox
                     x:Name="LEDModeComboBox"
-                    Grid.Row="0"
+                    Grid.Row="1"
                     Grid.Column="1"
                     VerticalAlignment="Center"
                     SelectedIndex="{Binding LEDMode}">
@@ -42,9 +47,8 @@
                     <ComboBoxItem Content="Custom (simple)" />
                     <ComboBoxItem Content="Custom (advanced)" />
                 </ComboBox>
-
                 <TabControl
-                    Grid.Row="1"
+                    Grid.Row="2"
                     Grid.ColumnSpan="2"
                     HorizontalAlignment="Stretch"
                     SelectedIndex="{Binding SelectedIndex, ElementName=LEDModeComboBox}">
@@ -99,7 +103,7 @@
                                         <ColumnDefinition Width="3*" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock
+                                    <ui:TextBlock
                                         Grid.Row="0"
                                         Grid.Column="0"
                                         HorizontalAlignment="Left"
@@ -113,11 +117,11 @@
                                         Maximum="255"
                                         Minimum="0"
                                         Value="{Binding Duration}" />
-                                    <TextBlock
+                                    <ui:TextBlock
                                         Grid.Row="0"
                                         Grid.Column="2"
                                         Text="{Binding Duration}" />
-                                    <TextBlock
+                                    <ui:TextBlock
                                         Grid.Row="1"
                                         Grid.Column="0"
                                         HorizontalAlignment="Left"
@@ -129,14 +133,14 @@
                                         Grid.Column="1"
                                         VerticalAlignment="Center"
                                         ClipToBounds="True"
-                                        Maximum="255"
+                                        Maximum="65535"
                                         Minimum="0"
                                         Value="{Binding IntervalDuration}" />
-                                    <TextBlock
+                                    <ui:TextBlock
                                         Grid.Row="1"
                                         Grid.Column="2"
                                         Text="{Binding IntervalDuration}" />
-                                    <TextBlock
+                                    <ui:TextBlock
                                         Grid.Row="2"
                                         Grid.Column="0"
                                         HorizontalAlignment="Left"
@@ -152,11 +156,11 @@
                                         Minimum="0"
                                         Text="{Binding IntervalPortionON}"
                                         ToolTip="{Binding Value, RelativeSource={RelativeSource Self}}" />
-                                    <TextBlock
+                                    <ui:TextBlock
                                         Grid.Row="2"
                                         Grid.Column="2"
                                         Text="{Binding IntervalPortionON}" />
-                                    <TextBlock
+                                    <ui:TextBlock
                                         Grid.Row="3"
                                         Grid.Column="0"
                                         HorizontalAlignment="Left"
@@ -171,7 +175,7 @@
                                         Maximum="254"
                                         Minimum="0"
                                         Value="{Binding IntervalPortionOFF}" />
-                                    <TextBlock
+                                    <ui:TextBlock
                                         Grid.Row="3"
                                         Grid.Column="2"
                                         Text="{Binding IntervalPortionOFF}" />
@@ -187,7 +191,7 @@
     </DataTemplate>
 
     <!--  Basic wireless settings  -->
-    <DataTemplate x:Key="Template_WirelessSettings">
+    <DataTemplate x:Key="Template_WirelessSettings" DataType="devmvvm:GroupWirelessSettingsVM">
         <DockPanel>
             <!--  Idle disconnect  -->
             <ui:ToggleSwitch
@@ -198,14 +202,20 @@
             <DockPanel DockPanel.Dock="Top">
                 <Label
                     VerticalAlignment="Center"
-                    Content="Idle disconnect period:"
+                    Content="Idle disconnect period (in minutes):"
+                    DockPanel.Dock="Left" />
+                <Label
+                    VerticalAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Content="{Binding WirelessIdleDisconnectTime}"
                     DockPanel.Dock="Left" />
                 <Slider
-                    DockPanel.Dock="Right"
+                    AutoToolTipPlacement="TopLeft"
+                    DockPanel.Dock="Left"
                     IsEnabled="{Binding IsChecked, ElementName=IdleDisconnectEnableCheckbox}"
                     IsSnapToTickEnabled="True"
                     Maximum="60"
-                    Minimum="0"
+                    Minimum="1"
                     TickFrequency="1"
                     Value="{Binding WirelessIdleDisconnectTime}" />
             </DockPanel>
@@ -219,7 +229,7 @@
                 <!--  DataContext="{Binding QuickDisconnectCombo}"  -->
                 <Label
                     VerticalAlignment="Center"
-                    Content="Quick disconnect combo (3s):"
+                    Content="Quick disconnect combo:"
                     DockPanel.Dock="Left" />
                 <!--  Change ComboBox later so it's binding to a enum  -->
                 <ComboBox
@@ -243,6 +253,12 @@
                     ItemsSource="{Binding Source={wpf:EnumBindingSource {x:Type devmvvm:ControlApp_ComboButtons}}}"
                     SelectedItem="{Binding QuickDisconnectComboButton3}"
                     Text="{Binding QuickDisconnectComboButton3}" />
+                <ui:NumberBox
+                    ClearButtonEnabled="False"
+                    Maximum="5"
+                    Minimum="0"
+                    Text="{Binding QuickDisconnectComboHoldTime}"
+                    Value="{Binding QuickDisconnectComboHoldTime}" />
             </DockPanel>
         </DockPanel>
     </DataTemplate>
@@ -311,6 +327,7 @@
                 <ui:NumberBox
                     Grid.Row="1"
                     Grid.Column="1"
+                    ClearButtonEnabled="False"
                     ClipToBounds="True"
                     Maximum="142"
                     Minimum="0"
@@ -318,6 +335,7 @@
                 <ui:NumberBox
                     Grid.Row="1"
                     Grid.Column="2"
+                    ClearButtonEnabled="False"
                     ClipToBounds="True"
                     Maximum="142"
                     Minimum="0"
@@ -380,43 +398,49 @@
             </DockPanel>
             <DockPanel Visibility="{Binding IsAltModeEnabled, Converter={StaticResource BoolToVis}}">
                 <!--  Variable light rumble emulation enabler  -->
-                <ui:ToggleSwitch DockPanel.Dock="Top" IsChecked="{Binding sss}">
-                    <TextBlock Text="Start with variable right rumble emulation enabled" TextWrapping="Wrap" />
-                </ui:ToggleSwitch>
                 <ui:ToggleSwitch
-                    x:Name="EnableQuickDisconnectComboCheckbox"
-                    Content="Toggle variable right rumble emulation via button combo"
+                    x:Name="EnableAltModeToggleButtonCombo"
+                    Content="Toggle alternative rumble mode via button combo"
                     DockPanel.Dock="Top"
-                    IsChecked="{Binding IsVariableRightEmulToggleComboEnabled}" />
-                <DockPanel DockPanel.Dock="Top" LastChildFill="False">
+                    IsChecked="{Binding IsAltModeToggleButtonComboEnabled}" />
+                <DockPanel
+                    DockPanel.Dock="Top"
+                    IsEnabled="{Binding IsChecked, ElementName=EnableAltModeToggleButtonCombo}"
+                    LastChildFill="False">
                     <!--  DataContext="{Binding VariableRightEmulToggleCombo}"  -->
                     <Label
                         VerticalAlignment="Center"
-                        Content="Toogle combo (3s):"
+                        Content="Toogle combo:"
                         DockPanel.Dock="Left" />
                     <!--  Change ComboBox later so it's binding to a enum  -->
                     <ComboBox
                         Width="80"
                         DockPanel.Dock="Left"
-                        IsEnabled="{Binding IsChecked, ElementName=EnableQuickDisconnectComboCheckbox}"
                         ItemsSource="{Binding Source={wpf:EnumBindingSource {x:Type devmvvm:ControlApp_ComboButtons}}}"
-                        SelectedItem="{Binding VarRightEmul_ToggleComboButton1}"
-                        Text="{Binding VarRightEmul_ToggleComboButton1}" />
+                        SelectedItem="{Binding AltModeToggleButttonCombo_Button1}"
+                        Text="{Binding AltModeToggleButttonCombo_Button1}" />
                     <ComboBox
                         Width="80"
                         DockPanel.Dock="Left"
-                        IsEnabled="{Binding IsChecked, ElementName=EnableQuickDisconnectComboCheckbox}"
                         ItemsSource="{Binding Source={wpf:EnumBindingSource {x:Type devmvvm:ControlApp_ComboButtons}}}"
-                        SelectedItem="{Binding VarRightEmul_ToggleComboButton2}"
-                        Text="{Binding VarRightEmul_ToggleComboButton2}" />
+                        SelectedItem="{Binding AltModeToggleButttonCombo_Button2}"
+                        Text="{Binding AltModeToggleButttonCombo_Button2}" />
                     <ComboBox
                         Width="80"
                         DockPanel.Dock="Left"
-                        IsEnabled="{Binding IsChecked, ElementName=EnableQuickDisconnectComboCheckbox}"
                         ItemsSource="{Binding Source={wpf:EnumBindingSource {x:Type devmvvm:ControlApp_ComboButtons}}}"
-                        SelectedItem="{Binding VarRightEmul_ToggleComboButton3}"
-                        Text="{Binding VarRightEmul_ToggleComboButton3}" />
+                        SelectedItem="{Binding AltModeToggleButttonCombo_Button3}"
+                        Text="{Binding AltModeToggleButttonCombo_Button3}" />
+                    <ui:NumberBox
+                        ClearButtonEnabled="False"
+                        Maximum="5"
+                        Minimum="1"
+                        Text="{Binding AltModeToggleComboHoldTime}"
+                        Value="{Binding AltModeToggleComboHoldTime}" />
                 </DockPanel>
+                <ui:ToggleSwitch DockPanel.Dock="Top" IsChecked="{Binding AlwaysStartInNormalRumbleMode}">
+                    <Label Content="Start in normal mode" />
+                </ui:ToggleSwitch>
             </DockPanel>
 
 
@@ -434,11 +458,11 @@
                 IsChecked="{Binding IsLeftMotorStrRescalingEnabled}" />
             <!--  Upper range controls  -->
             <DockPanel DockPanel.Dock="Top">
-                <TextBlock
+                <Label
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    DockPanel.Dock="Left"
-                    Text="New upper range:" />
+                    Content="New upper range:"
+                    DockPanel.Dock="Left" />
                 <Slider
                     DockPanel.Dock="Right"
                     IsSnapToTickEnabled="True"
@@ -449,11 +473,11 @@
             </DockPanel>
             <!--  lower range controls  -->
             <DockPanel DockPanel.Dock="Top">
-                <TextBlock
+                <Label
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    DockPanel.Dock="Left"
-                    Text="New lower range:" />
+                    Content="New lower range:"
+                    DockPanel.Dock="Left" />
                 <Slider
                     DockPanel.Dock="Right"
                     IsSnapToTickEnabled="True"
@@ -470,12 +494,11 @@
         <DockPanel>
             <!--  Conversion upper range  -->
             <DockPanel DockPanel.Dock="Top">
-                <TextBlock
+                <Label
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    DockPanel.Dock="Left"
-                    Text="Conversion upper range:"
-                    TextWrapping="Wrap" />
+                    Content="Conversion upper range:"
+                    DockPanel.Dock="Left" />
                 <Slider
                     DockPanel.Dock="Right"
                     IsSnapToTickEnabled="True"
@@ -486,12 +509,11 @@
             </DockPanel>
             <!--  Conversion lower range  -->
             <DockPanel DockPanel.Dock="Top">
-                <TextBlock
+                <Label
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    DockPanel.Dock="Left"
-                    Text="Conversion lower range:"
-                    TextWrapping="Wrap" />
+                    Content="Conversion lower range:"
+                    DockPanel.Dock="Left" />
                 <Slider
                     DockPanel.Dock="Right"
                     IsSnapToTickEnabled="True"
@@ -500,12 +522,11 @@
                     TickFrequency="1"
                     Value="{Binding RightRumbleConversionLowerRange}" />
             </DockPanel>
-            <TextBlock
+            <Label
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                DockPanel.Dock="Top"
-                Text="Force activate right motor when above..."
-                TextWrapping="Wrap" />
+                Content="Force activate right motor when above..."
+                DockPanel.Dock="Top" />
             <!--  Forced right motor activation / light rumble threshold  -->
             <DockPanel DockPanel.Dock="Top">
                 <ui:ToggleSwitch
@@ -543,41 +564,39 @@
     </DataTemplate>
 
     <!--  Template: Mode_Unique_All  -->
-    <DataTemplate x:Key="Template_Unique_All">
+    <DataTemplate x:Key="Template_Unique_All" DataType="devmvvm:GroupModeUniqueVM">
         <StackPanel>
             <DockPanel>
-                <TextBlock
+                <Label
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    DockPanel.Dock="Left"
-                    Text="HID Device Mode:" />
+                    Content="HID Device Mode:"
+                    DockPanel.Dock="Left" />
                 <ComboBox
                     VerticalAlignment="Center"
                     DockPanel.Dock="Right"
                     ItemsSource="{Binding HIDDeviceModesList}"
                     SelectedItem="{Binding Context, FallbackValue=4}" />
             </DockPanel>
-            <DockPanel DockPanel.Dock="Top">
-                <ui:ToggleSwitch
-                    VerticalContentAlignment="Center"
-                    Content="Allow apps to control LEDs (e.g.: RPCS3)"
-                    DockPanel.Dock="Left"
-                    IsChecked="{Binding AllowAppsToControlLEDsInSXSMode}"
-                    Visibility="{Binding Path=Context, Converter={StaticResource VisibilityPerHIDModeConverterKey}, ConverterParameter=100}" />
-                <ui:ToggleSwitch
-                    VerticalContentAlignment="Center"
-                    Content="Enable DS4 Lightbar Translation"
-                    DockPanel.Dock="Right"
-                    IsChecked="{Binding IsDS4LightbarTranslationEnabled}"
-                    Visibility="{Binding Path=Context, Converter={StaticResource VisibilityPerHIDModeConverterKey}, ConverterParameter=1000}" />
-            </DockPanel>
+            <!--<ui:ToggleSwitch
+                VerticalContentAlignment="Center"
+                Content="Allow apps to control LEDs (e.g.: RPCS3)"
+                DockPanel.Dock="Top"
+                IsChecked="{Binding AllowAppsToControlLEDsInSXSMode}"
+                Visibility="{Binding Path=Context, Converter={StaticResource VisibilityPerHIDModeConverterKey}, ConverterParameter=100}" />-->
+            <ui:ToggleSwitch
+                VerticalContentAlignment="Center"
+                Content="Prevent remapping issues in DS4W mode"
+                DockPanel.Dock="Top"
+                IsChecked="{Binding PreventRemappingConflictsInDS4WMode}"
+                Visibility="{Binding Path=Context, Converter={StaticResource VisibilityPerHIDModeConverterKey}, ConverterParameter=1000}" />
             <!--  Pressure buttons mode  -->
             <DockPanel Visibility="{Binding Path=Context, Converter={StaticResource VisibilityPerHIDModeConverterKey}, ConverterParameter=11}">
-                <TextBlock
+                <Label
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    DockPanel.Dock="Left"
-                    Text="Pressure buttons mode:" />
+                    Content="Pressure buttons mode:"
+                    DockPanel.Dock="Left" />
                 <ComboBox
                     VerticalAlignment="Center"
                     DockPanel.Dock="Right"
@@ -586,11 +605,11 @@
             </DockPanel>
             <!--  DPAD modes  -->
             <DockPanel Visibility="{Binding Path=Context, Converter={StaticResource VisibilityPerHIDModeConverterKey}, ConverterParameter=11}">
-                <TextBlock
+                <Label
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    DockPanel.Dock="Left"
-                    Text="Expose D-Pad as:" />
+                    Content="Expose D-Pad as:"
+                    DockPanel.Dock="Left" />
                 <ComboBox
                     VerticalAlignment="Center"
                     DockPanel.Dock="Right"
@@ -601,22 +620,25 @@
     </DataTemplate>
 
     <!--  Template: Output Rate Control  -->
-    <DataTemplate x:Key="Template_OutputRateControl">
+    <DataTemplate x:Key="Template_OutputRateControl" DataType="devmvvm:GroupOutRepControlVM">
         <DockPanel>
             <!--  Output rate enabler  -->
             <ui:ToggleSwitch
-                Content="Limit maximum output rate when wireless"
+                Content="Limit maximum output rate when wireless (in ms)"
                 DockPanel.Dock="Top"
                 IsChecked="{Binding IsOutputReportRateControlEnabled}" />
             <!--  Max output rate adjuster  -->
             <DockPanel DockPanel.Dock="Top">
-                <TextBlock
-                    HorizontalAlignment="Left"
+                <Label
                     VerticalAlignment="Center"
-                    DockPanel.Dock="Left"
-                    Text="Max output rate:" />
+                    Content="Max output rate:"
+                    DockPanel.Dock="Left" />
+                <Label
+                    VerticalAlignment="Center"
+                    Content="{Binding MaxOutputRate}"
+                    DockPanel.Dock="Left" />
                 <Slider
-                    DockPanel.Dock="Right"
+                    DockPanel.Dock="Left"
                     IsSnapToTickEnabled="True"
                     Maximum="255"
                     Minimum="1"

@@ -1,16 +1,4 @@
-﻿using DynamicData.Binding;
-using Nefarius.DsHidMini.ControlApp.UserData;
-using Newtonsoft.Json.Linq;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Reactive;
-using System.Reactive.Linq;
+﻿using Nefarius.DsHidMini.ControlApp.UserData;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 

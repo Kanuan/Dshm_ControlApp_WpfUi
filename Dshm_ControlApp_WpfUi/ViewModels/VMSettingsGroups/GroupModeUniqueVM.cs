@@ -1,12 +1,4 @@
-﻿using Nefarius.DsHidMini.ControlApp.DSHM_Settings;
-using Nefarius.DsHidMini.ControlApp.UserData;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Net.Sockets;
-using System.Reactive.Linq;
+﻿using Nefarius.DsHidMini.ControlApp.UserData;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
@@ -105,13 +97,13 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         }
 
         // DS4Windows
-        public bool IsDS4LightbarTranslationEnabled
+        public bool PreventRemappingConflictsInDS4WMode
         {
-            get => _tempBackingData.IsDS4LightbarTranslationEnabled;
+            get => _tempBackingData.PreventRemappingConflictsInDS4WMode;
             set
             {
-                _tempBackingData.IsDS4LightbarTranslationEnabled = value;
-                this.OnPropertyChanged(nameof(IsDS4LightbarTranslationEnabled));
+                _tempBackingData.PreventRemappingConflictsInDS4WMode = value;
+                this.OnPropertyChanged(nameof(PreventRemappingConflictsInDS4WMode));
             }
         }
 

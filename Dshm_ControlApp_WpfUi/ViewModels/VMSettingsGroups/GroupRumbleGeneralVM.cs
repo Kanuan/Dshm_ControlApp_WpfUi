@@ -1,8 +1,4 @@
-﻿using Nefarius.DsHidMini.ControlApp.DSHM_Settings;
-using Nefarius.DsHidMini.ControlApp.UserData;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
-using System;
+﻿using Nefarius.DsHidMini.ControlApp.UserData;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
@@ -25,21 +21,21 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         public bool IsAltModeToggleButtonComboEnabled
         {
-            get => _tempBackingData.IsAltModeToggleButtonComboEnabled;
+            get => _tempBackingData.AltModeToggleButtonCombo.IsEnabled;
             set
             {
-                _tempBackingData.IsAltModeToggleButtonComboEnabled = value;
+                _tempBackingData.AltModeToggleButtonCombo.IsEnabled = value;
                 this.OnPropertyChanged(nameof(IsAltModeToggleButtonComboEnabled));
             }
         }
 
-        public bool AlwaysStartInNormal
+        public bool AlwaysStartInNormalRumbleMode
         {
-            get => _tempBackingData.IsAltModeToggleButtonComboEnabled;
+            get => _tempBackingData.AlwaysStartInNormalMode;
             set
             {
-                _tempBackingData.IsAltModeToggleButtonComboEnabled = value;
-                this.OnPropertyChanged(nameof(IsAltModeToggleButtonComboEnabled));
+                _tempBackingData.AlwaysStartInNormalMode = value;
+                this.OnPropertyChanged(nameof(AlwaysStartInNormalRumbleMode));
             }
         }
 
@@ -72,6 +68,16 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
+        public int AltModeToggleComboHoldTime
+        {
+            get => _tempBackingData.AltModeToggleButtonCombo.HoldTime;
+            set
+            {
+                _tempBackingData.AltModeToggleButtonCombo.HoldTime = value;
+                this.OnPropertyChanged(nameof(AltModeToggleComboHoldTime));
+            }
+        }
+
         public bool IsLeftMotorDisabled
         {
             get => _tempBackingData.IsLeftMotorDisabled;
@@ -92,17 +98,6 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
                 this.OnPropertyChanged(nameof(IsRightMotorDisabled));
             }
         }
-
-        //public override void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
-        //{
-        //    BackingData_RumbleGeneral.CopySettings(dataContainerSource.rumbleGeneralData, _tempBackingData);
-        //}
-
-        //public override void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
-        //{
-        //    BackingData_RumbleGeneral.CopySettings(_tempBackingData, dataContainerSource.rumbleGeneralData);
-        //    NotifyAllPropertiesHaveChanged();
-        //}
 
         public GroupRumbleGeneralVM() : base()
         {

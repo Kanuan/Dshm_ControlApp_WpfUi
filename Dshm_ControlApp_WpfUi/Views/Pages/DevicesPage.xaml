@@ -120,7 +120,7 @@
                             Content="Apply changes" />
                         <ui:Button
                             HorizontalAlignment="Stretch"
-                            Command="{Binding RevertChangesCommand}"
+                            Command="{Binding RefreshDeviceSettingsCommand}"
                             Content="Cancel" />
                     </UniformGrid>
 

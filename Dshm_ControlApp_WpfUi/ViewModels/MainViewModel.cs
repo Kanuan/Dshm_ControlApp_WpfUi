@@ -1,16 +1,5 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Reactive;
-using System.Reflection;
-using Microsoft.Win32;
-using Nefarius.DsHidMini.ControlApp.Drivers;
-using Nefarius.DsHidMini.ControlApp.Util;
-using Nefarius.DsHidMini.ControlApp.Util.App;
-using Nefarius.DsHidMini.ControlApp.Util.Web;
-using Nefarius.DsHidMini.Util;
-using Nefarius.Utilities.DeviceManagement.PnP;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
+﻿using Nefarius.DsHidMini.ControlApp.Util.App;
+using System.Collections.ObjectModel;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {

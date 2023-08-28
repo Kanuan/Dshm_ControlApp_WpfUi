@@ -108,8 +108,8 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
 
         // ----------------------------------------------------------- AUTO-PROPERTIES
 
-        private static readonly ControlApp_UserData controlAppSettings = new();
-        
+        private static readonly ControlApp_UserData controlAppSettings = ControlApp_UserData.Instance;
+
 
         // ----------------------------------------------------------- PROPERTIES
 
@@ -162,12 +162,17 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             /// <summary>
             ///     Implicitly loads configuration from file.
             /// </summary>
-            private static readonly Lazy<ApplicationConfiguration> AppConfigLazy =
-                new Lazy<ApplicationConfiguration>(() => JsonApplicationConfiguration
-                    .Load<ApplicationConfiguration>(
+            private static readonly Lazy<ControlApp_UserData> AppConfigLazy =
+                new Lazy<ControlApp_UserData>(() => JsonApplicationConfiguration
+                    .Load<ControlApp_UserData>(
                         GlobalUserCustomsFileName,
                         true,
                         true));
+
+            /// <summary>
+            ///     Singleton instance of app configuration.
+            /// </summary>
+            public static ControlApp_UserData Instance => AppConfigLazy.Value;
 
             [JsonIgnore]
             public static string GlobalUserCustomsFileName => "ControlApp_UserData";

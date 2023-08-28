@@ -1,11 +1,4 @@
-﻿using Nefarius.DsHidMini.ControlApp.DSHM_Settings;
-using Nefarius.DsHidMini.ControlApp.UserData;
-using Newtonsoft.Json.Linq;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
-using System.Text.Json.Serialization;
-using System.Windows;
-using static Nefarius.DsHidMini.ControlApp.MVVM.GroupLEDsCustomsVM;
+﻿using Nefarius.DsHidMini.ControlApp.UserData;
 using static Nefarius.DsHidMini.ControlApp.UserData.BackingData_LEDs.All4LEDsCustoms;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
@@ -26,6 +19,16 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         }
 
         protected override IBackingData _myInterface => _tempBackingData;
+
+        public bool AllowLedsOverride
+        {
+            get => _tempBackingData.AllowExternalLedsControl;
+            set
+            {
+                _tempBackingData.AllowExternalLedsControl = value;
+                this.OnPropertyChanged(nameof(AllowLedsOverride));
+            }
+        }
 
         [ObservableProperty] int _currentLEDCustomsIndex = 0;
 

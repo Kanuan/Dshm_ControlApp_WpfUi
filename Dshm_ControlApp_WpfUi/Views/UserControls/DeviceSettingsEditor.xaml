@@ -72,6 +72,20 @@
             <Setter Property="Margin" Value="0,2,0,0" />
             <Setter Property="ContentTemplate" Value="{StaticResource ModeSetting}" />
         </Style>
+
+        <Style BasedOn="{StaticResource {x:Type Label}}" TargetType="Label">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,10,0" />
+        </Style>
+
+        <Style x:Key="StyleKey_DockPanelLine" TargetType="DockPanel">
+            <Setter Property="Margin" Value="0,0,0,10" />
+        </Style>
+
+        <!--<Style BasedOn="{StaticResource BaseStyle}" TargetType="Slider" />
+        <Style BasedOn="{StaticResource BaseStyle}" TargetType="TextBox" />-->
+
     </UserControl.Resources>
     <ui:DynamicScrollViewer>
         <DockPanel

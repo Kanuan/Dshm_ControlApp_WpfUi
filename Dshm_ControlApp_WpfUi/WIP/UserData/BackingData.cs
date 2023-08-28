@@ -1,23 +1,23 @@
 ﻿using Nefarius.DsHidMini.ControlApp.DSHM_Settings;
 using Nefarius.DsHidMini.ControlApp.MVVM;
-using ReactiveUI.Fody.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Nefarius.DsHidMini.ControlApp.UserData
 {
     public class ButtonsCombo
     {
+        private int holdTime;
+     
+        public bool IsEnabled { get; set; }
+        public int HoldTime
+        {
+            get => holdTime;
+            set => holdTime = (value >= 0) ? value : 0;
+        }
 
         private ControlApp_ComboButtons button1;
         private ControlApp_ComboButtons button2;
         private ControlApp_ComboButtons button3;
-
         public ControlApp_ComboButtons Button1
         {
             get => button1;
@@ -55,6 +55,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
 
         public void copyCombo(ButtonsCombo comboToCopy)
         {
+            HoldTime = comboToCopy.HoldTime;
             Button1 = comboToCopy.Button1;
             Button2 = comboToCopy.Button2;
             Button3 = comboToCopy.Button3;
@@ -165,8 +166,8 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
         public ControlApp_DPADModes DPadExposureMode { get; set; } = ControlApp_DPADModes.HAT;
         public bool IsLEDsAsXInputSlotEnabled { get; set; } = false;
         public bool PreventRemappingConflictsInSXSMode { get; set; } = false;
-        public bool PreventRemappingConflictsInDS4WMode { get; set; } = true;
-        public bool IsDS4LightbarTranslationEnabled { get; set; } = false;
+        public bool PreventRemappingConflictsInDS4WModeqw { get; set; } = true;
+        public bool PreventRemappingConflictsInDS4WMode { get; set; } = false;
         public bool AllowAppsToOverrideLEDsInSXSMode { get; set; } = false;
 
         public override void ResetToDefault()
@@ -180,9 +181,9 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             destiny.PressureExposureMode = source.PressureExposureMode;
             destiny.DPadExposureMode = source.DPadExposureMode;
             destiny.IsLEDsAsXInputSlotEnabled = source.IsLEDsAsXInputSlotEnabled;
-            destiny.IsDS4LightbarTranslationEnabled = source.IsDS4LightbarTranslationEnabled;
-            destiny.PreventRemappingConflictsInSXSMode = source.PreventRemappingConflictsInSXSMode;
             destiny.PreventRemappingConflictsInDS4WMode = source.PreventRemappingConflictsInDS4WMode;
+            destiny.PreventRemappingConflictsInSXSMode = source.PreventRemappingConflictsInSXSMode;
+            destiny.PreventRemappingConflictsInDS4WModeqw = source.PreventRemappingConflictsInDS4WModeqw;
             destiny.AllowAppsToOverrideLEDsInSXSMode = source.AllowAppsToOverrideLEDsInSXSMode;
         }
 
@@ -206,7 +207,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
                 ? SaveLoadUtils.Get_DSHM_DPadMode_From_ControlApp[this.DPadExposureMode] : null;
 
             dshmContextSettings.ContextSettings.LEDSettings.Authority = this.AllowAppsToOverrideLEDsInSXSMode ? DSHM_LEDsAuthority.Application : DSHM_LEDsAuthority.Driver;
-            dshmContextSettings.ContextSettings.LEDSettings.Authority = this.IsDS4LightbarTranslationEnabled ? DSHM_LEDsAuthority.Application : DSHM_LEDsAuthority.Driver;
+            dshmContextSettings.ContextSettings.LEDSettings.Authority = this.PreventRemappingConflictsInDS4WMode ? DSHM_LEDsAuthority.Application : DSHM_LEDsAuthority.Driver;
         }
 
         public override void CopySettingsFromContainer(BackingDataContainer container)
@@ -223,6 +224,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
     public class BackingData_LEDs : SettingsBackingData
     {
         public ControlApp_LEDsModes LEDMode { get; set; } = ControlApp_LEDsModes.BatteryIndicatorPlayerIndex;
+        public bool AllowExternalLedsControl { get; set; } = true;
         public All4LEDsCustoms LEDsCustoms { get; set; } = new();
 
 
@@ -234,6 +236,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
         public static void CopySettings(BackingData_LEDs destiny, BackingData_LEDs source)
         {
             destiny.LEDMode = source.LEDMode;
+            destiny.AllowExternalLedsControl = source.AllowExternalLedsControl;
             destiny.LEDsCustoms.CopyLEDsCustoms(source.LEDsCustoms);
         }
 
@@ -252,6 +255,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             DshmCustomSettings.AllLEDSettings dshm_AllLEDsSettings = dshmContextSettings.ContextSettings.LEDSettings;
 
             dshm_AllLEDsSettings.Mode = SaveLoadUtils.Get_DSHM_LEDModes_From_ControlApp[this.LEDMode];
+            dshm_AllLEDsSettings.Authority = AllowExternalLedsControl ? DSHM_LEDsAuthority.Automatic : DSHM_LEDsAuthority.Driver;
 
             var dshm_Customs = dshm_AllLEDsSettings.CustomPatterns;
 
@@ -352,9 +356,10 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
     {
         public bool IsWirelessIdleDisconnectEnabled { get; set; } = true;
         public int WirelessIdleDisconnectTime { get; set; } = 5;
-        public bool IsQuickDisconnectComboEnabled { get; set; } = true;
         public ButtonsCombo QuickDisconnectCombo { get; set; } = new()
         {
+            IsEnabled = true,
+            HoldTime = 3,
             Button1 = ControlApp_ComboButtons.PS,
             Button2 = ControlApp_ComboButtons.R1,
             Button3 = ControlApp_ComboButtons.L1,
@@ -367,10 +372,10 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
 
         public static void CopySettings(BackingData_Wireless destiny, BackingData_Wireless source)
         {
-            destiny.IsQuickDisconnectComboEnabled = source.IsQuickDisconnectComboEnabled;
             destiny.IsWirelessIdleDisconnectEnabled = source.IsWirelessIdleDisconnectEnabled;
             destiny.QuickDisconnectCombo.copyCombo(source.QuickDisconnectCombo);
             destiny.WirelessIdleDisconnectTime = source.WirelessIdleDisconnectTime;
+            destiny.QuickDisconnectCombo = source.QuickDisconnectCombo;
         }
 
         public override void CopySettingsFromContainer(BackingDataContainer container)
@@ -387,7 +392,12 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
         {
             dshmContextSettings.DisableWirelessIdleTimeout = !this.IsWirelessIdleDisconnectEnabled;
             dshmContextSettings.WirelessIdleTimeoutPeriodMs = this.WirelessIdleDisconnectTime * 60 * 1000;
-            //dshmContextSettings.QuickDisconnectCombo = dictionary combo pair;
+
+            dshmContextSettings.QuickDisconnectCombo.IsEnabled = this.QuickDisconnectCombo.IsEnabled;
+            dshmContextSettings.QuickDisconnectCombo.HoldTime = this.QuickDisconnectCombo.HoldTime;
+            dshmContextSettings.QuickDisconnectCombo.Button1 = this.QuickDisconnectCombo.Button1;
+            dshmContextSettings.QuickDisconnectCombo.Button2 = this.QuickDisconnectCombo.Button2;
+            dshmContextSettings.QuickDisconnectCombo.Button3 = this.QuickDisconnectCombo.Button3;
         }
     }
 
@@ -482,6 +492,8 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
         public bool IsAltModeToggleButtonComboEnabled { get; set; } = false;
         public ButtonsCombo AltModeToggleButtonCombo { get; set; } = new()
         {
+            IsEnabled = false,
+            HoldTime = 3,
             Button1 = ControlApp_ComboButtons.PS,
             Button2 = ControlApp_ComboButtons.SELECT,
             Button3 = ControlApp_ComboButtons.None,
@@ -519,10 +531,13 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             dshmRumbleSettings.DisableSM = this.IsLeftMotorDisabled;
 
             dshmRumbleSettings.SMToBMConversion.Enabled = AlwaysStartInNormalMode ? false : this.IsAltRumbleModeEnabled;
-            dshmRumbleSettings.SMToBMConversion.IsSMToBMConversionToggleComboEnabled = IsAltRumbleModeEnabled ? this.IsAltModeToggleButtonComboEnabled : false;
-            // button combo
 
-
+            // Disable toggle combo if alt Rumble Mode is not supposed to be used
+            dshmRumbleSettings.SMToBMConversion.ToggleSMtoBMConversionCombo.IsEnabled = IsAltRumbleModeEnabled ? this.AltModeToggleButtonCombo.IsEnabled : false;
+            dshmRumbleSettings.SMToBMConversion.ToggleSMtoBMConversionCombo.HoldTime = this.AltModeToggleButtonCombo.HoldTime;
+            dshmRumbleSettings.SMToBMConversion.ToggleSMtoBMConversionCombo.Button1 = this.AltModeToggleButtonCombo.Button1;
+            dshmRumbleSettings.SMToBMConversion.ToggleSMtoBMConversionCombo.Button2 = this.AltModeToggleButtonCombo.Button2;
+            dshmRumbleSettings.SMToBMConversion.ToggleSMtoBMConversionCombo.Button3 = this.AltModeToggleButtonCombo.Button3;
         }
     }
 

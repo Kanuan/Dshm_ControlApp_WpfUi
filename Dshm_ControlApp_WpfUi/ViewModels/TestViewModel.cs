@@ -1,21 +1,9 @@
-﻿using Dshm_ControlApp_WpfUi.ViewModels.Pages;
-using Dshm_ControlApp_WpfUi;
+﻿using Dshm_ControlApp_WpfUi;
 using FontAwesome5;
 using Nefarius.DsHidMini.ControlApp.Drivers;
 using Nefarius.DsHidMini.ControlApp.UserData;
 using Nefarius.Utilities.Bluetooth;
 using Nefarius.Utilities.DeviceManagement.PnP;
-using Newtonsoft.Json.Linq;
-using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Drawing;
-using System.Net.NetworkInformation;
-using System.Reactive;
-using System.Reactive.Linq;
 using Wpf.Ui.Controls;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
@@ -37,12 +25,16 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         // ------------------------------------------------------ PROPERTIES
 
-        [ObservableProperty] private VMGroupsContainer _deviceCustomsVM;
-        [ObservableProperty] private VMGroupsContainer _selectedGroupsVM;
+        [ObservableProperty] private VMGroupsContainer _deviceCustomsVM = new() { AllowEditing = true };
+        [ObservableProperty] private VMGroupsContainer _profileCustomsVM = new();
+        [ObservableProperty] private VMGroupsContainer _globalCustomsVM = new();
+
+        [ObservableProperty] private VMGroupsContainer _selectedGroupsVM = new();
 
         //internal string DisplayName { get; set; }
         [ObservableProperty] private bool _isEditorEnabled;
         [ObservableProperty] private bool _isProfileSelectorVisible;
+
         public List<SettingsModes> SettingsModesList => settingsModesList;
 
         [ObservableProperty] private SettingsModes _currentDeviceSettingsMode;
@@ -222,8 +214,9 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         internal TestViewModel(PnPDevice device)
         {
             _device = device;
-            // Loads correspondent controller data based on controller's MAC address 
             deviceUserData = UserDataManager.GetDeviceData(DeviceAddress);
+            // Loads correspondent controller data based on controller's MAC address 
+
 
             AutoPairDeviceWhenCabled = deviceUserData.AutoPairWhenCabled;
 
@@ -240,36 +233,44 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         [ObservableProperty] public List<ProfileData> _listOfProfiles;
 
-        public void RefreshDeviceSettings()
-        {
-            ListOfProfiles = UserDataManager.Profiles;
-            // Loads device' specific custom settings from its BackingDataContainer into the Settings Groups VM
-            DeviceCustomsVM = new(deviceUserData.DatasContainter);
-            SelectedProfile = UserDataManager.GetProfile(deviceUserData.GuidOfProfileToUse);
-            CurrentDeviceSettingsMode = deviceUserData.SettingsMode;
-            SelectedGroupsVM = UserDataManager.GlobalProfile.GetProfileVMGroupsContainer();
-            IsProfileSelectorVisible = CurrentDeviceSettingsMode == SettingsModes.Profile;
-            UpdateEditor();
-
-        }
-        public void UpdateEditor()
+        partial void OnCurrentDeviceSettingsModeChanged(SettingsModes value)
         {
             switch (CurrentDeviceSettingsMode)
             {
-                case SettingsModes.Profile:
-                    SelectedGroupsVM = SelectedProfile.GetProfileVMGroupsContainer();
-                    break;
                 case SettingsModes.Custom:
                     SelectedGroupsVM = DeviceCustomsVM;
                     break;
+                case SettingsModes.Profile:
+                    SelectedGroupsVM = ProfileCustomsVM;
+                    break;
                 case SettingsModes.Global:
                 default:
-                    SelectedGroupsVM = UserDataManager.GlobalProfile.GetProfileVMGroupsContainer();
+                    SelectedGroupsVM = GlobalCustomsVM;
                     break;
             }
-            SelectedGroupsVM.AllowEditing = CurrentDeviceSettingsMode == SettingsModes.Custom;
             IsProfileSelectorVisible = CurrentDeviceSettingsMode == SettingsModes.Profile;
         }
+
+        partial void OnSelectedProfileChanged(ProfileData? value)
+        {
+            ProfileCustomsVM.LoadDatasToAllGroups(SelectedProfile.DataContainer);
+        }
+
+        [RelayCommand]
+        public void RefreshDeviceSettings()
+        {
+            AutoPairDeviceWhenCabled = deviceUserData.AutoPairWhenCabled;
+            DeviceCustomsVM.LoadDatasToAllGroups(deviceUserData.DatasContainter);
+            ListOfProfiles = UserDataManager.Profiles;
+            SelectedProfile = UserDataManager.GetProfile(deviceUserData.GuidOfProfileToUse);
+            GlobalCustomsVM.LoadDatasToAllGroups(UserDataManager.GlobalProfile.DataContainer);
+            CurrentDeviceSettingsMode = deviceUserData.SettingsMode;
+        }
+
+        //public void UpdateEditor()
+        //{
+
+        //}
 
         [RelayCommand]
         private void ApplyChanges()
@@ -287,15 +288,6 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
                 deviceUserData.GuidOfProfileToUse = SelectedProfile.ProfileGuid;
             }
             UserDataManager.SaveChangesAndUpdateDsHidMiniConfigFile();
-        }
-
-        [RelayCommand]
-        private void RevertChanges()
-        {
-            DeviceCustomsVM.LoadDatasToAllGroups(deviceUserData.DatasContainter);
-            SelectedProfile = UserDataManager.GetProfile(deviceUserData.GuidOfProfileToUse);
-            CurrentDeviceSettingsMode = deviceUserData.SettingsMode;
-            AutoPairDeviceWhenCabled = deviceUserData.AutoPairWhenCabled;
         }
 
         [RelayCommand]
