@@ -10,6 +10,8 @@
     Startup="OnStartup">
     <Application.Resources>
         <ResourceDictionary>
+            <BitmapImage x:Key="NormalRumbleModeImage" UriSource="\Resources\NormalRumbleMode.png" />
+            <BitmapImage x:Key="AltRumbleModeImage" UriSource="\Resources\AltRumbleMode.png" />
             <wpf:VisibilityPerHidModeConverter x:Key="VisibilityPerHIDModeConverterKey" />
             <helpers:BooleanToVisibilityConverter
                 x:Key="BoolToVis_TC_FV"

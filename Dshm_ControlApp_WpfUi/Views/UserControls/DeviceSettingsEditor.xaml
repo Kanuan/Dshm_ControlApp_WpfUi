@@ -458,7 +458,7 @@
                 <Image Height="150" DockPanel.Dock="Top">
                     <Image.Style>
                         <Style TargetType="Image">
-                            <Setter Property="Source" Value="\Resources\NormalRumbleMode.png" />
+                            <Setter Property="Source" Value="{StaticResource NormalRumbleModeImage}" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding IsChecked, ElementName=AltModeEnabler_ToggleSwitch}" Value="True">
                                     <Setter Property="Source" Value="\Resources\AltRumbleMode.png" />
