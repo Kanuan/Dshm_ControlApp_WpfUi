@@ -4,7 +4,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
     public class GroupWirelessSettingsVM : GroupSettingsVM
     {
-        private BackingData_Wireless _tempBackingData = new();
+        private WirelessSettings _tempBackingData = new();
         protected override IBackingData _myInterface => _tempBackingData;
 
         public override SettingsModeGroups Group { get; } = SettingsModeGroups.WirelessSettings;
@@ -46,7 +46,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
                 this.OnPropertyChanged(nameof(QuickDisconnectComboHoldTime));
             }
         }
-        public ControlApp_ComboButtons QuickDisconnectComboButton1
+        public Manager_Button QuickDisconnectComboButton1
         {
             get => _tempBackingData.QuickDisconnectCombo.Button1;
             set
@@ -56,7 +56,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public ControlApp_ComboButtons QuickDisconnectComboButton2
+        public Manager_Button QuickDisconnectComboButton2
         {
             get => _tempBackingData.QuickDisconnectCombo.Button2;
             set
@@ -66,7 +66,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public ControlApp_ComboButtons QuickDisconnectComboButton3
+        public Manager_Button QuickDisconnectComboButton3
         {
             get => _tempBackingData.QuickDisconnectCombo.Button3;
             set

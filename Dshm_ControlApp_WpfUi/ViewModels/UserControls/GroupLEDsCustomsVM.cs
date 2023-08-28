@@ -1,11 +1,11 @@
 ﻿using Nefarius.DsHidMini.ControlApp.UserData;
-using static Nefarius.DsHidMini.ControlApp.UserData.BackingData_LEDs.All4LEDsCustoms;
+using static Nefarius.DsHidMini.ControlApp.UserData.LedsSettings.All4LEDsCustoms;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
     public partial class GroupLEDsCustomsVM : GroupSettingsVM
     {
-        private BackingData_LEDs _tempBackingData = new();
+        private LedsSettings _tempBackingData = new();
 
         public override SettingsModeGroups Group { get; } = SettingsModeGroups.LEDsControl;
         public int LEDMode

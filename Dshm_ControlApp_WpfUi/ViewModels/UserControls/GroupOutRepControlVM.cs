@@ -4,7 +4,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
     public class GroupOutRepControlVM : GroupSettingsVM
     {
-        private BackingData_OutRepControl _tempBackingData = new();
+        private OutputReportSettings _tempBackingData = new();
         protected override IBackingData _myInterface => _tempBackingData;
         public override SettingsModeGroups Group { get; } = SettingsModeGroups.OutputReportControl;
         public bool IsOutputReportRateControlEnabled

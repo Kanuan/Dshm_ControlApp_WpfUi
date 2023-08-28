@@ -9,11 +9,11 @@ using Wpf.Ui.Controls;
 
 namespace Dshm_ControlApp_WpfUi.Views.Pages
 {
-    public partial class ProfileEditorPage : INavigableView<ProfileEditorViewModel>
+    public partial class ProfilesPage : INavigableView<ProfileEditorViewModel>
     {
         public ProfileEditorViewModel ViewModel { get; }
 
-        public ProfileEditorPage(ProfileEditorViewModel viewModel)
+        public ProfilesPage(ProfileEditorViewModel viewModel)
         {
             ViewModel = viewModel;
             DataContext = this;

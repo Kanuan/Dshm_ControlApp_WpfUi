@@ -29,7 +29,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         public static List<ControlApp_DsPressureMode> ListOfPressureModes { get => listOfPressureModes; }
         public static List<ControlApp_DPADModes> ListOfDPadModes { get => listOfDPadModes; }
 
-        private BackingData_ModesUnique _tempBackingData = new();
+        private HidModeSettings _tempBackingData = new();
         protected override IBackingData _myInterface => _tempBackingData;
 
         public override SettingsModeGroups Group { get; } = SettingsModeGroups.Unique_All;

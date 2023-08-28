@@ -16,7 +16,11 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         [ObservableProperty] private GroupRumbleLeftRescaleVM _groupRumbleLeftRescale = new();
         [ObservableProperty] private GroupRumbleRightConversionAdjustsVM _groupRumbleRightConversion = new();
 
-        public VMGroupsContainer(BackingDataContainer? dataContainer = null)
+        public VMGroupsContainer() : this(null)
+        {
+        }
+
+        public VMGroupsContainer(DeviceSettings? dataContainer = null)
         {
             groupSettingsList.Add(GroupModeUnique);
             groupSettingsList.Add(GroupLEDsControl);
@@ -27,11 +31,10 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             groupSettingsList.Add(GroupRumbleLeftRescale);
             groupSettingsList.Add(GroupRumbleRightConversion);
 
-            if(dataContainer != null)
-                LoadDatasToAllGroups(dataContainer);
-
-            // Duct tape for RaisePropertyChange(string.empty)
             this.GroupModeUnique.PropertyChanged += ModeSettingsChanged;
+
+            if (dataContainer != null)
+                LoadDatasToAllGroups(dataContainer);
         }
 
         private void UpdateLockStateOfGroups()
@@ -64,7 +67,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public void SaveAllChangesToBackingData(BackingDataContainer dataContainer)
+        public void SaveAllChangesToBackingData(DeviceSettings dataContainer)
         {
             foreach (GroupSettingsVM group in groupSettingsList)
             {
@@ -73,7 +76,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         }
 
-        public void LoadDatasToAllGroups(BackingDataContainer dataContainer)
+        public void LoadDatasToAllGroups(DeviceSettings dataContainer)
         {
             foreach (GroupSettingsVM group in groupSettingsList)
             {
@@ -127,13 +130,13 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             this.OnPropertyChanged(string.Empty);
         }
 
-        public void LoadSettingsFromBackingDataContainer(BackingDataContainer dataContainerSource)
+        public void LoadSettingsFromBackingDataContainer(DeviceSettings dataContainerSource)
         {
             _myInterface.CopySettingsFromContainer(dataContainerSource);
             NotifyAllPropertiesHaveChanged();
         }
 
-        public void SaveSettingsToBackingDataContainer(BackingDataContainer dataContainerSource)
+        public void SaveSettingsToBackingDataContainer(DeviceSettings dataContainerSource)
         {
             _myInterface.CopySettingsToContainer(dataContainerSource);
         }

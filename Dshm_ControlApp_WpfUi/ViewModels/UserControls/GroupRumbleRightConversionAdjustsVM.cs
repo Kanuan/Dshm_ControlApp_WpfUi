@@ -6,7 +6,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
     {
         // -------------------------------------------- RIGHT MOTOR CONVERSION GROUP
 
-        public BackingData_VariablaRightRumbleEmulAdjusts _tempBackingData = new();
+        public AltRumbleModeSettings _tempBackingData = new();
         protected override IBackingData _myInterface => _tempBackingData;
 
         public override SettingsModeGroups Group { get; } = SettingsModeGroups.RumbleRightConversion;

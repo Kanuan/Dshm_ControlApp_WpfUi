@@ -50,7 +50,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         CustomPattern,
     }
 
-    public enum ControlApp_ComboButtons
+    public enum Manager_Button
     {
         None,
         PS,

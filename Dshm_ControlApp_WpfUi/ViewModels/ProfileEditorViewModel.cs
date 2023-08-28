@@ -93,6 +93,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             SelectedProfileVM.SaveChanges();
             ShowSnackbarMessage("Profile updated.", "", ControlAppearance.Info, new SymbolIcon(SymbolRegular.ErrorCircle24), 2);
             IsEditing = false;
+            TestViewModel.UserDataManager.SaveChangesAndUpdateDsHidMiniConfigFile();
         }
 
         [RelayCommand]
@@ -111,6 +112,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             {
                 TestViewModel.UserDataManager.GlobalProfile = obj._profileData;
                 ShowSnackbarMessage("Global profile updated.", "", ControlAppearance.Info, new SymbolIcon(SymbolRegular.Checkmark24), 2);
+                TestViewModel.UserDataManager.SaveChangesAndUpdateDsHidMiniConfigFile();
             }
             UpdateProfileList();
         }
@@ -119,6 +121,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         private void CreateProfile()
         {
             TestViewModel.UserDataManager.CreateNewProfile("New profile");
+            TestViewModel.UserDataManager.SaveChangesAndUpdateDsHidMiniConfigFile();
             UpdateProfileList();
         }
 
@@ -127,6 +130,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         {
             if (obj == null) return;
             TestViewModel.UserDataManager.DeleteProfile(obj._profileData);
+            TestViewModel.UserDataManager.SaveChangesAndUpdateDsHidMiniConfigFile();
             UpdateProfileList();
         }
             
@@ -134,7 +138,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         public partial class ProfileViewModel : ObservableObject
         {
-            ControllersUserData _userDataManager = TestViewModel.UserDataManager;
+            DshmConfigManager _userDataManager = TestViewModel.UserDataManager;
 
             public readonly ProfileData _profileData;
 
@@ -147,7 +151,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             {
                 _profileData = data;
                 _name = data.ProfileName;
-                _vmGroupsCont = data.GetProfileVMGroupsContainer();
+                _vmGroupsCont = new(data.DataContainer);
             }
 
             [RelayCommand]
@@ -159,7 +163,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
                 }
                 _profileData.ProfileName = _name;
                 VmGroupsCont.SaveAllChangesToBackingData(_profileData.DataContainer);
-            TestViewModel.UserDataManager.SaveChangesAndUpdateDsHidMiniConfigFile();
+            
             }
 
         [RelayCommand]

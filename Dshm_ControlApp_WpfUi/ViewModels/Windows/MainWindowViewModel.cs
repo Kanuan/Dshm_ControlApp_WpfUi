@@ -27,7 +27,7 @@ namespace Dshm_ControlApp_WpfUi.ViewModels.Windows
             {
                 Content = "Profiles",
                 Icon = new SymbolIcon { Symbol = SymbolRegular.DocumentOnePage20 },
-                TargetPageType = typeof(Views.Pages.ProfileEditorPage)
+                TargetPageType = typeof(Views.Pages.ProfilesPage)
             },
         };
 

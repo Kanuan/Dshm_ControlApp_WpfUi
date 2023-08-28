@@ -37,21 +37,22 @@
   <ItemGroup>
     <None Remove="Assets\wpfui-icon-256.png" />
     <None Remove="Assets\wpfui-icon-1024.png" />
+    <None Remove="Resources\AltRumbleMode.png" />
+    <None Remove="Resources\NormalRumbleMode.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\NormalRumbleMode.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Assets\wpfui-icon-256.png" />
     <Resource Include="Assets\wpfui-icon-1024.png" />
+    <Resource Include="Resources\AltRumbleMode.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Resourcess\GroupSettingsTemplates.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Views\Windows\" />
+    <Folder Include="Models\Enums\" />
   </ItemGroup>
 
 </Project>

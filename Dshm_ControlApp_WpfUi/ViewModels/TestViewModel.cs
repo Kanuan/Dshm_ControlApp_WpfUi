@@ -12,10 +12,10 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
     {
         // ------------------------------------------------------ FIELDS
 
-        internal static ControllersUserData UserDataManager = new ControllersUserData();
+        internal static DshmConfigManager UserDataManager = new DshmConfigManager();
         internal static ProfileEditorViewModel vm = App.GetService<ProfileEditorViewModel>();
         private readonly PnPDevice _device;
-        private DeviceSpecificData deviceUserData;
+        private DeviceData deviceUserData;
         public readonly List<SettingsModes> settingsModesList = new List<SettingsModes>
         {
             SettingsModes.Global,

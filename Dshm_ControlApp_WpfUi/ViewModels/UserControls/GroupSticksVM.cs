@@ -5,7 +5,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
     public class GroupSticksVM : GroupSettingsVM
     {
         // -------------------------------------------- STICKS DEADZONE GROUP
-        private BackingData_Sticks _tempBackingData = new();
+        private SticksSettings _tempBackingData = new();
         protected override IBackingData _myInterface => _tempBackingData;
 
         public override SettingsModeGroups Group { get; } = SettingsModeGroups.SticksDeadzone;

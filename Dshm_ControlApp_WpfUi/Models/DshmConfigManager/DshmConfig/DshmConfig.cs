@@ -6,15 +6,15 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Nefarius.DsHidMini.ControlApp.MVVM;
-using static Nefarius.DsHidMini.ControlApp.DSHM_Settings.DshmCustomSettings;
+using static Nefarius.DsHidMini.ControlApp.DSHM_Settings.DshmDeviceSettings;
 using Newtonsoft.Json.Linq;
 using System.Windows.Navigation;
 
 namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
 {
-    public class DshmCustomSettings
+    public class DshmDeviceSettings
     {
-        public DSHM_HidDeviceModes? HIDDeviceMode { get; set; }// = DSHM_HidDeviceModes.DS4Windows;
+        public DSHM_HidDeviceMode? HIDDeviceMode { get; set; }// = DSHM_HidDeviceModes.DS4Windows;
         public bool? DisableAutoPairing { get; set; } = false; // false
         public string? PairingAddress { get; set; }
         public bool? EnableDS4WLightbarTranslation { get; set; } // = false;
@@ -31,14 +31,14 @@ namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
 
 
         [JsonIgnore]
-        public Dshm_ModeSpecificSettings ContextSettings { get; set; } = new();
-        public Dshm_ModeSpecificSettings? SDF => HIDDeviceMode == DSHM_HidDeviceModes.SDF ? ContextSettings : null;
-        public Dshm_ModeSpecificSettings? GPJ => HIDDeviceMode == DSHM_HidDeviceModes.GPJ ? ContextSettings : null;
-        public Dshm_ModeSpecificSettings? SXS => HIDDeviceMode == DSHM_HidDeviceModes.SXS ? ContextSettings : null;
-        public Dshm_ModeSpecificSettings? DS4Windows => HIDDeviceMode == DSHM_HidDeviceModes.DS4Windows ? ContextSettings : null;
-        public Dshm_ModeSpecificSettings? XInput => HIDDeviceMode == DSHM_HidDeviceModes.XInput ? ContextSettings : null;
+        public DshmHidModeSettings ContextSettings { get; set; } = new();
+        public DshmHidModeSettings? SDF => HIDDeviceMode == DSHM_HidDeviceMode.SDF ? ContextSettings : null;
+        public DshmHidModeSettings? GPJ => HIDDeviceMode == DSHM_HidDeviceMode.GPJ ? ContextSettings : null;
+        public DshmHidModeSettings? SXS => HIDDeviceMode == DSHM_HidDeviceMode.SXS ? ContextSettings : null;
+        public DshmHidModeSettings? DS4Windows => HIDDeviceMode == DSHM_HidDeviceMode.DS4Windows ? ContextSettings : null;
+        public DshmHidModeSettings? XInput => HIDDeviceMode == DSHM_HidDeviceMode.XInput ? ContextSettings : null;
 
-            public DshmCustomSettings()
+            public DshmDeviceSettings()
         {
 
         }
@@ -73,9 +73,9 @@ namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
         {
             public bool? IsEnabled { get; set; }
             public double? HoldTime { get; set; }
-            public ControlApp_ComboButtons? Button1 { get; set; }
-            public ControlApp_ComboButtons? Button2 { get; set; }
-            public ControlApp_ComboButtons? Button3 { get; set; }
+            public DSHM_Button? Button1 { get; set; }
+            public DSHM_Button? Button2 { get; set; }
+            public DSHM_Button? Button3 { get; set; }
         }
 
         public class ForcedSMSettings
@@ -106,7 +106,7 @@ namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
 
         public class AllLEDSettings
         {
-            public DSHM_LEDsModes? Mode { get; set; }// = DSHM_LEDsModes.BatteryIndicatorPlayerIndex;
+            public DSHM_LEDsMode? Mode { get; set; }// = DSHM_LEDsModes.BatteryIndicatorPlayerIndex;
             public DSHM_LEDsAuthority? Authority { get; set; }
             public LEDsCustoms CustomPatterns { get; set; } = new();
         }
@@ -129,12 +129,12 @@ namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
         }
     }
 
-    public class Dshm_ModeSpecificSettings
+    public class DshmHidModeSettings
     {
         [JsonIgnore]
-        public DSHM_HidDeviceModes? HIDDeviceMode { get; set; }
-        public DSHM_PressureModes? PressureExposureMode { get; set; }// = DSHM_PressureModes.Default;
-        public DSHM_DPadExposureModes? DPadExposureMode { get; set; }// = DSHM_DPadExposureModes.Default;
+        public DSHM_HidDeviceMode? HIDDeviceMode { get; set; }
+        public DSHM_PressureMode? PressureExposureMode { get; set; }// = DSHM_PressureModes.Default;
+        public DSHM_DPadExposureMode? DPadExposureMode { get; set; }// = DSHM_DPadExposureModes.Default;
         public DeadZoneSettings DeadZoneLeft { get; set; } = new();
         public DeadZoneSettings DeadZoneRight { get; set; } = new();
         public AllRumbleSettings RumbleSettings { get; set; } = new();
@@ -145,28 +145,28 @@ namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
     /// <summary>
     /// WIP: Json-serializalying an object from this class and saving it to disk results in a file with the appropriate contents to be loaded by the DsHidMini v3 driver
     /// </summary>
-    public class DshmSettings
+    public class DshmConfiguration
     {
-        public DshmCustomSettings Global { get; set; } = new();
-        public List<DshmDeviceSettings> Devices { get; set; } = new();
+        public DshmDeviceSettings Global { get; set; } = new();
+        public List<DshmDeviceData> Devices { get; set; } = new();
     }
 
-    public class DshmDeviceSettings
+    public class DshmDeviceData
     {
         public string DeviceAddress { get; set; }
-        public DshmCustomSettings CustomSettings { get; set; } = new();
+        public DshmDeviceSettings CustomSettings { get; set; } = new();
 
     }
 
-    public class DshmCustomJsonConverter : JsonConverter<DshmSettings>
+    public class DshmConfigCustomJsonConverter : JsonConverter<DshmConfiguration>
     {
-        public override DshmSettings Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override DshmConfiguration Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             throw new NotImplementedException();
         }
 
         public override void Write(
-        Utf8JsonWriter writer, DshmSettings instance, JsonSerializerOptions options)
+        Utf8JsonWriter writer, DshmConfiguration instance, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
                 writer.WritePropertyName(nameof(instance.Global));
@@ -177,7 +177,7 @@ namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
 
                 writer.WritePropertyName(nameof(instance.Devices));
                 writer.WriteStartObject();
-                    foreach (DshmDeviceSettings device in instance.Devices)
+                    foreach (DshmDeviceData device in instance.Devices)
                     {
                         if (string.IsNullOrEmpty(device.DeviceAddress?.Trim()))
                             throw new JsonException("Expected non-null, non-empty Name");
@@ -191,30 +191,6 @@ namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
             writer.WriteEndObject();
 
 }
-    }
-
-    public class DshmCustomContextNameJsonConverter : JsonConverter<Dshm_ModeSpecificSettings>
-    {
-        public override Dshm_ModeSpecificSettings Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Write(
-        Utf8JsonWriter writer, Dshm_ModeSpecificSettings instance, JsonSerializerOptions options)
-        {
-            if(!string.IsNullOrEmpty(instance.HIDDeviceMode.ToString()?.Trim()))
-            {
-                writer.WriteStartObject();
-                writer.WritePropertyName(instance.HIDDeviceMode.ToString());
-
-                JsonSerializerOptions options2 = new();
-                var serializedCustomSettings = JsonSerializer.Serialize(instance, options2);
-                writer.WriteRawValue(serializedCustomSettings);
-                writer.WriteEndObject();
-            }
-
-        }
     }
 }
 

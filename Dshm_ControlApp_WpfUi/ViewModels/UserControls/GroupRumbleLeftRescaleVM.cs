@@ -4,7 +4,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
     public class GroupRumbleLeftRescaleVM : GroupSettingsVM
     {
-        private BackingData_LeftRumbleRescale _tempBackingData = new();
+        private LeftMotorRescalingSettings _tempBackingData = new();
         protected override IBackingData _myInterface => _tempBackingData;
 
         public override SettingsModeGroups Group { get; } = SettingsModeGroups.RumbleLeftStrRescale;

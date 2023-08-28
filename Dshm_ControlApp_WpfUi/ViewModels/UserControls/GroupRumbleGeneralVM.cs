@@ -4,7 +4,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
     public class GroupRumbleGeneralVM : GroupSettingsVM
     {
-        private BackingData_RumbleGeneral _tempBackingData = new();
+        private GeneralRumbleSettings _tempBackingData = new();
         protected override IBackingData _myInterface => _tempBackingData;
 
         public override SettingsModeGroups Group { get; } = SettingsModeGroups.RumbleGeneral;
@@ -39,7 +39,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public ControlApp_ComboButtons AltModeToggleButttonCombo_Button1
+        public Manager_Button AltModeToggleButttonCombo_Button1
         {
             get => _tempBackingData.AltModeToggleButtonCombo.Button1;
             set
@@ -49,7 +49,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public ControlApp_ComboButtons AltModeToggleButttonCombo_Button2
+        public Manager_Button AltModeToggleButttonCombo_Button2
         {
             get => _tempBackingData.AltModeToggleButtonCombo.Button2;
             set
@@ -58,7 +58,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
                 this.OnPropertyChanged(nameof(AltModeToggleButttonCombo_Button2));
             }
         }
-        public ControlApp_ComboButtons AltModeToggleButttonCombo_Button3
+        public Manager_Button AltModeToggleButttonCombo_Button3
         {
             get => _tempBackingData.AltModeToggleButtonCombo.Button3;
             set

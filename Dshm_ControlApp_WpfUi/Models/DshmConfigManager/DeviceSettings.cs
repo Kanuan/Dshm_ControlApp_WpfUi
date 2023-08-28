@@ -15,10 +15,10 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             set => holdTime = (value >= 0) ? value : 0;
         }
 
-        private ControlApp_ComboButtons button1;
-        private ControlApp_ComboButtons button2;
-        private ControlApp_ComboButtons button3;
-        public ControlApp_ComboButtons Button1
+        private Manager_Button button1;
+        private Manager_Button button2;
+        private Manager_Button button3;
+        public Manager_Button Button1
         {
             get => button1;
             set
@@ -27,7 +27,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
                     button1 = value;
             }
         }
-        public ControlApp_ComboButtons Button2
+        public Manager_Button Button2
         {
             get => button2;
             set
@@ -36,7 +36,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
                     button2 = value;
             }
         }
-        public ControlApp_ComboButtons Button3
+        public Manager_Button Button3
         {
             get => button3;
             set
@@ -63,21 +63,21 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
 
     }
     
-    public class BackingDataContainer : IBackingData
+    public class DeviceSettings : IBackingData
     {
 
-        public BackingData_ModesUnique modesUniqueData { get; set; } = new();
-        public BackingData_LEDs ledsData { get; set; } = new();
-        public BackingData_Wireless wirelessData { get; set; } = new();
-        public BackingData_Sticks sticksData { get; set; } = new();
-        public BackingData_RumbleGeneral rumbleGeneralData { get; set; } = new();
-        public BackingData_OutRepControl outRepData { get; set; } = new();
-        public BackingData_LeftRumbleRescale leftRumbleRescaleData { get; set; } = new();
-        public BackingData_VariablaRightRumbleEmulAdjusts rightVariableEmulData { get; set; } = new();
+        public HidModeSettings modesUniqueData { get; set; } = new();
+        public LedsSettings ledsData { get; set; } = new();
+        public WirelessSettings wirelessData { get; set; } = new();
+        public SticksSettings sticksData { get; set; } = new();
+        public GeneralRumbleSettings rumbleGeneralData { get; set; } = new();
+        public OutputReportSettings outRepData { get; set; } = new();
+        public LeftMotorRescalingSettings leftRumbleRescaleData { get; set; } = new();
+        public AltRumbleModeSettings rightVariableEmulData { get; set; } = new();
 
-        public static readonly BackingDataContainer DefaultContainer = new BackingDataContainer();
+        public static readonly DeviceSettings DefaultContainer = new DeviceSettings();
 
-        public BackingDataContainer()
+        public DeviceSettings()
         {
             this.ResetToDefault();
         }
@@ -94,7 +94,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             rightVariableEmulData.ResetToDefault();
         }
 
-        public void CopySettingsFromContainer(BackingDataContainer container)
+        public void CopySettingsFromContainer(DeviceSettings container)
         {
             modesUniqueData.CopySettingsFromContainer(container);
             ledsData.CopySettingsFromContainer(container);
@@ -106,7 +106,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             rightVariableEmulData.CopySettingsFromContainer(container);
         }
 
-        public void CopySettingsToContainer(BackingDataContainer container)
+        public void CopySettingsToContainer(DeviceSettings container)
         {
             modesUniqueData.CopySettingsToContainer(container);
             ledsData.CopySettingsToContainer(container);
@@ -118,7 +118,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             rightVariableEmulData.CopySettingsToContainer(container);
         }
 
-        public void ConvertAllToDSHM(DshmCustomSettings dshm_data)
+        public void ConvertAllToDSHM(DshmDeviceSettings dshm_data)
         {
             modesUniqueData.SaveToDSHMSettings(dshm_data);
             ledsData.SaveToDSHMSettings(dshm_data);
@@ -141,32 +141,31 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
     {
         void ResetToDefault();
 
-        void CopySettingsFromContainer(BackingDataContainer container);
+        void CopySettingsFromContainer(DeviceSettings container);
 
-        void CopySettingsToContainer(BackingDataContainer container);
+        void CopySettingsToContainer(DeviceSettings container);
     }
 
-    public abstract class SettingsBackingData : IBackingData
+    public abstract class DeviceSubSettings : IBackingData
     {
         public abstract void ResetToDefault();
 
-        public abstract void CopySettingsFromContainer(BackingDataContainer container);
+        public abstract void CopySettingsFromContainer(DeviceSettings container);
 
-        public abstract void CopySettingsToContainer(BackingDataContainer container);
+        public abstract void CopySettingsToContainer(DeviceSettings container);
 
-        public abstract void SaveToDSHMSettings(DshmCustomSettings dshmContextSettings);
+        public abstract void SaveToDSHMSettings(DshmDeviceSettings dshmContextSettings);
 
         
     }
 
-    public class BackingData_ModesUnique : SettingsBackingData
+    public class HidModeSettings : DeviceSubSettings
     {
         public SettingsContext SettingsContext { get; set; } = SettingsContext.XInput;
         public ControlApp_DsPressureMode PressureExposureMode { get; set; } = ControlApp_DsPressureMode.Default;
         public ControlApp_DPADModes DPadExposureMode { get; set; } = ControlApp_DPADModes.HAT;
         public bool IsLEDsAsXInputSlotEnabled { get; set; } = false;
         public bool PreventRemappingConflictsInSXSMode { get; set; } = false;
-        public bool PreventRemappingConflictsInDS4WModeqw { get; set; } = true;
         public bool PreventRemappingConflictsInDS4WMode { get; set; } = false;
         public bool AllowAppsToOverrideLEDsInSXSMode { get; set; } = false;
 
@@ -175,7 +174,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             CopySettings(this, new());
         }
 
-        public static void CopySettings(BackingData_ModesUnique destiny, BackingData_ModesUnique source)
+        public static void CopySettings(HidModeSettings destiny, HidModeSettings source)
         {
             destiny.SettingsContext = source.SettingsContext;
             destiny.PressureExposureMode = source.PressureExposureMode;
@@ -183,45 +182,43 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             destiny.IsLEDsAsXInputSlotEnabled = source.IsLEDsAsXInputSlotEnabled;
             destiny.PreventRemappingConflictsInDS4WMode = source.PreventRemappingConflictsInDS4WMode;
             destiny.PreventRemappingConflictsInSXSMode = source.PreventRemappingConflictsInSXSMode;
-            destiny.PreventRemappingConflictsInDS4WModeqw = source.PreventRemappingConflictsInDS4WModeqw;
             destiny.AllowAppsToOverrideLEDsInSXSMode = source.AllowAppsToOverrideLEDsInSXSMode;
         }
 
 
-        public override void SaveToDSHMSettings(DshmCustomSettings dshmContextSettings)
+        public override void SaveToDSHMSettings(DshmDeviceSettings dshmContextSettings)
         {
             if (SettingsContext != SettingsContext.General)
             {
-                dshmContextSettings.HIDDeviceMode = SaveLoadUtils.Get_DSHM_HIDDeviceMode_From_ControlApp[SettingsContext];
+                dshmContextSettings.HIDDeviceMode = DshmManagerToDriverConversion.DictHidDeviceModes[SettingsContext];
                 dshmContextSettings.ContextSettings.HIDDeviceMode = dshmContextSettings.HIDDeviceMode;
             }
 
             dshmContextSettings.ContextSettings.PressureExposureMode = dshmContextSettings.ContextSettings.PressureExposureMode =
                 (this.SettingsContext == SettingsContext.SDF
                 || this.SettingsContext == SettingsContext.GPJ)
-                ? SaveLoadUtils.Get_DSHM_DsPressureMode_From_ControlApp[this.PressureExposureMode] : null;
+                ? DshmManagerToDriverConversion.DsPressureModeManagerToDriver[this.PressureExposureMode] : null;
 
             dshmContextSettings.ContextSettings.DPadExposureMode = dshmContextSettings.ContextSettings.DPadExposureMode =
                 (this.SettingsContext == SettingsContext.SDF
                 || this.SettingsContext == SettingsContext.GPJ)
-                ? SaveLoadUtils.Get_DSHM_DPadMode_From_ControlApp[this.DPadExposureMode] : null;
+                ? DshmManagerToDriverConversion.DPadExposureModeManagerToDriver[this.DPadExposureMode] : null;
 
-            dshmContextSettings.ContextSettings.LEDSettings.Authority = this.AllowAppsToOverrideLEDsInSXSMode ? DSHM_LEDsAuthority.Application : DSHM_LEDsAuthority.Driver;
             dshmContextSettings.ContextSettings.LEDSettings.Authority = this.PreventRemappingConflictsInDS4WMode ? DSHM_LEDsAuthority.Application : DSHM_LEDsAuthority.Driver;
         }
 
-        public override void CopySettingsFromContainer(BackingDataContainer container)
+        public override void CopySettingsFromContainer(DeviceSettings container)
         {
             CopySettings(this, container.modesUniqueData);
         }
 
-        public override void CopySettingsToContainer(BackingDataContainer container)
+        public override void CopySettingsToContainer(DeviceSettings container)
         {
             CopySettings(container.modesUniqueData, this); 
         }
     }
 
-    public class BackingData_LEDs : SettingsBackingData
+    public class LedsSettings : DeviceSubSettings
     {
         public ControlApp_LEDsModes LEDMode { get; set; } = ControlApp_LEDsModes.BatteryIndicatorPlayerIndex;
         public bool AllowExternalLedsControl { get; set; } = true;
@@ -233,33 +230,33 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             CopySettings(this, new());
         }
 
-        public static void CopySettings(BackingData_LEDs destiny, BackingData_LEDs source)
+        public static void CopySettings(LedsSettings destiny, LedsSettings source)
         {
             destiny.LEDMode = source.LEDMode;
             destiny.AllowExternalLedsControl = source.AllowExternalLedsControl;
             destiny.LEDsCustoms.CopyLEDsCustoms(source.LEDsCustoms);
         }
 
-        public override void CopySettingsFromContainer(BackingDataContainer container)
+        public override void CopySettingsFromContainer(DeviceSettings container)
         {
             CopySettings(this, container.ledsData);
         }
 
-        public override void CopySettingsToContainer(BackingDataContainer container)
+        public override void CopySettingsToContainer(DeviceSettings container)
         {
             CopySettings(container.ledsData, this);
         }
 
-        public override void SaveToDSHMSettings(DshmCustomSettings dshmContextSettings)
+        public override void SaveToDSHMSettings(DshmDeviceSettings dshmContextSettings)
         {
-            DshmCustomSettings.AllLEDSettings dshm_AllLEDsSettings = dshmContextSettings.ContextSettings.LEDSettings;
+            DshmDeviceSettings.AllLEDSettings dshm_AllLEDsSettings = dshmContextSettings.ContextSettings.LEDSettings;
 
-            dshm_AllLEDsSettings.Mode = SaveLoadUtils.Get_DSHM_LEDModes_From_ControlApp[this.LEDMode];
+            dshm_AllLEDsSettings.Mode = DshmManagerToDriverConversion.LedModeManagerToDriver[this.LEDMode];
             dshm_AllLEDsSettings.Authority = AllowExternalLedsControl ? DSHM_LEDsAuthority.Automatic : DSHM_LEDsAuthority.Driver;
 
             var dshm_Customs = dshm_AllLEDsSettings.CustomPatterns;
 
-            var dshm_singleLED = new DshmCustomSettings.SingleLEDCustoms[]
+            var dshm_singleLED = new DshmDeviceSettings.SingleLEDCustoms[]
             { dshm_Customs.Player1, dshm_Customs.Player2,dshm_Customs.Player3,dshm_Customs.Player4, };
 
 
@@ -352,7 +349,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
 
     }
 
-    public class BackingData_Wireless : SettingsBackingData
+    public class WirelessSettings : DeviceSubSettings
     {
         public bool IsWirelessIdleDisconnectEnabled { get; set; } = true;
         public int WirelessIdleDisconnectTime { get; set; } = 5;
@@ -360,9 +357,9 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
         {
             IsEnabled = true,
             HoldTime = 3,
-            Button1 = ControlApp_ComboButtons.PS,
-            Button2 = ControlApp_ComboButtons.R1,
-            Button3 = ControlApp_ComboButtons.L1,
+            Button1 = Manager_Button.PS,
+            Button2 = Manager_Button.R1,
+            Button3 = Manager_Button.L1,
         };
 
         public override void ResetToDefault()
@@ -370,7 +367,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             CopySettings(this,new());
         }
 
-        public static void CopySettings(BackingData_Wireless destiny, BackingData_Wireless source)
+        public static void CopySettings(WirelessSettings destiny, WirelessSettings source)
         {
             destiny.IsWirelessIdleDisconnectEnabled = source.IsWirelessIdleDisconnectEnabled;
             destiny.QuickDisconnectCombo.copyCombo(source.QuickDisconnectCombo);
@@ -378,30 +375,30 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             destiny.QuickDisconnectCombo = source.QuickDisconnectCombo;
         }
 
-        public override void CopySettingsFromContainer(BackingDataContainer container)
+        public override void CopySettingsFromContainer(DeviceSettings container)
         {
             CopySettings(this, container.wirelessData);
         }
 
-        public override void CopySettingsToContainer(BackingDataContainer container)
+        public override void CopySettingsToContainer(DeviceSettings container)
         {
             CopySettings(container.wirelessData, this);
         }
 
-        public override void SaveToDSHMSettings(DshmCustomSettings dshmContextSettings)
+        public override void SaveToDSHMSettings(DshmDeviceSettings dshmContextSettings)
         {
             dshmContextSettings.DisableWirelessIdleTimeout = !this.IsWirelessIdleDisconnectEnabled;
             dshmContextSettings.WirelessIdleTimeoutPeriodMs = this.WirelessIdleDisconnectTime * 60 * 1000;
 
             dshmContextSettings.QuickDisconnectCombo.IsEnabled = this.QuickDisconnectCombo.IsEnabled;
             dshmContextSettings.QuickDisconnectCombo.HoldTime = this.QuickDisconnectCombo.HoldTime;
-            dshmContextSettings.QuickDisconnectCombo.Button1 = this.QuickDisconnectCombo.Button1;
-            dshmContextSettings.QuickDisconnectCombo.Button2 = this.QuickDisconnectCombo.Button2;
-            dshmContextSettings.QuickDisconnectCombo.Button3 = this.QuickDisconnectCombo.Button3;
+            dshmContextSettings.QuickDisconnectCombo.Button1 = DshmManagerToDriverConversion.ButtonManagerToDriver[QuickDisconnectCombo.Button1];
+            dshmContextSettings.QuickDisconnectCombo.Button2 = DshmManagerToDriverConversion.ButtonManagerToDriver[QuickDisconnectCombo.Button2];
+            dshmContextSettings.QuickDisconnectCombo.Button3 = DshmManagerToDriverConversion.ButtonManagerToDriver[QuickDisconnectCombo.Button3];
         }
     }
 
-    public class BackingData_Sticks : SettingsBackingData
+    public class SticksSettings : DeviceSubSettings
     {
         public StickData LeftStickData { get; set; } = new();
         public StickData RightStickData { get; set; } = new();
@@ -412,27 +409,27 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             RightStickData.Reset();
         }
 
-        public static void CopySettings(BackingData_Sticks destiny, BackingData_Sticks source)
+        public static void CopySettings(SticksSettings destiny, SticksSettings source)
         {
             destiny.LeftStickData.CopyStickDataFromOtherStick(source.LeftStickData);
             destiny.RightStickData.CopyStickDataFromOtherStick(source.RightStickData);
         }
 
-        public override void CopySettingsFromContainer(BackingDataContainer container)
+        public override void CopySettingsFromContainer(DeviceSettings container)
         {
             CopySettings(this, container.sticksData);
         }
 
-        public override void CopySettingsToContainer(BackingDataContainer container)
+        public override void CopySettingsToContainer(DeviceSettings container)
         {
             CopySettings(container.sticksData, this);
         }
 
-        public override void SaveToDSHMSettings(DshmCustomSettings dshmContextSettings)
+        public override void SaveToDSHMSettings(DshmDeviceSettings dshmContextSettings)
         {
-            DshmCustomSettings.DeadZoneSettings dshmLeftDZSettings = dshmContextSettings.ContextSettings.DeadZoneLeft;
-            DshmCustomSettings.DeadZoneSettings dshmRightDZSettings = dshmContextSettings.ContextSettings.DeadZoneRight;
-            DshmCustomSettings.AxesFlipping axesFlipping = dshmContextSettings.ContextSettings.FlipAxis;
+            DshmDeviceSettings.DeadZoneSettings dshmLeftDZSettings = dshmContextSettings.ContextSettings.DeadZoneLeft;
+            DshmDeviceSettings.DeadZoneSettings dshmRightDZSettings = dshmContextSettings.ContextSettings.DeadZoneRight;
+            DshmDeviceSettings.AxesFlipping axesFlipping = dshmContextSettings.ContextSettings.FlipAxis;
 
 
             dshmLeftDZSettings.Apply = this.LeftStickData.IsDeadZoneEnabled;
@@ -476,16 +473,13 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
 
     }
 
-    public class BackingData_RumbleGeneral : SettingsBackingData
+    public class GeneralRumbleSettings : DeviceSubSettings
     {
 
         // -------------------------------------------- DEFAULT SETTINGS END
 
-        private bool isLeftMotorDisabled = false;
-        private bool isRightMotorDisabled = false;
-
-        public bool IsLeftMotorDisabled { get => IsAltRumbleModeEnabled ? false : isLeftMotorDisabled; set => isLeftMotorDisabled = value; }
-        public bool IsRightMotorDisabled { get => IsAltRumbleModeEnabled ? false : isRightMotorDisabled; set => isRightMotorDisabled = value; }
+        public bool IsLeftMotorDisabled { get; set; } = false;
+        public bool IsRightMotorDisabled { get; set; } = false;
 
         public bool IsAltRumbleModeEnabled { get; set; } = false;
         public bool AlwaysStartInNormalMode { get; set; } = false;
@@ -494,9 +488,9 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
         {
             IsEnabled = false,
             HoldTime = 3,
-            Button1 = ControlApp_ComboButtons.PS,
-            Button2 = ControlApp_ComboButtons.SELECT,
-            Button3 = ControlApp_ComboButtons.None,
+            Button1 = Manager_Button.PS,
+            Button2 = Manager_Button.SELECT,
+            Button3 = Manager_Button.None,
         };
 
         public override void ResetToDefault()
@@ -504,7 +498,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             CopySettings(this, new());
         }
 
-        public static void CopySettings(BackingData_RumbleGeneral destiny, BackingData_RumbleGeneral source)
+        public static void CopySettings(GeneralRumbleSettings destiny, GeneralRumbleSettings source)
         {
             destiny.IsAltRumbleModeEnabled = source.IsAltRumbleModeEnabled;
             destiny.IsLeftMotorDisabled = source.IsLeftMotorDisabled;
@@ -513,35 +507,38 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             destiny.AltModeToggleButtonCombo.copyCombo(source.AltModeToggleButtonCombo);
         }
 
-        public override void CopySettingsFromContainer(BackingDataContainer container)
+        public override void CopySettingsFromContainer(DeviceSettings container)
         {
             CopySettings(this, container.rumbleGeneralData);
         }
 
-        public override void CopySettingsToContainer(BackingDataContainer container)
+        public override void CopySettingsToContainer(DeviceSettings container)
         {
             CopySettings(container.rumbleGeneralData, this);
         }
 
-        public override void SaveToDSHMSettings(DshmCustomSettings dshmContextSettings)
+        public override void SaveToDSHMSettings(DshmDeviceSettings dshmContextSettings)
         {
-            DshmCustomSettings.AllRumbleSettings dshmRumbleSettings = dshmContextSettings.ContextSettings.RumbleSettings;
+            DshmDeviceSettings.AllRumbleSettings dshmRumbleSettings = dshmContextSettings.ContextSettings.RumbleSettings;
 
-            dshmRumbleSettings.DisableBM = this.IsLeftMotorDisabled;
-            dshmRumbleSettings.DisableSM = this.IsLeftMotorDisabled;
+            if(!IsAltRumbleModeEnabled)
+            {
+                dshmRumbleSettings.DisableBM = this.IsLeftMotorDisabled;
+                dshmRumbleSettings.DisableSM = this.IsLeftMotorDisabled;
+            }
 
             dshmRumbleSettings.SMToBMConversion.Enabled = AlwaysStartInNormalMode ? false : this.IsAltRumbleModeEnabled;
 
             // Disable toggle combo if alt Rumble Mode is not supposed to be used
             dshmRumbleSettings.SMToBMConversion.ToggleSMtoBMConversionCombo.IsEnabled = IsAltRumbleModeEnabled ? this.AltModeToggleButtonCombo.IsEnabled : false;
             dshmRumbleSettings.SMToBMConversion.ToggleSMtoBMConversionCombo.HoldTime = this.AltModeToggleButtonCombo.HoldTime;
-            dshmRumbleSettings.SMToBMConversion.ToggleSMtoBMConversionCombo.Button1 = this.AltModeToggleButtonCombo.Button1;
-            dshmRumbleSettings.SMToBMConversion.ToggleSMtoBMConversionCombo.Button2 = this.AltModeToggleButtonCombo.Button2;
-            dshmRumbleSettings.SMToBMConversion.ToggleSMtoBMConversionCombo.Button3 = this.AltModeToggleButtonCombo.Button3;
+            dshmRumbleSettings.SMToBMConversion.ToggleSMtoBMConversionCombo.Button1 = DshmManagerToDriverConversion.ButtonManagerToDriver[AltModeToggleButtonCombo.Button1];
+            dshmRumbleSettings.SMToBMConversion.ToggleSMtoBMConversionCombo.Button2 = DshmManagerToDriverConversion.ButtonManagerToDriver[AltModeToggleButtonCombo.Button2];
+            dshmRumbleSettings.SMToBMConversion.ToggleSMtoBMConversionCombo.Button3 = DshmManagerToDriverConversion.ButtonManagerToDriver[AltModeToggleButtonCombo.Button3];
         }
     }
 
-    public class BackingData_OutRepControl : SettingsBackingData
+    public class OutputReportSettings : DeviceSubSettings
     {
         public bool IsOutputReportRateControlEnabled { get; set; } = true;
         public int MaxOutputRate { get; set; } = 150;
@@ -552,24 +549,24 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             CopySettings(this, new());
         }
 
-        public static void CopySettings(BackingData_OutRepControl destiny, BackingData_OutRepControl source)
+        public static void CopySettings(OutputReportSettings destiny, OutputReportSettings source)
         {
             destiny.IsOutputReportDeduplicatorEnabled = source.IsOutputReportDeduplicatorEnabled;
             destiny.IsOutputReportRateControlEnabled = source.IsOutputReportRateControlEnabled;
             destiny.MaxOutputRate = source.MaxOutputRate;
         }
 
-        public override void CopySettingsFromContainer(BackingDataContainer container)
+        public override void CopySettingsFromContainer(DeviceSettings container)
         {
             CopySettings(this, container.outRepData);
         }
 
-        public override void CopySettingsToContainer(BackingDataContainer container)
+        public override void CopySettingsToContainer(DeviceSettings container)
         {
             CopySettings(container.outRepData, this);
         }
 
-        public override void SaveToDSHMSettings(DshmCustomSettings dshmContextSettings)
+        public override void SaveToDSHMSettings(DshmDeviceSettings dshmContextSettings)
         {
             dshmContextSettings.IsOutputRateControlEnabled = this.IsOutputReportRateControlEnabled;
             dshmContextSettings.OutputRateControlPeriodMs = (byte)this.MaxOutputRate;
@@ -577,7 +574,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
         }
     }
 
-    public class BackingData_LeftRumbleRescale : SettingsBackingData
+    public class LeftMotorRescalingSettings : DeviceSubSettings
     {
         private int leftMotorStrRescalingUpperRange = 255;
         private int leftMotorStrRescalingLowerRange = 64;
@@ -608,26 +605,26 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             CopySettings(this, new());
         }
 
-        public static void CopySettings(BackingData_LeftRumbleRescale destiny, BackingData_LeftRumbleRescale source)
+        public static void CopySettings(LeftMotorRescalingSettings destiny, LeftMotorRescalingSettings source)
         {
             destiny.IsLeftMotorStrRescalingEnabled = source.IsLeftMotorStrRescalingEnabled;
             destiny.leftMotorStrRescalingLowerRange = source.LeftMotorStrRescalingLowerRange;
             destiny.leftMotorStrRescalingUpperRange = source.LeftMotorStrRescalingUpperRange;
         }
 
-        public override void CopySettingsFromContainer(BackingDataContainer container)
+        public override void CopySettingsFromContainer(DeviceSettings container)
         {
             CopySettings(this, container.leftRumbleRescaleData);
         }
 
-        public override void CopySettingsToContainer(BackingDataContainer container)
+        public override void CopySettingsToContainer(DeviceSettings container)
         {
             CopySettings(container.leftRumbleRescaleData, this);
         }
 
-        public override void SaveToDSHMSettings(DshmCustomSettings dshmContextSettings)
+        public override void SaveToDSHMSettings(DshmDeviceSettings dshmContextSettings)
         {
-            DshmCustomSettings.BMStrRescaleSettings dshmLeftRumbleRescaleSettings = dshmContextSettings.ContextSettings.RumbleSettings.BMStrRescale;
+            DshmDeviceSettings.BMStrRescaleSettings dshmLeftRumbleRescaleSettings = dshmContextSettings.ContextSettings.RumbleSettings.BMStrRescale;
 
             dshmLeftRumbleRescaleSettings.Enabled = this.IsLeftMotorStrRescalingEnabled;
             dshmLeftRumbleRescaleSettings.MinValue = (byte)this.LeftMotorStrRescalingLowerRange;
@@ -635,7 +632,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
         }
     }
 
-    public class BackingData_VariablaRightRumbleEmulAdjusts : SettingsBackingData
+    public class AltRumbleModeSettings : DeviceSubSettings
     {
         public int ForcedRightMotorHeavyThreshold { get; set; } = 230;
         public int ForcedRightMotorLightThreshold { get; set; } = 230;
@@ -651,7 +648,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             CopySettings(this, new());
         }
 
-        public static void CopySettings(BackingData_VariablaRightRumbleEmulAdjusts destiny, BackingData_VariablaRightRumbleEmulAdjusts source)
+        public static void CopySettings(AltRumbleModeSettings destiny, AltRumbleModeSettings source)
         {
             destiny.RightRumbleConversionLowerRange = source.RightRumbleConversionLowerRange;
             destiny.RightRumbleConversionUpperRange = source.RightRumbleConversionUpperRange;
@@ -663,20 +660,20 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
             destiny.ForcedRightMotorHeavyThreshold = source.ForcedRightMotorHeavyThreshold;
         }
 
-        public override void CopySettingsFromContainer(BackingDataContainer container)
+        public override void CopySettingsFromContainer(DeviceSettings container)
         {
             CopySettings(this, container.rightVariableEmulData);
         }
 
-        public override void CopySettingsToContainer(BackingDataContainer container)
+        public override void CopySettingsToContainer(DeviceSettings container)
         {
             CopySettings(container.rightVariableEmulData, this);
         }
 
-        public override void SaveToDSHMSettings(DshmCustomSettings dshmContextSettings)
+        public override void SaveToDSHMSettings(DshmDeviceSettings dshmContextSettings)
         {
-            DshmCustomSettings.SMToBMConversionSettings dshmSMConversionSettings = dshmContextSettings.ContextSettings.RumbleSettings.SMToBMConversion;
-            DshmCustomSettings.ForcedSMSettings dshmForcedSMSettings = dshmContextSettings.ContextSettings.RumbleSettings.ForcedSM;
+            DshmDeviceSettings.SMToBMConversionSettings dshmSMConversionSettings = dshmContextSettings.ContextSettings.RumbleSettings.SMToBMConversion;
+            DshmDeviceSettings.ForcedSMSettings dshmForcedSMSettings = dshmContextSettings.ContextSettings.RumbleSettings.ForcedSM;
 
             // Right rumble conversion rescaling adjustment
             if(RightRumbleConversionLowerRange < RightRumbleConversionUpperRange)

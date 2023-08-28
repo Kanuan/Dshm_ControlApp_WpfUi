@@ -7,7 +7,7 @@ using Nefarius.DsHidMini.ControlApp.MVVM;
 
 namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
 {
-    public enum DSHM_HidDeviceModes
+    public enum DSHM_HidDeviceMode
     {
         SDF,
         GPJ,
@@ -16,39 +16,30 @@ namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
         XInput,
     }
 
-    public enum DSHM_PressureModes
+    public enum DSHM_PressureMode
     {
         Digital,
         Analogue,
         Default,
     }
 
-    public enum DSHM_DPadExposureModes
+    public enum DSHM_DPadExposureMode
     {
         HAT,
         IndividualButtons,
         Default,
     }
 
-    public enum DSHM_LEDsModes
+    public enum DSHM_LEDsMode
     {
         BatteryIndicatorPlayerIndex,
         BatteryIndicatorBarGraph,
         CustomPattern,
     }
 
-    public enum DSHM_QuickDisconnectCombo
+    public enum DSHM_Button
     {
-        PS_R1_L1,
-        PS_Start,
-        PS_Select,
-        Start_R1_L1,
-        Select_R1_L1,
-        Start_Select,
-    }
-
-    public enum DSHM_ComboButtons
-    {
+        None,
         PS,
         START,
         SELECT,
