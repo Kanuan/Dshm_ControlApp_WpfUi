@@ -1,7 +1,8 @@
-﻿using Nefarius.DsHidMini.ControlApp.DshmConfigManager;
-using static Nefarius.DsHidMini.ControlApp.DshmConfigManager.LedsSettings.All4LEDsCustoms;
+﻿using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager;
+using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums;
+using static Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.LedsSettings.All4LEDsCustoms;
 
-namespace Nefarius.DsHidMini.ControlApp.MVVM
+namespace Nefarius.DsHidMini.ControlApp.ViewModels.UserControls.DeviceSettings
 {
     public partial class LedsSettingsViewModel : DeviceSettingsViewModel
     {
@@ -18,7 +19,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        protected override IBackingData _myInterface => _tempBackingData;
+        protected override IDeviceSettings _myInterface => _tempBackingData;
 
         public bool AllowLedsOverride
         {

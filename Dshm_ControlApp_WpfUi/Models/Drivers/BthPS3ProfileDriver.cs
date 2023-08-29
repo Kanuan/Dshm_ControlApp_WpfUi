@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
 
-namespace Nefarius.DsHidMini.ControlApp.Drivers
+namespace Nefarius.DsHidMini.ControlApp.Models.Drivers
 {
     public static class BthPS3ProfileDriver
     {

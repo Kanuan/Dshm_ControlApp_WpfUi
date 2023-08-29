@@ -1,10 +1,8 @@
-﻿using System;
-using System.Globalization;
-using Nefarius.DsHidMini.ControlApp.MVVM;
-using System.Collections.Generic;
+﻿using System.Globalization;
 using System.Windows.Data;
+using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums;
 
-namespace Nefarius.DsHidMini.ControlApp.Util.WPF
+namespace Nefarius.DsHidMini.ControlApp.Helpers
 {
     public class VisibilityPerHidModeConverter : IValueConverter
     {

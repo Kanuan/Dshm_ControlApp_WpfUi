@@ -3,27 +3,27 @@
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
-using Dshm_ControlApp_WpfUi.ViewModels.Pages;
-using Dshm_ControlApp_WpfUi.ViewModels.Windows;
-using Nefarius.DsHidMini.ControlApp.Drivers;
-using Nefarius.DsHidMini.ControlApp.MVVM;
-using Nefarius.Utilities.DeviceManagement.PnP;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
+using Nefarius.DsHidMini.ControlApp.Models.Drivers;
+using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager;
+using Nefarius.DsHidMini.ControlApp.ViewModels;
+using Nefarius.DsHidMini.ControlApp.ViewModels.Pages;
+using Nefarius.DsHidMini.ControlApp.ViewModels.Windows;
+using Nefarius.Utilities.DeviceManagement.PnP;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 
-namespace Dshm_ControlApp_WpfUi.Views.Windows
+namespace Nefarius.DsHidMini.ControlApp.Views.Windows
 {
     public partial class MainWindow : INavigationWindow
     {
-        private readonly DeviceNotificationListener _listener = new DeviceNotificationListener();
-
-        public DevicesViewModel DevicesVM = App.GetService<DevicesViewModel>();
+        private readonly DeviceNotificationListener _listener;
         public MainWindowViewModel ViewModel { get; }
-
+        
         public MainWindow(
-            MainWindowViewModel viewModel, //
+            MainWindowViewModel viewModel,
+            DeviceNotificationListener listener,//
             INavigationService navigationService,
             IServiceProvider serviceProvider,
             ISnackbarService snackbarService,
@@ -35,6 +35,8 @@ namespace Dshm_ControlApp_WpfUi.Views.Windows
             ViewModel = viewModel;
             DataContext = this;
 
+            _listener = listener;
+            
             Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
 
             InitializeComponent();
@@ -53,12 +55,6 @@ namespace Dshm_ControlApp_WpfUi.Views.Windows
             base.OnSourceInitialized(e);
 
             InitializeComponent();
-            RefreshDevicesList();
-
-
-            _listener.DeviceArrived += ListenerOnDeviceArrived;
-            _listener.DeviceRemoved += ListenerOnDeviceRemoved;
-
             _listener.StartListen(DsHidMiniDriver.DeviceInterfaceGuid);
         }
 
@@ -70,36 +66,8 @@ namespace Dshm_ControlApp_WpfUi.Views.Windows
             _listener.Dispose();
         }
 
-        /// <summary>
-        ///     DsHidMini device disconnected.
-        /// </summary>
-        /// <param name="obj">The device path.</param>
-        private void ListenerOnDeviceRemoved(DeviceEventArgs e)
-        {
-            RefreshDevicesList();
-        }
 
-        /// <summary>
-        ///     DsHidMini device connected.
-        /// </summary>
-        /// <param name="obj">The device path.</param>
-        private void ListenerOnDeviceArrived(DeviceEventArgs e)
-        {
-            RefreshDevicesList();
-        }
-
-        private void RefreshDevicesList()
-        {
-            App.Current.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                DevicesVM.Devices.Clear();
-                var instance = 0;
-                while (Devcon.FindByInterfaceGuid(DsHidMiniDriver.DeviceInterfaceGuid, out var path, out var instanceId, instance++))
-                {
-                    DevicesVM.Devices.Add(new DeviceViewModel(PnPDevice.GetDeviceByInstanceId(instanceId)));
-                }
-            }));
-        }
+        
 
         #region INavigationWindow methods
 

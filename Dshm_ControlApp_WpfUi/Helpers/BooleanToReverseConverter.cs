@@ -1,11 +1,7 @@
-﻿using System;
-using System.Globalization;
-using System.Collections.Generic;
-using Nefarius.DsHidMini.ControlApp.MVVM;
-using Serilog.Formatting.Display;
+﻿using System.Globalization;
 using System.Windows.Data;
 
-namespace Nefarius.DsHidMini.ControlApp.Util.WPF
+namespace Nefarius.DsHidMini.ControlApp.Helpers
 {
     public class BooleanToReverseConverter : IValueConverter
     {

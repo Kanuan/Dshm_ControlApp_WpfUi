@@ -1,10 +1,9 @@
 ﻿<Application
-    x:Class="Dshm_ControlApp_WpfUi.App"
+    x:Class="Nefarius.DsHidMini.ControlApp.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:helpers="clr-namespace:Nefarius.DsHidMini.ControlApp.Helpers.WPF"
+    xmlns:helpers="clr-namespace:Nefarius.DsHidMini.ControlApp.Helpers"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    xmlns:wpf="clr-namespace:Nefarius.DsHidMini.ControlApp.Util.WPF"
     DispatcherUnhandledException="OnDispatcherUnhandledException"
     Exit="OnExit"
     Startup="OnStartup">
@@ -12,7 +11,8 @@
         <ResourceDictionary>
             <BitmapImage x:Key="NormalRumbleModeImage" UriSource="\Resources\NormalRumbleMode.png" />
             <BitmapImage x:Key="AltRumbleModeImage" UriSource="\Resources\AltRumbleMode.png" />
-            <wpf:VisibilityPerHidModeConverter x:Key="VisibilityPerHIDModeConverterKey" />
+            <helpers:VisibilityPerHidModeConverter x:Key="VisibilityPerHIDModeConverterKey" />
+            <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <helpers:BooleanToVisibilityConverter
                 x:Key="BoolToVis_TC_FV"
                 False="Visible"
@@ -20,6 +20,10 @@
             <helpers:BooleanToVisibilityConverter
                 x:Key="BoolToVis_TV_FC"
                 False="Collapsed"
+                True="Visible" />
+            <helpers:BooleanToVisibilityConverter
+                x:Key="BoolToVis_TV_FH"
+                False="Hidden"
                 True="Visible" />
             <ResourceDictionary.MergedDictionaries>
                 <ui:ThemesDictionary Theme="Light" />

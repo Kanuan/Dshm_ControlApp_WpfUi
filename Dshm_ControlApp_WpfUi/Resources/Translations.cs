@@ -3,7 +3,7 @@
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
-namespace Dshm_ControlApp_WpfUi.Resources
+namespace Nefarius.DsHidMini.ControlApp.Resources
 {
     public partial class Translations
     {

@@ -1,9 +1,9 @@
 ﻿<ui:FluentWindow
-    x:Class="Dshm_ControlApp_WpfUi.Views.Windows.MainWindow"
+    x:Class="Nefarius.DsHidMini.ControlApp.Views.Windows.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:Dshm_ControlApp_WpfUi.Views.Windows"
+    xmlns:local="clr-namespace:Nefarius.DsHidMini.ControlApp.Views.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
@@ -40,11 +40,12 @@
         </ui:TitleBar>
         <Grid DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="23*"/>
-                <ColumnDefinition Width="9*"/>
+                <ColumnDefinition Width="23*" />
+                <ColumnDefinition Width="9*" />
             </Grid.ColumnDefinitions>
             <ui:NavigationView
                 x:Name="RootNavigation"
+                Grid.ColumnSpan="2"
                 Padding="10,0,10,0"
                 FooterMenuItemsSource="{Binding ViewModel.FooterMenuItems, Mode=OneWay}"
                 FrameMargin="0"
@@ -52,7 +53,7 @@
                 IsPaneToggleVisible="False"
                 MenuItemsSource="{Binding ViewModel.MenuItems, Mode=OneWay}"
                 OpenPaneLength="100"
-                PaneDisplayMode="Left" Grid.ColumnSpan="2">
+                PaneDisplayMode="Left">
 
                 <!--<ui:NavigationView.AutoSuggestBox>
                 <ui:AutoSuggestBox x:Name="AutoSuggestBox" PlaceholderText="Search">
@@ -70,7 +71,10 @@
                 </ui:NavigationView.ContentOverlay>
             </ui:NavigationView>
 
-            <ContentPresenter x:Name="RootContentDialog" Grid.Row="0" Grid.ColumnSpan="2" />
+            <ContentPresenter
+                x:Name="RootContentDialog"
+                Grid.Row="0"
+                Grid.ColumnSpan="2" />
         </Grid>
 
 

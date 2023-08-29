@@ -1,9 +1,8 @@
-﻿using System;
-using System.ComponentModel;
-using Nefarius.DsHidMini.ControlApp.Util.WPF;
+﻿using System.ComponentModel;
+using Nefarius.DsHidMini.ControlApp.Helpers;
 using Nefarius.Utilities.DeviceManagement.PnP;
 
-namespace Nefarius.DsHidMini.ControlApp.Drivers
+namespace Nefarius.DsHidMini.ControlApp.Models.Drivers
 {
     public static class DsHidMiniDriver
     {

@@ -3,21 +3,22 @@
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
-using Dshm_ControlApp_WpfUi.Services;
-using Dshm_ControlApp_WpfUi.ViewModels.Pages;
-using Dshm_ControlApp_WpfUi.ViewModels.Windows;
-using Dshm_ControlApp_WpfUi.Views.Pages;
-using Dshm_ControlApp_WpfUi.Views.Windows;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Nefarius.DsHidMini.ControlApp.MVVM;
 using System.IO;
 using System.Reflection;
 using System.Windows.Threading;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager;
+using Nefarius.DsHidMini.ControlApp.Services;
+using Nefarius.DsHidMini.ControlApp.ViewModels.Pages;
+using Nefarius.DsHidMini.ControlApp.ViewModels.Windows;
+using Nefarius.DsHidMini.ControlApp.Views.Pages;
+using Nefarius.DsHidMini.ControlApp.Views.Windows;
+using Nefarius.Utilities.DeviceManagement.PnP;
 using Wpf.Ui;
 
-namespace Dshm_ControlApp_WpfUi
+namespace Nefarius.DsHidMini.ControlApp
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -41,6 +42,11 @@ namespace Dshm_ControlApp_WpfUi
                 services.AddSingleton<INavigationService, NavigationService>();
                 services.AddSingleton<ISnackbarService, SnackbarService>();
                 services.AddSingleton<IContentDialogService, ContentDialogService>();
+
+                services.AddSingleton<DeviceNotificationListener>();
+                services.AddSingleton<AppSnackbarMessagesService>();
+
+                services.AddSingleton<DshmConfigManager>();
 
                 services.AddSingleton<DevicesPage>();
                 services.AddSingleton<DevicesViewModel>();

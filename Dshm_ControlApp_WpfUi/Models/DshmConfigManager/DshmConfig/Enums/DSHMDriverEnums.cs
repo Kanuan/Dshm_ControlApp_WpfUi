@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Nefarius.DsHidMini.ControlApp.MVVM;
-
-namespace Nefarius.DsHidMini.ControlApp.DshmConfiguration
+﻿namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.DshmConfig.Enums
 {
     public enum DSHM_HidDeviceMode
     {

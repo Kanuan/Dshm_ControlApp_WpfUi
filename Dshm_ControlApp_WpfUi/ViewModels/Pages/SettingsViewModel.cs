@@ -5,7 +5,7 @@
 
 using Wpf.Ui.Controls;
 
-namespace Dshm_ControlApp_WpfUi.ViewModels.Pages
+namespace Nefarius.DsHidMini.ControlApp.ViewModels.Pages
 {
     public partial class SettingsViewModel : ObservableObject, INavigationAware
     {

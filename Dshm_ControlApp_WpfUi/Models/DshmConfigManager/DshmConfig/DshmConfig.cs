@@ -1,33 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Nefarius.DsHidMini.ControlApp.MVVM;
-using static Nefarius.DsHidMini.ControlApp.DshmConfiguration.DshmDeviceSettings;
-using Newtonsoft.Json.Linq;
-using System.Windows.Navigation;
+using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.DshmConfig.Enums;
+using static Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.DshmConfig.DshmDeviceSettings;
 
-namespace Nefarius.DsHidMini.ControlApp.DshmConfiguration
+namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.DshmConfig
 {
+
+    /// <summary>
+    /// DsHidMini driver settings for a specific Device (or global)
+    /// </summary>
     public class DshmDeviceSettings
     {
         public DSHM_HidDeviceMode? HIDDeviceMode { get; set; }// = DSHM_HidDeviceModes.DS4Windows;
         public bool? DisableAutoPairing { get; set; } = false; // false
         public string? PairingAddress { get; set; }
-        public bool? EnableDS4WLightbarTranslation { get; set; } // = false;
-        public bool? PreventRemappingConflitsInDS4WMode { get; set; } // = true;
-        public bool? PreventRemappingConflitsInSXSMode { get; set; } // = true;
         public bool? DisableWirelessIdleTimeout { get; set; }// = false;
         public bool? IsOutputRateControlEnabled { get; set; }// = true;
         public byte? OutputRateControlPeriodMs { get; set; }// = 150;
         public bool? IsOutputDeduplicatorEnabled { get; set; }// = false;
         public double? WirelessIdleTimeoutPeriodMs { get; set; }// = 300000;
-        public bool? IsQuickDisconnectComboEnabled { get; set; }// = true;
-        public double? QuickDisconnectComboHoldTime { get; set; }// = 300000;
-        public ButtonCombo QuickDisconnectCombo { get; set; } = new();// = DSHM_QuickDisconnectCombo.PS_R1_L1
+        public bool? IsQuickDisconnectComboEnabled { get; set; } = true;
+        public ButtonCombo QuickDisconnectCombo { get; set; } = new();
 
 
         [JsonIgnore]
@@ -129,6 +122,9 @@ namespace Nefarius.DsHidMini.ControlApp.DshmConfiguration
         }
     }
 
+    /// <summary>
+    /// DsHidMini driver settings related only to a given Hid Device Mode
+    /// </summary>
     public class DshmHidModeSettings
     {
         [JsonIgnore]
@@ -143,54 +139,35 @@ namespace Nefarius.DsHidMini.ControlApp.DshmConfiguration
     }
 
     /// <summary>
-    /// WIP: Json-serializalying an object from this class and saving it to disk results in a file with the appropriate contents to be loaded by the DsHidMini v3 driver
+    /// A class representing the DsHidMini configuration disk file
     /// </summary>
     public class DshmConfiguration
     {
         public DshmDeviceSettings Global { get; set; } = new();
         public List<DshmDeviceData> Devices { get; set; } = new();
+
+        /// <summary>
+        /// Updates the DsHidMini configuration file on disk accordingly to this object's settings
+        /// </summary>
+        /// <returns>If the update was successfully</returns>
+        public bool ApplyConfiguration()
+        {
+            return DshmConfigSerialization.UpdateDsHidMiniConfigFile(this);
+
+        }
     }
 
+    /// <summary>
+    /// class representing a DsHidMini specific device data, containing its MAC address and Settings
+    /// </summary>
     public class DshmDeviceData
     {
         public string DeviceAddress { get; set; }
-        public DshmDeviceSettings CustomSettings { get; set; } = new();
+        public DshmDeviceSettings DeviceSettings { get; set; } = new();
 
     }
 
-    public class DshmConfigCustomJsonConverter : JsonConverter<DshmConfiguration>
-    {
-        public override DshmConfiguration Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
-        }
 
-        public override void Write(
-        Utf8JsonWriter writer, DshmConfiguration instance, JsonSerializerOptions options)
-        {
-            writer.WriteStartObject();
-                writer.WritePropertyName(nameof(instance.Global));
-                var serializedGlobal = JsonSerializer.Serialize(instance.Global, options);
-                writer.WriteRawValue(serializedGlobal);
 
-                //JsonSerializer.Serialize(writer, new { instance.Global }, options);
-
-                writer.WritePropertyName(nameof(instance.Devices));
-                writer.WriteStartObject();
-                    foreach (DshmDeviceData device in instance.Devices)
-                    {
-                        if (string.IsNullOrEmpty(device.DeviceAddress?.Trim()))
-                            throw new JsonException("Expected non-null, non-empty Name");
-                        writer.WritePropertyName(device.DeviceAddress);
-
-                        var serializedCustomSettings = JsonSerializer.Serialize(device.CustomSettings, options);
-                writer.WriteRawValue(serializedCustomSettings);
-    }
-                writer.WriteEndObject();
-
-            writer.WriteEndObject();
-
-}
-    }
 }
 

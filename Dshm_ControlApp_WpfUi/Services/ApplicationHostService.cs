@@ -3,12 +3,12 @@
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
-using Dshm_ControlApp_WpfUi.Views.Windows;
 using Microsoft.Extensions.Hosting;
-using Dshm_ControlApp_WpfUi.Views.Pages;
+using Nefarius.DsHidMini.ControlApp.Views.Pages;
+using Nefarius.DsHidMini.ControlApp.Views.Windows;
 using Wpf.Ui;
 
-namespace Dshm_ControlApp_WpfUi.Services;
+namespace Nefarius.DsHidMini.ControlApp.Services;
 
 /// <summary>
 /// Managed host of the application.
@@ -55,7 +55,7 @@ public class ApplicationHostService : IHostedService
             )!;
             _navigationWindow!.ShowWindow();
 
-            _navigationWindow.Navigate(typeof(Dshm_ControlApp_WpfUi.Views.Pages.DevicesPage));
+            _navigationWindow.Navigate(typeof(DevicesPage));
         }
 
         await Task.CompletedTask;

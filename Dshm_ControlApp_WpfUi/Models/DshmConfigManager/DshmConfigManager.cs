@@ -1,58 +1,37 @@
-﻿using Microsoft.Win32.SafeHandles;
-using Nefarius.DsHidMini.ControlApp.DshmConfiguration;
-using Nefarius.DsHidMini.ControlApp.MVVM;
-using Nefarius.DsHidMini.ControlApp.Util.App;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Security.AccessControl;
-using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.DshmConfig;
+using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums;
 
-namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
+namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
 {
-    internal class DshmConfigManager
+    /// <summary>
+    ///  Class for managing user's dshidmini settings and applying them to the DsHidMini Configuration File
+    /// </summary>
+    public class DshmConfigManager
     {
-        // ----------------------------------------------------------- FIELDS
-
-        public static JsonSerializerOptions DshmConfigSerializerOptions = new JsonSerializerOptions
-        {
-            WriteIndented = true,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-            IncludeFields = true,
-
-            Converters =
-            {
-                new JsonStringEnumConverter(),
-                new DshmConfigCustomJsonConverter(),
-            }
-        };
-
-        private const string DISK = @"C:\";
-        private const string CONTROL_APP_FOLDER_PATH_IN_DISK = @"ProgramData\DsHidMini\ControlApp\";
-        private const string CONTROL_APP_SETTINGS_FILE_NAME = @"ControlAppSettings.json";
-        private const string DSHM_FOLDER_PATH_IN_DISK = @"ProgramData\DsHidMini\";
-        private const string PROFILE_FOLDER_NAME = @"Profiles\";
-        private const string DEVICES_FOLDER_NAME = @"Devices\";
-
-        public string DshmFolderFullPath { get; } = $@"{DISK}{DSHM_FOLDER_PATH_IN_DISK}";
-        public string ProfilesFolderFullPath { get; } = $@"{DISK}{CONTROL_APP_FOLDER_PATH_IN_DISK}{PROFILE_FOLDER_NAME}";
-        public string DevicesFolderFullPath { get; } = $@"{DISK}{CONTROL_APP_FOLDER_PATH_IN_DISK}{DEVICES_FOLDER_NAME}";
-        public string ControlAppFolderFullPath { get; } = $@"{DISK}{CONTROL_APP_FOLDER_PATH_IN_DISK}";
-        public string ControlAppSettingsFileFullPath { get; } = $@"{DISK}{CONTROL_APP_FOLDER_PATH_IN_DISK}{CONTROL_APP_SETTINGS_FILE_NAME}";
-
-        public static Guid guid = new();
-
         // ----------------------------------------------------------- AUTO-PROPERTIES
 
+        /// <summary>
+        /// Singleton instace of the DshmConfigManager's user data
+        /// </summary>
         private static readonly DshmConfigManagerUserData dshmManagerUserData = DshmConfigManagerUserData.Instance;
+        /// <summary>
+        /// Raised when the DsHidMini Configuraton File on disk is updated
+        /// </summary>
+        public event EventHandler<DshmUpdatedEventArgs> DshmConfigurationUpdated;
+        /// <summary>
+        /// Raised when the GlobalProfile is updated
+        /// </summary>
+        public event EventHandler GlobalProfileUpdated;
 
 
         // ----------------------------------------------------------- PROPERTIES
-
+        
+        /// <summary>
+        /// Profile used for all new controllers and those configured to use Global Settings Mode.
+        /// Reverts back to the Default Profile if the profile it's set to does not exist 
+        /// </summary>
         public ProfileData GlobalProfile
         {
             get
@@ -61,11 +40,17 @@ namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
                 if (gp == null)
                 {
                     dshmManagerUserData.GlobalProfileGuid = ProfileData.DefaultGuid;
+                    GlobalProfileUpdated?.Invoke(this, new());
                     gp = ProfileData.DefaultProfile;
                 }
                 return gp;
             }
-            set => dshmManagerUserData.GlobalProfileGuid = value.ProfileGuid;
+            set
+            {
+                dshmManagerUserData.GlobalProfileGuid = value.ProfileGuid;
+                GlobalProfileUpdated?.Invoke(this,new());
+            }
+            
         }
 
         public List<ProfileData> Profiles
@@ -94,6 +79,9 @@ namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
             FixDevicesWithBlankProfiles();
         }
 
+        /// <summary>
+        /// Dshm Config Manager's User Data, containing the profile set as Global and Devices/Profiles datas
+        /// </summary>
         private class DshmConfigManagerUserData
         {
             /// <summary>
@@ -111,10 +99,22 @@ namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
             /// </summary>
             public static DshmConfigManagerUserData Instance => AppConfigLazy.Value;
 
+            /// <summary>
+            /// Configuration file name
+            /// </summary>
             [JsonIgnore]
             public static string GlobalUserDataFileName => "DshmUserData";
+            /// <summary>
+            /// Guid of the profile set as global
+            /// </summary>
             public Guid GlobalProfileGuid { get; set; } = ProfileData.DefaultGuid;
+            /// <summary>
+            /// List of profiles datas
+            /// </summary>
             public List<ProfileData> Profiles { get; set; } = new();
+            /// <summary>
+            /// List of known devices datas
+            /// </summary>
             public List<DeviceData> Devices { get; set; } = new();
 
 
@@ -136,6 +136,15 @@ namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
 
         // ----------------------------------------------------------- METHODS
 
+        public void SaveChanges()
+        {
+            dshmManagerUserData.Save();
+        }
+
+        /// <summary>
+        /// Links Devices Datas back to the default profile if the profile they are set to use doesn't exist more,
+        /// also reverting them to the Global Settings Mode if in Profile Setting Mode
+        /// </summary>
         private void FixDevicesWithBlankProfiles()
         {
             foreach(DeviceData device in dshmManagerUserData.Devices)
@@ -143,11 +152,17 @@ namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
                 if(GetProfile(device.GuidOfProfileToUse) == null)
                 {
                     device.GuidOfProfileToUse = ProfileData.DefaultGuid;
-                    device.SettingsMode = SettingsModes.Global;
+                    if(device.SettingsMode == SettingsModes.Profile)
+                        device.SettingsMode = SettingsModes.Global;
                 }
             }
         }
 
+        /// <summary>
+        /// If it exists, returns the Profile Data identified by the given GUID
+        /// </summary>
+        /// <param name="profileGuid"></param>
+        /// <returns>The profile data of the given GUID if it exists, null otherwise</returns>
         public ProfileData? GetProfile(Guid profileGuid)
         {
             ProfileData profile = null;
@@ -163,28 +178,34 @@ namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
             return profile;
         }
 
+        /// <summary>
+        /// Saves the DshmConfigManager configuration to disk and updates DsHidMini configuration file
+        /// </summary>
         public void SaveChangesAndUpdateDsHidMiniConfigFile()
         {
             dshmManagerUserData.Save();
-            UpdateDsHidMiniConfigFile();
+            ApplySettings();
         }
 
-        public void UpdateDsHidMiniConfigFile()
+        /// <summary>
+        /// Updates the DsHidMini configuration file on disk based on the global profile and each device's settings
+        /// </summary>
+        public void ApplySettings()
         {
-            var dshmSettings = new DshmConfiguration.DshmConfiguration();
+            var dshmConfiguration = new DshmConfiguration();
             
-            GlobalProfile.DataContainer.ConvertAllToDSHM(dshmSettings.Global);
+            GlobalProfile.DeviceSettings.ConvertAllToDSHM(dshmConfiguration.Global);
            
             foreach(DeviceData dev in dshmManagerUserData.Devices)
             {
-                var temp = new DshmDeviceData();
-                temp.DeviceAddress = dev.DeviceMac;
-                temp.CustomSettings.DisableAutoPairing = !dev.AutoPairWhenCabled;
-                temp.CustomSettings.PairingAddress = dev.PairingAddress;
+                var dshmDeviceData = new DshmDeviceData();
+                dshmDeviceData.DeviceAddress = dev.DeviceMac;
+                dshmDeviceData.DeviceSettings.DisableAutoPairing = !dev.AutoPairWhenCabled;
+                dshmDeviceData.DeviceSettings.PairingAddress = dev.PairingAddress;
                 switch (dev.SettingsMode)
                 {
                     case SettingsModes.Custom:
-                dev.DatasContainter.ConvertAllToDSHM(temp.CustomSettings);
+                        dev.DatasContainter.ConvertAllToDSHM(dshmDeviceData.DeviceSettings);
                         break;
                     case SettingsModes.Profile:
                         ProfileData devprof = GetProfile(dev.GuidOfProfileToUse);
@@ -194,7 +215,7 @@ namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
                         }
                         else
                         {
-                            devprof.DataContainer.ConvertAllToDSHM(temp.CustomSettings);
+                            devprof.DeviceSettings.ConvertAllToDSHM(dshmDeviceData.DeviceSettings);
                         }
                         break;
 
@@ -202,15 +223,24 @@ namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
                     default:
                         break; ;
                 }
-                dshmSettings.Devices.Add(temp);
+                dshmConfiguration.Devices.Add(dshmDeviceData);
             }
-            
-            string profileJson = JsonSerializer.Serialize(dshmSettings, DshmConfigSerializerOptions);
 
-            System.IO.Directory.CreateDirectory(DshmFolderFullPath);
-            System.IO.File.WriteAllText($@"{DshmFolderFullPath}DsHidMini.json", profileJson);
+            var updateStatus = dshmConfiguration.ApplyConfiguration();
+
+            DshmConfigurationUpdated?.Invoke(this, new DshmUpdatedEventArgs() { UpdatedSuccessfully = updateStatus});
+
         }
 
+        public class DshmUpdatedEventArgs : EventArgs
+        {
+            public bool UpdatedSuccessfully;
+        }
+
+        /// <summary>
+        /// Adds to the Profile List a new profile with the given name and settings based on the default profile
+        /// </summary>
+        /// <param name="profileName">The name of the profile</param>
         public void CreateNewProfile(string profileName)
         {
             ProfileData newProfile = new();
@@ -219,6 +249,11 @@ namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
             dshmManagerUserData.Profiles.Add(newProfile);
         }
 
+        /// <summary>
+        /// Removes the given profile from the profile list.
+        /// Devices set to use it will be updated to use the default profile and will be reverted back to Global settings mode if in Profile settings mode
+        /// </summary>
+        /// <param name="profile">The profile to be deleted</param>
         public void DeleteProfile(ProfileData profile)
         {
             if (profile == ProfileData.DefaultProfile) // Must not save Default Profile to disk
@@ -229,6 +264,11 @@ namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
             FixDevicesWithBlankProfiles();
         }
 
+        /// <summary>
+        /// Gets the DsHidMini config. manager device data of a DsHidMini device.  If it does not exist, a new one will be created for it first before returning
+        /// </summary>
+        /// <param name="deviceMac">The MAC address of the DsHidMini device</param>
+        /// <returns>The device data of the DsHidMini device</returns>
         public DeviceData GetDeviceData(string deviceMac)
         {
             foreach (DeviceData dev in dshmManagerUserData.Devices)

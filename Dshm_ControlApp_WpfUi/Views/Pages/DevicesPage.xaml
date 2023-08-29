@@ -1,10 +1,11 @@
 ﻿<Page
-    x:Class="Dshm_ControlApp_WpfUi.Views.Pages.DevicesPage"
+    x:Class="Nefarius.DsHidMini.ControlApp.Views.Pages.DevicesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:helpers="clr-namespace:Nefarius.DsHidMini.ControlApp.Helpers.WPF"
-    xmlns:local="clr-namespace:Dshm_ControlApp_WpfUi.Views.Pages"
+    xmlns:helpers="clr-namespace:Nefarius.DsHidMini.ControlApp.Helpers"
+    xmlns:local="clr-namespace:Nefarius.DsHidMini.ControlApp.Views.Pages"
+    xmlns:manaenum="clr-namespace:Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:viewuserctrls="clr-namespace:Nefarius.DsHidMini.ControlApp.Views.UserControls"
@@ -18,14 +19,6 @@
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     ScrollViewer.CanContentScroll="False"
     mc:Ignorable="d">
-    <Page.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVis" />
-        <helpers:BooleanToVisibilityConverter
-            x:Key="BoolToVisConverterVisOrHid"
-            False="Hidden"
-            True="Visible" />
-    </Page.Resources>
-
     <DockPanel VerticalAlignment="Stretch">
         <DockPanel
             Width="250"
@@ -111,7 +104,7 @@
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Stretch"
             DockPanel.Dock="Right">
-            <DockPanel Visibility="{Binding ViewModel.AnyDeviceSelected, Converter={StaticResource BoolToVisConverterVisOrHid}}">
+            <DockPanel Visibility="{Binding ViewModel.AnyDeviceSelected, Converter={StaticResource BoolToVis_TV_FH}}">
                 <DockPanel DataContext="{Binding ViewModel.SelectedDevice}" DockPanel.Dock="Bottom">
                     <UniformGrid Columns="2">
                         <ui:Button
@@ -229,7 +222,7 @@
                                         x:Name="SettingsModeSelection_ComboBox"
                                         VerticalAlignment="Center"
                                         DockPanel.Dock="Left"
-                                        ItemsSource="{Binding SettingsModesList}"
+                                        ItemsSource="{Binding Source={helpers:EnumBindingSource {x:Type manaenum:SettingsModes}}}"
                                         SelectedItem="{Binding CurrentDeviceSettingsMode}" />
                                     <Label
                                         VerticalContentAlignment="Center"

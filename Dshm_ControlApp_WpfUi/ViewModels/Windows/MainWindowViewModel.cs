@@ -3,15 +3,22 @@
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
-using Nefarius.DsHidMini.ControlApp.MVVM;
-using Nefarius.DsHidMini.ControlApp.Util.App;
 using System.Collections.ObjectModel;
+using Nefarius.DsHidMini.ControlApp.Models;
+using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager;
+using Nefarius.DsHidMini.ControlApp.Services;
+using Wpf.Ui;
 using Wpf.Ui.Controls;
+using static Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.DshmConfigManager;
 
-namespace Dshm_ControlApp_WpfUi.ViewModels.Windows
+namespace Nefarius.DsHidMini.ControlApp.ViewModels.Windows
 {
     public partial class MainWindowViewModel : ObservableObject
     {
+        private readonly AppSnackbarMessagesService _appSnackbarMessagesService;
+
+        private readonly DshmConfigManager _dshmConfigManager;
+
         [ObservableProperty]
         private string _applicationTitle = "DsHidMini ControlApp";
 
@@ -48,35 +55,15 @@ namespace Dshm_ControlApp_WpfUi.ViewModels.Windows
         {
             new MenuItem { Header = "Home", Tag = "tray_home" }
         };
-
-        /// <summary>
-        ///     List of detected devices.
-        /// </summary>
-        internal ObservableCollection<DeviceViewModel> Devices { get; set; }
-
-        /// <summary>
-        ///     Currently selected device, if any.
-        /// </summary>
-        [ObservableProperty] private DeviceViewModel _selectedDevice;
-
-        public MainWindowViewModel()
+        
+        public MainWindowViewModel(AppSnackbarMessagesService appSnackbarMessagesService, DshmConfigManager dshmConfigManager)
         {
-            Devices = new ObservableCollection<DeviceViewModel>();
-
+            _appSnackbarMessagesService = appSnackbarMessagesService;
+            _dshmConfigManager = dshmConfigManager;
         }
 
         public ApplicationConfiguration AppConfig => ApplicationConfiguration.Instance;
 
-
-        /// <summary>
-        ///     Is a device currently selected.
-        /// </summary>
-        public bool HasDeviceSelected => SelectedDevice != null;
-
-        /// <summary>
-        ///     Are there devices connected.
-        /// </summary>
-        public bool HasNoDevices => Devices.Count == 0;
 
         /*
         /// <summary>
@@ -104,10 +91,6 @@ namespace Dshm_ControlApp_WpfUi.ViewModels.Windows
         /// </summary>
         public string Version => $"Version: {Assembly.GetEntryAssembly().GetName().Version}";
 
-        /// <summary>
-        ///     True if GitHub version is newer than own version.
-        /// </summary>
-        public bool IsUpdateAvailable => Updater.IsUpdateAvailable;
 
         private static string ParametersKey =>
             "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\WUDF\\Services\\dshidmini\\Parameters";
@@ -134,28 +117,6 @@ namespace Dshm_ControlApp_WpfUi.ViewModels.Windows
                 }
             }
         }
-
-        public bool IsFilterAvailable => IsElevated && BthPS3FilterDriver.IsFilterAvailable;
-
-        public bool IsFilterUnavailable => IsElevated && !BthPS3FilterDriver.IsFilterAvailable;
-
-        public bool IsFilterEnabled
-        {
-            get => IsElevated && BthPS3FilterDriver.IsFilterEnabled;
-            set => BthPS3FilterDriver.IsFilterEnabled = value;
-        }
-
-        public bool IsRawPDODisabled => !BthPS3ProfileDriver.RawPDO;
-
-        public bool AreBthPS3SettingsCorrect =>
-            IsElevated && !BthPS3ProfileDriver.RawPDO && BthPS3FilterDriver.IsFilterEnabled;
-
-        public bool AreBthPS3SettingsIncorrect =>
-            IsElevated && (BthPS3ProfileDriver.RawPDO || !BthPS3FilterDriver.IsFilterEnabled);
-
-        public bool IsPressureMutingSupported => IsEditable && SelectedDevice.IsPressureMutingSupported;
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public void RefreshProperties()
         {

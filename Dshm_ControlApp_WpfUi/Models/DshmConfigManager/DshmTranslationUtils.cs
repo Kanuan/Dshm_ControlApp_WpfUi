@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Nefarius.DsHidMini.ControlApp.MVVM;
+﻿using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.DshmConfig.Enums;
+using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums;
 
-namespace Nefarius.DsHidMini.ControlApp.DshmConfiguration
+namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
 {
     public class DshmManagerToDriverConversion
     {

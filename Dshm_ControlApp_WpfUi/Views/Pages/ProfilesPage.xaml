@@ -1,13 +1,13 @@
 <Page
-    x:Class="Dshm_ControlApp_WpfUi.Views.Pages.ProfilesPage"
+    x:Class="Nefarius.DsHidMini.ControlApp.Views.Pages.ProfilesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:Dshm_ControlApp_WpfUi.Views.Pages"
+    xmlns:helpers="clr-namespace:Nefarius.DsHidMini.ControlApp.Helpers"
+    xmlns:local="clr-namespace:Nefarius.DsHidMini.ControlApp.Views.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:models="clr-namespace:Dshm_ControlApp_WpfUi.Models"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    xmlns:viewuserctrls="clr-namespace:Nefarius.DsHidMini.ControlApp.Views.UserControls" xmlns:super="clr-namespace:Nefarius.DsHidMini.ControlApp.Util.WPF" xmlns:helpers="clr-namespace:Nefarius.DsHidMini.ControlApp.Helpers.WPF"
+    xmlns:viewuserctrls="clr-namespace:Nefarius.DsHidMini.ControlApp.Views.UserControls"
     Title="ProfilesPage"
     d:DataContext="{d:DesignInstance local:ProfilesPage,
                                      IsDesignTimeCreatable=False}"
@@ -19,96 +19,113 @@
     ScrollViewer.CanContentScroll="False"
     mc:Ignorable="d">
     <Page.Resources>
-        <super:BooleanToReverseConverter x:Key="BooleanToReverseConverterKey"/>
-        <helpers:BooleanToVisibilityConverter 
-                x:Key="BoolToVisConverter_TCollapsed_FVisible" 
-                True="Collapsed" 
-                False="Visible" />
-        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <helpers:BooleanToReverseConverter x:Key="BooleanToReverseConverterKey" />
+        <helpers:BooleanToVisibilityConverter
+            x:Key="BoolToVisConverter_TCollapsed_FVisible"
+            False="Visible"
+            True="Collapsed" />
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Page.Resources>
 
 
     <DockPanel VerticalAlignment="Stretch">
-        <DockPanel DockPanel.Dock="Left" Width="250" MaxWidth="250" IsEnabled="{Binding ViewModel.IsEditing, Converter={StaticResource BooleanToReverseConverterKey}}">
+        <DockPanel
+            Width="250"
+            MaxWidth="250"
+            DockPanel.Dock="Left"
+            IsEnabled="{Binding ViewModel.IsEditing, Converter={StaticResource BooleanToReverseConverterKey}}">
             <DockPanel.Style>
                 <Style TargetType="DockPanel">
                     <Style.Setters>
-                        <Setter Property="Opacity" Value="1"/>
+                        <Setter Property="Opacity" Value="1" />
                     </Style.Setters>
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding ViewModel.IsEditing}" Value="True">
-                            <Setter Property="Opacity" Value="0.3"/>
+                            <Setter Property="Opacity" Value="0.3" />
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </DockPanel.Style>
-            <ui:TextBlock 
+            <ui:TextBlock
+                HorizontalAlignment="Center"
                 DockPanel.Dock="Top"
-                Text="Profiles"
                 FontSize="20"
-                HorizontalAlignment="Center"/>
+                Text="Profiles" />
 
             <Grid DockPanel.Dock="Top">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Margin="2" Command="{Binding ViewModel.CreateProfileCommand}">
+                <Button
+                    Grid.Column="0"
+                    Margin="2"
+                    Command="{Binding ViewModel.CreateProfileCommand}">
                     <Button.Content>
                         <Viewbox>
-                            <ui:SymbolIcon Symbol="Add24"/>
+                            <ui:SymbolIcon Symbol="Add24" />
                         </Viewbox>
                     </Button.Content>
                 </Button>
-                <Button Grid.Column="1" Margin="2" Command="{Binding ViewModel.EnableEditingOfSelectedProfileCommand}">
+                <Button
+                    Grid.Column="1"
+                    Margin="2"
+                    Command="{Binding ViewModel.EnableEditingOfSelectedProfileCommand}">
                     <Button.Content>
                         <Viewbox>
-                            <ui:SymbolIcon Symbol="Pen24"/>
+                            <ui:SymbolIcon Symbol="Pen24" />
                         </Viewbox>
                     </Button.Content>
                 </Button>
-                <Button Grid.Column="2" Margin="2" Command="{Binding ViewModel.SetprofileAsGlobalCommand}" CommandParameter="{Binding ViewModel.SelectedProfileVM}">
+                <Button
+                    Grid.Column="2"
+                    Margin="2"
+                    Command="{Binding ViewModel.SetprofileAsGlobalCommand}"
+                    CommandParameter="{Binding ViewModel.SelectedProfileVM}">
                     <Button.Content>
                         <Viewbox>
-                            <ui:TextBlock Text="Set as global"/>
+                            <ui:TextBlock Text="Set as global" />
                         </Viewbox>
                     </Button.Content>
                 </Button>
-                <Button Grid.Column="3" Margin="2" Command="{Binding ViewModel.DeleteProfileCommand}" CommandParameter="{Binding ViewModel.SelectedProfileVM}">
+                <Button
+                    Grid.Column="3"
+                    Margin="2"
+                    Command="{Binding ViewModel.DeleteProfileCommand}"
+                    CommandParameter="{Binding ViewModel.SelectedProfileVM}">
                     <Button.Content>
                         <Viewbox>
-                            <ui:SymbolIcon Symbol="Delete28"/>
+                            <ui:SymbolIcon Symbol="Delete28" />
                         </Viewbox>
                     </Button.Content>
                 </Button>
             </Grid>
-            
+
             <ListView
-            DockPanel.Dock="Top"
-            VerticalAlignment="Stretch"
-            HorizontalAlignment="Stretch"
-            ItemsSource="{Binding ViewModel.ProfilesViewModels}"
-            SelectedItem="{Binding ViewModel.SelectedProfileVM}"
-            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-            >
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                DockPanel.Dock="Top"
+                ItemsSource="{Binding ViewModel.ProfilesViewModels}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                SelectedItem="{Binding ViewModel.SelectedProfileVM}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ui:Card Padding="2">
-                            <Grid >
+                            <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="210"/>
-                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="210" />
+                                    <ColumnDefinition Width="40" />
                                 </Grid.ColumnDefinitions>
-                                <ui:TextBlock Text="{Binding Name}" HorizontalAlignment="Stretch"/>
+                                <ui:TextBlock HorizontalAlignment="Stretch" Text="{Binding Name}" />
                                 <ui:SymbolIcon Symbol="Globe24">
                                     <ui:SymbolIcon.Style>
                                         <Style TargetType="ui:SymbolIcon">
-                                            <Setter Property="Visibility"  Value="Hidden"/>
+                                            <Setter Property="Visibility" Value="Hidden" />
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding IsGlobal}" Value="True">
-                                                    <Setter Property="Visibility"  Value="Visible"/>
+                                                    <Setter Property="Visibility" Value="Visible" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
@@ -121,25 +138,42 @@
             </ListView>
         </DockPanel>
 
-        <ui:Card DockPanel.Dock="Right" VerticalAlignment="Stretch" VerticalContentAlignment="Stretch">
+        <ui:Card
+            VerticalAlignment="Stretch"
+            VerticalContentAlignment="Stretch"
+            DockPanel.Dock="Right">
             <DockPanel DockPanel.Dock="Right">
                 <ui:Card DockPanel.Dock="Top">
-                    <DockPanel >
-                        <ui:TextBlock Text="Profile name:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                        <ui:TextBox Text="{Binding ViewModel.SelectedProfileVM.Name}" IsEnabled="{Binding ViewModel.IsEditing}"/>
+                    <DockPanel>
+                        <ui:TextBlock
+                            Margin="0,0,10,0"
+                            VerticalAlignment="Center"
+                            Text="Profile name:" />
+                        <ui:TextBox IsEnabled="{Binding ViewModel.IsEditing}" Text="{Binding ViewModel.SelectedProfileVM.Name}" />
                     </DockPanel>
                 </ui:Card>
                 <DockPanel DockPanel.Dock="Bottom" IsEnabled="{Binding ViewModel.IsEditing}">
-                    <UniformGrid  Columns="2">
-                        <ui:Button Content="Save changes" HorizontalAlignment="Stretch" Command="{Binding ViewModel.SaveChangesToProfileCommand }" />
-                        <ui:Button Content="Cancel" HorizontalAlignment="Stretch" Command="{Binding ViewModel.CancelChangesToProfileCommand}"/>
+                    <UniformGrid Columns="2">
+                        <ui:Button
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding ViewModel.SaveChangesToProfileCommand}"
+                            Content="Save changes" />
+                        <ui:Button
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding ViewModel.CancelChangesToProfileCommand}"
+                            Content="Cancel" />
                     </UniformGrid>
                 </DockPanel>
-                <viewuserctrls:DeviceSettingsEditor Margin="0,10,0,10" Height="auto" DockPanel.Dock="Top" VerticalAlignment="Stretch" DataContext="{Binding ViewModel.SelectedProfileVM.VmGroupsCont}"/>
+                <viewuserctrls:DeviceSettingsEditor
+                    Height="auto"
+                    Margin="0,10,0,10"
+                    VerticalAlignment="Stretch"
+                    DataContext="{Binding ViewModel.SelectedProfileVM.VmGroupsCont}"
+                    DockPanel.Dock="Top" />
 
             </DockPanel>
         </ui:Card>
-        
-        
+
+
     </DockPanel>
 </Page>

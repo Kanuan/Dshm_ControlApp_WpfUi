@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
-using System;
 
-namespace Nefarius.DsHidMini.Util
+namespace Nefarius.DsHidMini.ControlApp.Models.Util
 {
     public static class RegistryHelpers
     {

@@ -1,11 +1,12 @@
-﻿using Nefarius.DsHidMini.ControlApp.DshmConfigManager;
+﻿using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager;
+using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums;
 
-namespace Nefarius.DsHidMini.ControlApp.MVVM
+namespace Nefarius.DsHidMini.ControlApp.ViewModels.UserControls.DeviceSettings
 {
     public class LeftMotorRescalingSettingsViewModel : DeviceSettingsViewModel
     {
         private LeftMotorRescalingSettings _tempBackingData = new();
-        protected override IBackingData _myInterface => _tempBackingData;
+        protected override IDeviceSettings _myInterface => _tempBackingData;
 
         public override SettingsModeGroups Group { get; } = SettingsModeGroups.RumbleLeftStrRescale;
 

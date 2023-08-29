@@ -3,10 +3,10 @@
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
-using Dshm_ControlApp_WpfUi.ViewModels.Pages;
+using Nefarius.DsHidMini.ControlApp.ViewModels.Pages;
 using Wpf.Ui.Controls;
 
-namespace Dshm_ControlApp_WpfUi.Views.Pages
+namespace Nefarius.DsHidMini.ControlApp.Views.Pages
 {
     public partial class DevicesPage : INavigableView<DevicesViewModel>
     {

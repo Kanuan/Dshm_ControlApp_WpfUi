@@ -1,29 +1,28 @@
-﻿using Dshm_ControlApp_WpfUi;
-using FontAwesome5;
-using Nefarius.DsHidMini.ControlApp.Drivers;
-using Nefarius.DsHidMini.ControlApp.DshmConfigManager;
+﻿using FontAwesome5;
+using Nefarius.DsHidMini.ControlApp.Models.Drivers;
+using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager;
+using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums;
+using Nefarius.DsHidMini.ControlApp.Services;
+using Nefarius.DsHidMini.ControlApp.ViewModels.Pages;
+using Nefarius.DsHidMini.ControlApp.ViewModels.UserControls;
 using Nefarius.Utilities.Bluetooth;
 using Nefarius.Utilities.DeviceManagement.PnP;
-using System.ComponentModel;
+using Wpf.Ui;
 using Wpf.Ui.Controls;
 
-namespace Nefarius.DsHidMini.ControlApp.MVVM
+namespace Nefarius.DsHidMini.ControlApp.ViewModels
 {
     public partial class DeviceViewModel : ObservableObject
     {
         // ------------------------------------------------------ FIELDS
 
-        internal static DshmConfigManager.DshmConfigManager UserDataManager = new DshmConfigManager.DshmConfigManager();
-        internal static ProfilesViewModel vm = App.GetService<ProfilesViewModel>();
+        private readonly DshmConfigManager _dshmConfigManager;
+        private readonly AppSnackbarMessagesService _appSnackbarMessagesService;
+
+
         private readonly PnPDevice _device;
         private DeviceData deviceUserData;
         private readonly Timer _batteryQuery;
-        public readonly List<SettingsModes> settingsModesList = new List<SettingsModes>
-        {
-            SettingsModes.Global,
-            SettingsModes.Profile,
-            SettingsModes.Custom,
-        };
 
         // ------------------------------------------------------ PROPERTIES
 
@@ -36,8 +35,6 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         //internal string DisplayName { get; set; }
         [ObservableProperty] private bool _isEditorEnabled;
         [ObservableProperty] private bool _isProfileSelectorVisible;
-
-        public List<SettingsModes> SettingsModesList => settingsModesList;
 
         [ObservableProperty] private SettingsModes _currentDeviceSettingsMode;
 
@@ -213,11 +210,13 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         // ------------------------------------------------------ CONSTRUCTOR
 
-        internal DeviceViewModel(PnPDevice device)
+        internal DeviceViewModel(PnPDevice device, DshmConfigManager dshmConfigManager, AppSnackbarMessagesService appSnackbarMessagesService)
         {
             _device = device;
+            _dshmConfigManager = dshmConfigManager;
+            _appSnackbarMessagesService = appSnackbarMessagesService;
             _batteryQuery = new Timer(UpdateBatteryStatus, null, 10000, 10000);
-            deviceUserData = UserDataManager.GetDeviceData(DeviceAddress);
+            deviceUserData = _dshmConfigManager.GetDeviceData(DeviceAddress);
             // Loads correspondent controller data based on controller's MAC address 
 
 
@@ -256,7 +255,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         partial void OnSelectedProfileChanged(ProfileData? value)
         {
-            ProfileCustomsVM.LoadDatasToAllGroups(SelectedProfile.DataContainer);
+            ProfileCustomsVM.LoadDatasToAllGroups(SelectedProfile.DeviceSettings);
         }
 
         [RelayCommand]
@@ -264,9 +263,9 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         {
             AutoPairDeviceWhenCabled = deviceUserData.AutoPairWhenCabled;
             DeviceCustomsVM.LoadDatasToAllGroups(deviceUserData.DatasContainter);
-            ListOfProfiles = UserDataManager.Profiles;
-            SelectedProfile = UserDataManager.GetProfile(deviceUserData.GuidOfProfileToUse);
-            GlobalCustomsVM.LoadDatasToAllGroups(UserDataManager.GlobalProfile.DataContainer);
+            ListOfProfiles = _dshmConfigManager.Profiles;
+            SelectedProfile = _dshmConfigManager.GetProfile(deviceUserData.GuidOfProfileToUse);
+            GlobalCustomsVM.LoadDatasToAllGroups(_dshmConfigManager.GlobalProfile.DeviceSettings);
             CurrentDeviceSettingsMode = deviceUserData.SettingsMode;
         }
 
@@ -290,7 +289,8 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             {
                 deviceUserData.GuidOfProfileToUse = SelectedProfile.ProfileGuid;
             }
-            UserDataManager.SaveChangesAndUpdateDsHidMiniConfigFile();
+            _appSnackbarMessagesService.ShowDsHidMiniConfigurationUpdateSuccessMessage();
+            _dshmConfigManager.SaveChangesAndUpdateDsHidMiniConfigFile();
         }
 
         [RelayCommand]

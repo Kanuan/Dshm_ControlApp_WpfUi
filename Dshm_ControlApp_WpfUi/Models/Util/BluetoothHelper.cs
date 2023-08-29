@@ -1,11 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Net.NetworkInformation;
+﻿using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using Windows.Win32;
 using Windows.Win32.Devices.Bluetooth;
 
-namespace Nefarius.DsHidMini.ControlApp.Util
+namespace Nefarius.DsHidMini.ControlApp.Models.Util
 {
     public static class BluetoothHelper
     {

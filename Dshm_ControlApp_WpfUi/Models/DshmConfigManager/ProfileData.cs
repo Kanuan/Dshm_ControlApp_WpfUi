@@ -1,4 +1,4 @@
-﻿namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
+﻿namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
 {
     public class ProfileData
     {
@@ -6,7 +6,7 @@
         public string ProfileName { get; set; }
         public Guid ProfileGuid { get; set; } = Guid.NewGuid();
 
-        public DeviceSettings DataContainer { get; set; } = new();
+        public DeviceSettings DeviceSettings { get; set; } = new();
 
         public ProfileData()
         {
@@ -16,7 +16,7 @@
         {
             ProfileName = "XInput (Default)",
             ProfileGuid = DefaultGuid,
-            DataContainer = new(),
+            DeviceSettings = new(),
         };
 
         public override string ToString()

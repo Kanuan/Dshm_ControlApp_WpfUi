@@ -1,6 +1,7 @@
-﻿using Nefarius.DsHidMini.ControlApp.DshmConfigManager;
+﻿using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager;
+using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums;
 
-namespace Nefarius.DsHidMini.ControlApp.MVVM;
+namespace Nefarius.DsHidMini.ControlApp.ViewModels.UserControls.DeviceSettings;
 
 public abstract partial class DeviceSettingsViewModel : ObservableObject
 {
@@ -28,7 +29,7 @@ public abstract partial class DeviceSettingsViewModel : ObservableObject
 
     public abstract SettingsModeGroups Group { get; }
 
-    protected abstract IBackingData _myInterface { get; }
+    protected abstract IDeviceSettings _myInterface { get; }
 
     [ObservableProperty] private bool _isGroupLocked = false;
 
@@ -46,13 +47,13 @@ public abstract partial class DeviceSettingsViewModel : ObservableObject
         this.OnPropertyChanged(string.Empty);
     }
 
-    public void LoadSettingsFromBackingDataContainer(DeviceSettings dataContainerSource)
+    public void LoadSettingsFromBackingDataContainer(Models.DshmConfigManager.DeviceSettings dataContainerSource)
     {
         _myInterface.CopySettingsFromContainer(dataContainerSource);
         NotifyAllPropertiesHaveChanged();
     }
 
-    public void SaveSettingsToBackingDataContainer(DeviceSettings dataContainerSource)
+    public void SaveSettingsToBackingDataContainer(Models.DshmConfigManager.DeviceSettings dataContainerSource)
     {
         _myInterface.CopySettingsToContainer(dataContainerSource);
     }

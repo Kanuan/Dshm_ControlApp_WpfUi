@@ -3,7 +3,7 @@
 // Copyright (C) Leszek Pomianowski and WPF UI Contributors.
 // All Rights Reserved.
 
-namespace Dshm_ControlApp_WpfUi.Models
+namespace Nefarius.DsHidMini.ControlApp.Models
 {
     public class AppConfig
     {

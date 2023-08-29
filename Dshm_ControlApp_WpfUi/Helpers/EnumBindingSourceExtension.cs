@@ -1,7 +1,6 @@
-﻿using System;
-using System.Windows.Markup;
+﻿using System.Windows.Markup;
 
-namespace Nefarius.DsHidMini.ControlApp.Util.WPF
+namespace Nefarius.DsHidMini.ControlApp.Helpers
 {
     public class EnumBindingSourceExtension : MarkupExtension
     {

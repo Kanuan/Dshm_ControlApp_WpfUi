@@ -1,13 +1,14 @@
-﻿using Nefarius.DsHidMini.ControlApp.DshmConfigManager;
+﻿using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager;
+using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums;
 
-namespace Nefarius.DsHidMini.ControlApp.MVVM
+namespace Nefarius.DsHidMini.ControlApp.ViewModels.UserControls.DeviceSettings
 {
     public class AltRumbleModeSettingsViewModel : DeviceSettingsViewModel
     {
         // -------------------------------------------- RIGHT MOTOR CONVERSION GROUP
 
         public AltRumbleModeSettings _tempBackingData = new();
-        protected override IBackingData _myInterface => _tempBackingData;
+        protected override IDeviceSettings _myInterface => _tempBackingData;
 
         public override SettingsModeGroups Group { get; } = SettingsModeGroups.RumbleRightConversion;
 

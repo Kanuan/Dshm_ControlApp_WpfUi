@@ -1,11 +1,10 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Storage.FileSystem;
-using Nefarius.DsHidMini.ControlApp.Util;
+using Nefarius.DsHidMini.ControlApp.Models.Util;
 
-namespace Nefarius.DsHidMini.ControlApp.Drivers
+namespace Nefarius.DsHidMini.ControlApp.Models.Drivers
 {
     public static class BthPS3FilterDriver
     {

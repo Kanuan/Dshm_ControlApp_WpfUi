@@ -1,8 +1,9 @@
-﻿using Nefarius.DsHidMini.ControlApp.DshmConfiguration;
-using Nefarius.DsHidMini.ControlApp.MVVM;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.DshmConfig;
+using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.DshmConfig.Enums;
+using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums;
 
-namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
+namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
 {
     public class ButtonsCombo
     {
@@ -63,7 +64,7 @@ namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
 
     }
     
-    public class DeviceSettings : IBackingData
+    public class DeviceSettings : IDeviceSettings
     {
 
         public HidModeSettings modesUniqueData { get; set; } = new();
@@ -137,7 +138,8 @@ namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
         }
     }
 
-    public interface IBackingData
+
+    public interface IDeviceSettings
     {
         void ResetToDefault();
 
@@ -146,7 +148,7 @@ namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
         void CopySettingsToContainer(DeviceSettings container);
     }
 
-    public abstract class DeviceSubSettings : IBackingData
+    public abstract class DeviceSubSettings : IDeviceSettings
     {
         public abstract void ResetToDefault();
 

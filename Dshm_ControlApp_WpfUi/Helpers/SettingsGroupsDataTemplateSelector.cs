@@ -1,13 +1,7 @@
-﻿using Dshm_ControlApp_WpfUi;
-using Nefarius.DsHidMini.ControlApp.MVVM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
+using Nefarius.DsHidMini.ControlApp.ViewModels.UserControls.DeviceSettings;
 
-namespace Nefarius.DsHidMini.ControlApp.Helpers.WPF
+namespace Nefarius.DsHidMini.ControlApp.Helpers
 {
     internal class SettingsGroupsDataTemplateSelector : DataTemplateSelector
     {

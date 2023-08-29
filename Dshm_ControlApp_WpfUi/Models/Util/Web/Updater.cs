@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Reflection;
-using Nefarius.DsHidMini.ControlApp.Util.App;
 using Newtonsoft.Json;
 using Serilog;
 
-namespace Nefarius.DsHidMini.ControlApp.Util.Web
+namespace Nefarius.DsHidMini.ControlApp.Models.Util.Web
 {
     /// <summary>
     ///     Checks for updates via GitHub API.

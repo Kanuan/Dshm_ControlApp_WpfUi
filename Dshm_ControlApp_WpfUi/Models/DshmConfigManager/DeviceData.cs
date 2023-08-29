@@ -1,6 +1,6 @@
-﻿using Nefarius.DsHidMini.ControlApp.MVVM;
+﻿using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums;
 
-namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
+namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
 {
     public class DeviceData
     {

@@ -6,7 +6,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Dshm_ControlApp_WpfUi.Helpers
+namespace Nefarius.DsHidMini.ControlApp.Helpers
 {
     internal class EnumToBooleanConverter : IValueConverter
     {

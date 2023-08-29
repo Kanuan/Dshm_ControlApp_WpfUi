@@ -1,8 +1,7 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Globalization;
 
-namespace Nefarius.DsHidMini.ControlApp.Util.WPF
+namespace Nefarius.DsHidMini.ControlApp.Helpers
 {
     public class EnumDescriptionTypeConverter : EnumConverter
     {

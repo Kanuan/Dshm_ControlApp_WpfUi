@@ -1,13 +1,17 @@
-﻿using Nefarius.DsHidMini.ControlApp.DshmConfigManager;
+﻿using System.Diagnostics.Metrics;
+using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager;
+using Nefarius.DsHidMini.ControlApp.Services;
 using Wpf.Ui;
 using Wpf.Ui.Controls;
 
-namespace Nefarius.DsHidMini.ControlApp.MVVM
+namespace Nefarius.DsHidMini.ControlApp.ViewModels.Pages
 {
 
     public partial class ProfilesViewModel : ObservableObject, INavigationAware
     {
         // ----------------------------------------------------------- FIELDS
+
+        private readonly DshmConfigManager _dshmConfigManager;
 
         [ObservableProperty] public List<ProfileViewModel> _profilesViewModels;
         [ObservableProperty] private ProfileViewModel? _selectedProfileVM = null;
@@ -15,15 +19,16 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         // ----------------------------------------------------------- PROPERTIES
 
-        public List<ProfileData> ProfilesDatas => DeviceViewModel.UserDataManager.Profiles;
+        public List<ProfileData> ProfilesDatas => _dshmConfigManager.Profiles;
 
-        private readonly ISnackbarService _snackbarService;
+        private readonly AppSnackbarMessagesService _appSnackbarMessagesService;
 
         // ----------------------------------------------------------- CONSTRUCTOR
 
-        public ProfilesViewModel(ISnackbarService snackbarService)
+        public ProfilesViewModel(AppSnackbarMessagesService appSnackbarMessagesService, DshmConfigManager dshmConfigManager)
         {
-            _snackbarService = snackbarService;
+            _dshmConfigManager = dshmConfigManager;
+            _appSnackbarMessagesService = appSnackbarMessagesService;
             UpdateProfileList();
         }
      
@@ -33,7 +38,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             List<ProfileViewModel> newList = new();
             foreach(ProfileData prof in ProfilesDatas)
             {
-                newList.Add(new(prof) { IsGlobal = (prof == DeviceViewModel.UserDataManager.GlobalProfile)});
+                newList.Add(new(prof) { IsGlobal = (prof == _dshmConfigManager.GlobalProfile)});
             }
             ProfilesViewModels = newList;
         }
@@ -54,7 +59,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             if(IsEditing && SelectedProfileVM != null)
             {
                 CancelChangesToProfile();
-                ShowSnackbarMessage("Canceled profile changes.", "", ControlAppearance.Caution, new SymbolIcon(SymbolRegular.ErrorCircle24), 2);
+                _appSnackbarMessagesService.ShowProfileChangedCanceledMessage();
             }
         }
 
@@ -62,16 +67,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         {
         }
 
-        private void ShowSnackbarMessage(string title, string message, ControlAppearance appearance, SymbolIcon symbol, int timeSpanInSeconds)
-        {
-            _snackbarService.Show(
-                title,
-                message,
-                appearance,
-                symbol,
-                TimeSpan.FromSeconds(timeSpanInSeconds)
-            );
-        }
+
 
         [RelayCommand]
         private void EnableEditingOfSelectedProfile()
@@ -79,7 +75,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             if (SelectedProfileVM == null) return;
             if (SelectedProfileVM._profileData == ProfileData.DefaultProfile)
             {
-                ShowSnackbarMessage("ControlApp's default profile can't be modified.", "", ControlAppearance.Info, new SymbolIcon(SymbolRegular.Info24), 2);
+                _appSnackbarMessagesService.ShowDefaultProfileEditingBlockedMessage();
             }
             else
             {
@@ -91,9 +87,9 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         private void SaveChangesToProfile()
         {
             SelectedProfileVM.SaveChanges();
-            ShowSnackbarMessage("Profile updated.", "", ControlAppearance.Info, new SymbolIcon(SymbolRegular.ErrorCircle24), 2);
+            _appSnackbarMessagesService.ShowProfileUpdateMessage();
             IsEditing = false;
-            DeviceViewModel.UserDataManager.SaveChangesAndUpdateDsHidMiniConfigFile();
+            _dshmConfigManager.SaveChangesAndUpdateDsHidMiniConfigFile();
         }
 
         [RelayCommand]
@@ -110,9 +106,9 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         {
             if (obj != null)
             {
-                DeviceViewModel.UserDataManager.GlobalProfile = obj._profileData;
-                ShowSnackbarMessage("Global profile updated.", "", ControlAppearance.Info, new SymbolIcon(SymbolRegular.Checkmark24), 2);
-                DeviceViewModel.UserDataManager.SaveChangesAndUpdateDsHidMiniConfigFile();
+                _dshmConfigManager.GlobalProfile = obj._profileData;
+                _appSnackbarMessagesService.ShowGlobalProfileUpdatedMessage();
+                _dshmConfigManager.SaveChangesAndUpdateDsHidMiniConfigFile();
             }
             UpdateProfileList();
         }
@@ -120,8 +116,8 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         [RelayCommand]
         private void CreateProfile()
         {
-            DeviceViewModel.UserDataManager.CreateNewProfile("New profile");
-            DeviceViewModel.UserDataManager.SaveChangesAndUpdateDsHidMiniConfigFile();
+            _dshmConfigManager.CreateNewProfile("New profile");
+            _dshmConfigManager.SaveChanges();
             UpdateProfileList();
         }
 
@@ -129,49 +125,16 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         private void DeleteProfile(ProfileViewModel? obj)
         {
             if (obj == null) return;
-            DeviceViewModel.UserDataManager.DeleteProfile(obj._profileData);
-            DeviceViewModel.UserDataManager.SaveChangesAndUpdateDsHidMiniConfigFile();
+            if (obj._profileData == ProfileData.DefaultProfile)
+            {
+                _appSnackbarMessagesService.ShowDefaultProfileEditingBlockedMessage();
+                return;
+            }
+            _dshmConfigManager.DeleteProfile(obj._profileData);
+            _dshmConfigManager.SaveChangesAndUpdateDsHidMiniConfigFile();
+            _appSnackbarMessagesService.ShowProfileDeletedMessage();
             UpdateProfileList();
         }
             
         }
-
-        public partial class ProfileViewModel : ObservableObject
-        {
-        DshmConfigManager.DshmConfigManager _userDataManager = DeviceViewModel.UserDataManager;
-
-            public readonly ProfileData _profileData;
-
-            [ObservableProperty] private string _name;
-            [ObservableProperty] private SettingsEditorViewModel _vmGroupsCont;
-            [ObservableProperty] private bool _isGlobal = false;
-
-
-            public ProfileViewModel(ProfileData data)
-            {
-                _profileData = data;
-                _name = data.ProfileName;
-                _vmGroupsCont = new(data.DataContainer);
-            }
-
-            [RelayCommand]
-            public void SaveChanges()
-            {
-                if(_name == null)
-                {
-                    _name = "User Profile";
-                }
-                _profileData.ProfileName = _name;
-                VmGroupsCont.SaveAllChangesToBackingData(_profileData.DataContainer);
-            
-            }
-
-        [RelayCommand]
-        public void CancelChanges()
-            {
-                VmGroupsCont.LoadDatasToAllGroups(_profileData.DataContainer);
-                Name = _profileData.ProfileName;
-            }
-        }
-
 }

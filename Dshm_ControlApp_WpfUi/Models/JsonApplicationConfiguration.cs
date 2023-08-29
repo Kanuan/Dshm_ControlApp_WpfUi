@@ -6,13 +6,12 @@
 // <author>Rico Suter, mail@rsuter.com</author>
 //-----------------------------------------------------------------------
 
-using System;
 using System.IO;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Nefarius.DsHidMini.ControlApp.Util.App
+namespace Nefarius.DsHidMini.ControlApp.Models
 {
     /// <summary>Provides methods to load and save the application configuration. </summary>
     public static class JsonApplicationConfiguration

@@ -1,7 +1,8 @@
-﻿using Nefarius.DsHidMini.ControlApp.DshmConfigManager;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums;
+using Nefarius.DsHidMini.ControlApp.ViewModels.UserControls.DeviceSettings;
 
-namespace Nefarius.DsHidMini.ControlApp.MVVM
+namespace Nefarius.DsHidMini.ControlApp.ViewModels.UserControls
 {
     public partial class SettingsEditorViewModel : ObservableObject
     {   
@@ -20,7 +21,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         {
         }
 
-        public SettingsEditorViewModel(DeviceSettings? dataContainer = null)
+        public SettingsEditorViewModel(Models.DshmConfigManager.DeviceSettings? dataContainer = null)
         {
             groupSettingsList.Add(HidModeVM);
             groupSettingsList.Add(LedsSettingsVM);
@@ -59,15 +60,15 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         {
             switch (e.PropertyName)
             {
-                case nameof(HidModeVM.Context):
-                case nameof(HidModeVM.PreventRemappingConflictsInSXSMode):
-                case nameof(HidModeVM.PreventRemappingConflictsInDS4WMode):
+                case nameof(HidModeSettingsViewModel.Context):
+                case nameof(HidModeSettingsViewModel.PreventRemappingConflictsInSXSMode):
+                case nameof(HidModeSettingsViewModel.PreventRemappingConflictsInDS4WMode):
                     UpdateLockStateOfGroups();
                     break;
             }
         }
 
-        public void SaveAllChangesToBackingData(DeviceSettings dataContainer)
+        public void SaveAllChangesToBackingData(Models.DshmConfigManager.DeviceSettings dataContainer)
         {
             foreach (DeviceSettingsViewModel group in groupSettingsList)
             {
@@ -76,7 +77,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
 
         }
 
-        public void LoadDatasToAllGroups(DeviceSettings dataContainer)
+        public void LoadDatasToAllGroups(Models.DshmConfigManager.DeviceSettings dataContainer)
         {
             foreach (DeviceSettingsViewModel group in groupSettingsList)
             {

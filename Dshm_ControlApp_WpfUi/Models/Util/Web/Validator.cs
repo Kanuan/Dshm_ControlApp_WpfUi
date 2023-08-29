@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.NetworkInformation;
 using Newtonsoft.Json;
 
-namespace Nefarius.DsHidMini.ControlApp.Util.Web
+namespace Nefarius.DsHidMini.ControlApp.Models.Util.Web
 {
     public class OUIEntry : IEquatable<OUIEntry>
     {
