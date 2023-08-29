@@ -1,8 +1,8 @@
-﻿using Nefarius.DsHidMini.ControlApp.UserData;
+﻿using Nefarius.DsHidMini.ControlApp.DshmConfigManager;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
-    public class GroupWirelessSettingsVM : GroupSettingsVM
+    public class WirelessSettingsViewModel : DeviceSettingsViewModel
     {
         private WirelessSettings _tempBackingData = new();
         protected override IBackingData _myInterface => _tempBackingData;
@@ -76,7 +76,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public GroupWirelessSettingsVM() : base()
+        public WirelessSettingsViewModel() : base()
         {
 
         }

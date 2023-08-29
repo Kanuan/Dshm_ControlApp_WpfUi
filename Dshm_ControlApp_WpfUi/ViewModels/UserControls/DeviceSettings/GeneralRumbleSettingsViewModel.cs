@@ -1,8 +1,8 @@
-﻿using Nefarius.DsHidMini.ControlApp.UserData;
+﻿using Nefarius.DsHidMini.ControlApp.DshmConfigManager;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
-    public class GroupRumbleGeneralVM : GroupSettingsVM
+    public class GeneralRumbleSettingsViewModel : DeviceSettingsViewModel
     {
         private GeneralRumbleSettings _tempBackingData = new();
         protected override IBackingData _myInterface => _tempBackingData;
@@ -99,7 +99,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public GroupRumbleGeneralVM() : base()
+        public GeneralRumbleSettingsViewModel() : base()
         {
         }
     }

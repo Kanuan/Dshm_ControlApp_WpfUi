@@ -1,8 +1,8 @@
-﻿using Nefarius.DsHidMini.ControlApp.UserData;
+﻿using Nefarius.DsHidMini.ControlApp.DshmConfigManager;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
-    public class GroupSticksVM : GroupSettingsVM
+    public class SticksSettingsViewModel : DeviceSettingsViewModel
     {
         // -------------------------------------------- STICKS DEADZONE GROUP
         private SticksSettings _tempBackingData = new();
@@ -91,7 +91,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
         }
 
 
-        public GroupSticksVM() : base()
+        public SticksSettingsViewModel() : base()
         {
         }
 

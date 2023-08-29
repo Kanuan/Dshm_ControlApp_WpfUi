@@ -1,8 +1,8 @@
-﻿using Nefarius.DsHidMini.ControlApp.UserData;
+﻿using Nefarius.DsHidMini.ControlApp.DshmConfigManager;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
-    public class GroupOutRepControlVM : GroupSettingsVM
+    public class OutputReportSettingsViewModel : DeviceSettingsViewModel
     {
         private OutputReportSettings _tempBackingData = new();
         protected override IBackingData _myInterface => _tempBackingData;
@@ -37,7 +37,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public GroupOutRepControlVM() : base()
+        public OutputReportSettingsViewModel() : base()
         {
         }
 

@@ -26,14 +26,14 @@ namespace Nefarius.DsHidMini.ControlApp.Helpers.WPF
 
         public Dictionary<Type, string> GroupSettingsTemplateIndex = new Dictionary<Type, string>()
         {
-            { typeof(GroupModeUniqueVM), "Template_Unique_All"},
-            { typeof(GroupLEDsCustomsVM), "Template_LEDsSettings"},
-            { typeof(GroupWirelessSettingsVM), "Template_WirelessSettings"},
-            { typeof(GroupSticksVM), "Template_SticksDeadZone"},
-            { typeof(GroupRumbleGeneralVM), "Template_RumbleBasicFunctions"},
-            { typeof(GroupOutRepControlVM), "Template_OutputRateControl"},
-            { typeof(GroupRumbleLeftRescaleVM), "Template_RumbleHeavyStrRescale"},
-            { typeof(GroupRumbleRightConversionAdjustsVM), "Template_RumbleVariableLightEmuTuning"},
+            { typeof(HidModeSettingsViewModel), "Template_Unique_All"},
+            { typeof(LedsSettingsViewModel), "Template_LEDsSettings"},
+            { typeof(WirelessSettingsViewModel), "Template_WirelessSettings"},
+            { typeof(SticksSettingsViewModel), "Template_SticksDeadZone"},
+            { typeof(GeneralRumbleSettingsViewModel), "Template_RumbleBasicFunctions"},
+            { typeof(OutputReportSettingsViewModel), "Template_OutputRateControl"},
+            { typeof(LeftMotorRescalingSettingsViewModel), "Template_RumbleHeavyStrRescale"},
+            { typeof(AltRumbleModeSettingsViewModel), "Template_RumbleVariableLightEmuTuning"},
 
         };
     }

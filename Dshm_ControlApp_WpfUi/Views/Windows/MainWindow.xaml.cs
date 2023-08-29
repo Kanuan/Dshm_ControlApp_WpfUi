@@ -96,7 +96,7 @@ namespace Dshm_ControlApp_WpfUi.Views.Windows
                 var instance = 0;
                 while (Devcon.FindByInterfaceGuid(DsHidMiniDriver.DeviceInterfaceGuid, out var path, out var instanceId, instance++))
                 {
-                    DevicesVM.Devices.Add(new TestViewModel(PnPDevice.GetDeviceByInstanceId(instanceId)));
+                    DevicesVM.Devices.Add(new DeviceViewModel(PnPDevice.GetDeviceByInstanceId(instanceId)));
                 }
             }));
         }

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Win32.SafeHandles;
-using Nefarius.DsHidMini.ControlApp.DSHM_Settings;
+using Nefarius.DsHidMini.ControlApp.DshmConfiguration;
 using Nefarius.DsHidMini.ControlApp.MVVM;
 using Nefarius.DsHidMini.ControlApp.Util.App;
 using System;
@@ -12,7 +12,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Nefarius.DsHidMini.ControlApp.UserData
+namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
 {
     internal class DshmConfigManager
     {
@@ -171,7 +171,7 @@ namespace Nefarius.DsHidMini.ControlApp.UserData
 
         public void UpdateDsHidMiniConfigFile()
         {
-            var dshmSettings = new DshmConfiguration();
+            var dshmSettings = new DshmConfiguration.DshmConfiguration();
             
             GlobalProfile.DataContainer.ConvertAllToDSHM(dshmSettings.Global);
            

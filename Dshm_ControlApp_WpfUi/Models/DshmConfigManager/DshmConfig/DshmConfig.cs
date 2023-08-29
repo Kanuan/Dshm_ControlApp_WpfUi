@@ -6,11 +6,11 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Nefarius.DsHidMini.ControlApp.MVVM;
-using static Nefarius.DsHidMini.ControlApp.DSHM_Settings.DshmDeviceSettings;
+using static Nefarius.DsHidMini.ControlApp.DshmConfiguration.DshmDeviceSettings;
 using Newtonsoft.Json.Linq;
 using System.Windows.Navigation;
 
-namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
+namespace Nefarius.DsHidMini.ControlApp.DshmConfiguration
 {
     public class DshmDeviceSettings
     {

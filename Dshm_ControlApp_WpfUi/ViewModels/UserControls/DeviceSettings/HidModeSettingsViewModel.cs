@@ -1,9 +1,9 @@
-﻿using Nefarius.DsHidMini.ControlApp.UserData;
+﻿using Nefarius.DsHidMini.ControlApp.DshmConfigManager;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
 
-    public class GroupModeUniqueVM : GroupSettingsVM
+    public class HidModeSettingsViewModel : DeviceSettingsViewModel
     {
         public readonly List<SettingsContext> hidDeviceModesList = new List<SettingsContext>
         {
@@ -107,7 +107,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public GroupModeUniqueVM() : base()
+        public HidModeSettingsViewModel() : base()
         {
         }
 

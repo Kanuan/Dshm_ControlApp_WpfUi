@@ -1,4 +1,4 @@
-﻿namespace Nefarius.DsHidMini.ControlApp.UserData
+﻿namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
 {
     public class ProfileData
     {

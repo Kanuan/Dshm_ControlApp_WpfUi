@@ -14,12 +14,12 @@ namespace Dshm_ControlApp_WpfUi.ViewModels.Pages
         /// <summary>
         ///     List of detected devices.
         /// </summary>
-        public ObservableCollection<TestViewModel> Devices { get; set; } = new();
+        public ObservableCollection<DeviceViewModel> Devices { get; set; } = new();
 
         /// <summary>
         ///     Currently selected device, if any.
         /// </summary>
-        [ObservableProperty] private TestViewModel? _selectedDevice;
+        [ObservableProperty] private DeviceViewModel? _selectedDevice;
 
         /// <summary>
         ///     Is a device currently selected.
@@ -31,14 +31,14 @@ namespace Dshm_ControlApp_WpfUi.ViewModels.Pages
         /// </summary>
         [ObservableProperty] private bool _anyDeviceSelected = false;
 
-        partial void OnSelectedDeviceChanged(TestViewModel? value)
+        partial void OnSelectedDeviceChanged(DeviceViewModel? value)
         {
             AnyDeviceSelected = (value != null);
         }
 
         public void OnNavigatedTo()
         {
-            foreach(TestViewModel device in Devices)
+            foreach(DeviceViewModel device in Devices)
             {
                 device.RefreshDeviceSettings();
             }

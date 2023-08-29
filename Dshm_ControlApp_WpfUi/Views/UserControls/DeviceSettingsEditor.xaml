@@ -8,16 +8,16 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:super="clr-namespace:Nefarius.DsHidMini.ControlApp.Util.WPF"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-    d:DataContext="{d:DesignInstance local:VMGroupsContainer,
+    d:DataContext="{d:DesignInstance local:SettingsEditorViewModel,
                                      IsDesignTimeCreatable=True}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <helpers:SettingsGroupsDataTemplateSelector x:Key="GroupSettingsTemplateSelector" />
         <super:BooleanToReverseConverter x:Key="BooleanToReverseConverterKey" />
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
-        <DataTemplate x:Key="ModeSetting" DataType="{x:Type local:GroupSettingsVM}">
+
+        <DataTemplate x:Key="ModeSetting" DataType="{x:Type local:DeviceSettingsViewModel}">
             <ui:Card Margin="10,0,10,5" DockPanel.Dock="Top">
                 <DockPanel>
                     <!--  Outer settings container with override button  -->
@@ -44,7 +44,6 @@
                     <ContentControl
                         HorizontalAlignment="Stretch"
                         Content="{Binding}"
-                        ContentTemplateSelector="{StaticResource GroupSettingsTemplateSelector}"
                         DockPanel.Dock="Top"
                         Visibility="{Binding IsGroupLocked, Converter={StaticResource BoolToVis_TC_FV}}" />
                     <!--  Warning when settings are locked for specific mode  -->
@@ -58,6 +57,7 @@
                 </DockPanel>
             </ui:Card>
         </DataTemplate>
+
         <Style x:Key="SetGroupItem" TargetType="ContentControl">
             <Setter Property="DockPanel.Dock" Value="Top" />
             <Setter Property="Margin" Value="0,2,0,0" />
@@ -66,10 +66,12 @@
 
         <Thickness x:Key="MyKey_NextLineSpacement" Bottom="20" />
 
+
+
         <!--#region ===================================================================SubSettingsTemplates=======================================-->
 
         <!--  Template: Mode_Unique_All  -->
-        <DataTemplate DataType="{x:Type local:GroupModeUniqueVM}">
+        <DataTemplate DataType="{x:Type local:HidModeSettingsViewModel}">
             <StackPanel>
                 <DockPanel Margin="{StaticResource MyKey_NextLineSpacement}">
                     <Label
@@ -120,7 +122,7 @@
         </DataTemplate>
 
         <!--  Template: Leds settings  -->
-        <DataTemplate DataType="{x:Type local:GroupLEDsCustomsVM}">
+        <DataTemplate DataType="{x:Type local:LedsSettingsViewModel}">
             <ContentControl>
                 <StackPanel>
                     <!--  LEDs mode selection  -->
@@ -260,7 +262,7 @@
         </DataTemplate>
 
         <!--  Basic wireless settings  -->
-        <DataTemplate DataType="{x:Type local:GroupWirelessSettingsVM}">
+        <DataTemplate DataType="{x:Type local:WirelessSettingsViewModel}">
             <DockPanel>
                 <!--  Idle disconnect  -->
                 <ui:ToggleSwitch
@@ -362,7 +364,7 @@
         </DataTemplate>
 
         <!--  Template: sticks deadzone  -->
-        <DataTemplate DataType="{x:Type local:GroupSticksVM}">
+        <DataTemplate DataType="{x:Type local:SticksSettingsViewModel}">
             <DockPanel>
                 <!--  Grid test  -->
                 <Grid>
@@ -453,7 +455,7 @@
         </DataTemplate>
 
         <!--  Template: Rumble general  -->
-        <DataTemplate DataType="{x:Type local:GroupRumbleGeneralVM}">
+        <DataTemplate DataType="{x:Type local:GeneralRumbleSettingsViewModel}">
             <DockPanel>
                 <Image Height="150" DockPanel.Dock="Top">
                     <Image.Style>
@@ -542,7 +544,7 @@
         </DataTemplate>
 
         <!--  Template: Output Rate Control  -->
-        <DataTemplate DataType="{x:Type local:GroupOutRepControlVM}">
+        <DataTemplate DataType="{x:Type local:OutputReportSettingsViewModel}">
             <DockPanel>
                 <!--  Output rate enabler  -->
                 <ui:ToggleSwitch
@@ -578,7 +580,7 @@
         </DataTemplate>
 
         <!--  Template: left motor strength rescale  -->
-        <DataTemplate DataType="{x:Type local:GroupRumbleLeftRescaleVM}">
+        <DataTemplate DataType="{x:Type local:LeftMotorRescalingSettingsViewModel}">
             <DockPanel>
                 <!--  Left motor str rescaling ui:ToggleSwitch  -->
                 <ui:ToggleSwitch
@@ -592,6 +594,11 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Content="New upper range:"
+                        DockPanel.Dock="Left" />
+                    <Label
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Content="{Binding LeftMotorStrRescalingUpperRange}"
                         DockPanel.Dock="Left" />
                     <Slider
                         DockPanel.Dock="Right"
@@ -608,6 +615,11 @@
                         VerticalAlignment="Center"
                         Content="New lower range:"
                         DockPanel.Dock="Left" />
+                    <Label
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Content="{Binding LeftMotorStrRescalingLowerRange}"
+                        DockPanel.Dock="Left" />
                     <Slider
                         DockPanel.Dock="Right"
                         IsSnapToTickEnabled="True"
@@ -620,7 +632,7 @@
         </DataTemplate>
 
         <!--  Template: alternative rumble mode tuning  -->
-        <DataTemplate DataType="{x:Type local:GroupRumbleRightConversionAdjustsVM}">
+        <DataTemplate DataType="{x:Type local:AltRumbleModeSettingsViewModel}">
             <DockPanel>
                 <!--  Conversion upper range  -->
                 <DockPanel Margin="{StaticResource MyKey_NextLineSpacement}" DockPanel.Dock="Top">
@@ -628,6 +640,11 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Content="Conversion upper range:"
+                        DockPanel.Dock="Left" />
+                    <Label
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Content="{Binding RightRumbleConversionUpperRange}"
                         DockPanel.Dock="Left" />
                     <Slider
                         DockPanel.Dock="Right"
@@ -643,6 +660,11 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Content="Conversion lower range:"
+                        DockPanel.Dock="Left" />
+                    <Label
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Content="{Binding RightRumbleConversionLowerRange}"
                         DockPanel.Dock="Left" />
                     <Slider
                         DockPanel.Dock="Right"
@@ -665,6 +687,11 @@
                         Content="Left rumble threshold:"
                         DockPanel.Dock="Left"
                         IsChecked="{Binding IsForcedRightMotorHeavyThreasholdEnabled}" />
+                    <Label
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Content="{Binding ForcedRightMotorHeavyThreshold}"
+                        DockPanel.Dock="Left" />
                     <Slider
                         DockPanel.Dock="Right"
                         IsEnabled="{Binding IsChecked, ElementName=ForcedRMLeftThresholdCheckbox}"
@@ -678,9 +705,16 @@
                 <DockPanel Margin="{StaticResource MyKey_NextLineSpacement}" DockPanel.Dock="Top">
                     <ui:ToggleSwitch
                         x:Name="ForcedRMRightThresholdCheckbox"
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
                         Content="Right rumble threshold:"
                         DockPanel.Dock="Left"
                         IsChecked="{Binding IsForcedRightMotorLightThresholdEnabled}" />
+                    <Label
+                        VerticalAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        Content="{Binding ForcedRightMotorLightThreshold}"
+                        DockPanel.Dock="Left" />
                     <Slider
                         DockPanel.Dock="Right"
                         IsEnabled="{Binding IsChecked, ElementName=ForcedRMRightThresholdCheckbox}"
@@ -698,6 +732,7 @@
 
 
         <!--#endregion-->
+
 
 
         <Style BasedOn="{StaticResource {x:Type Label}}" TargetType="Label">
@@ -722,14 +757,15 @@
             LastChildFill="True">
 
             <!--  Mode unique settings  -->
-            <ContentControl Content="{Binding GroupModeUnique}" Style="{StaticResource SetGroupItem}" />
+            <ContentControl Content="{Binding HidModeVM}" Style="{StaticResource SetGroupItem}" />
 
             <!--  Mode Settings groups  -->
-            <ContentControl Content="{Binding GroupWireless}" Style="{StaticResource SetGroupItem}" />
-            <ContentControl Content="{Binding GroupLEDsControl}" Style="{StaticResource SetGroupItem}" />
+            <ContentControl Content="{Binding LedsSettingsVM}" Style="{StaticResource SetGroupItem}" />
+            <ContentControl Content="{Binding WirelessSettingsVM}" Style="{StaticResource SetGroupItem}" />
 
-            <ContentControl Content="{Binding GroupSticksDZ}" Style="{StaticResource SetGroupItem}" />
-            <ContentControl Content="{Binding GroupRumbleGeneral}" Style="{StaticResource SetGroupItem}" />
+
+            <ContentControl Content="{Binding SticksSettingsVM}" Style="{StaticResource SetGroupItem}" />
+            <ContentControl Content="{Binding GeneralRumbleSettingsVM}" Style="{StaticResource SetGroupItem}" />
 
 
             <!--  Advanced options  -->
@@ -741,7 +777,7 @@
                 <ui:CardExpander.Content>
                     <DockPanel>
                         <ui:InfoBar
-                            Title="Advanced/complex settings ahead!"
+                            Title="Advanced settings ahead!"
                             Margin="10"
                             DockPanel.Dock="Top"
                             IsClosable="False"
@@ -749,15 +785,15 @@
                             Message=" Don't change them unless you really know what you are doing (documentation on the website)"
                             Severity="Error" />
                         <ContentControl
-                            Content="{Binding GroupOutRepControl}"
+                            Content="{Binding OutRepSettingsVM}"
                             DockPanel.Dock="Top"
                             Style="{StaticResource SetGroupItem}" />
                         <ContentControl
-                            Content="{Binding GroupRumbleLeftRescale}"
+                            Content="{Binding LeftMotorRescaleSettingsVM}"
                             DockPanel.Dock="Top"
                             Style="{StaticResource SetGroupItem}" />
                         <ContentControl
-                            Content="{Binding GroupRumbleRightConversion}"
+                            Content="{Binding AltRumbleSettingsVM}"
                             DockPanel.Dock="Top"
                             Style="{StaticResource SetGroupItem}" />
                     </DockPanel>

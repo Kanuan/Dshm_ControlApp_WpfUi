@@ -1,8 +1,8 @@
-﻿using Nefarius.DsHidMini.ControlApp.UserData;
+﻿using Nefarius.DsHidMini.ControlApp.DshmConfigManager;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
-    public class GroupRumbleRightConversionAdjustsVM : GroupSettingsVM
+    public class AltRumbleModeSettingsViewModel : DeviceSettingsViewModel
     {
         // -------------------------------------------- RIGHT MOTOR CONVERSION GROUP
 
@@ -68,7 +68,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public GroupRumbleRightConversionAdjustsVM() : base()
+        public AltRumbleModeSettingsViewModel() : base()
         {
         }
 

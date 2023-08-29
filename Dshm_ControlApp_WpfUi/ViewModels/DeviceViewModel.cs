@@ -1,88 +1,51 @@
-﻿using System;
-using System.ComponentModel;
-using System.Net.NetworkInformation;
-using System.Threading;
+﻿using Dshm_ControlApp_WpfUi;
 using FontAwesome5;
 using Nefarius.DsHidMini.ControlApp.Drivers;
-using Nefarius.DsHidMini.ControlApp.Util;
-using Nefarius.DsHidMini.ControlApp.Util.Web;
+using Nefarius.DsHidMini.ControlApp.DshmConfigManager;
+using Nefarius.Utilities.Bluetooth;
 using Nefarius.Utilities.DeviceManagement.PnP;
+using System.ComponentModel;
+using Wpf.Ui.Controls;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
-    public class DeviceViewModel : INotifyPropertyChanged
+    public partial class DeviceViewModel : ObservableObject
     {
-        private readonly Timer _batteryQuery;
+        // ------------------------------------------------------ FIELDS
+
+        internal static DshmConfigManager.DshmConfigManager UserDataManager = new DshmConfigManager.DshmConfigManager();
+        internal static ProfilesViewModel vm = App.GetService<ProfilesViewModel>();
         private readonly PnPDevice _device;
-
-        public DeviceViewModel(PnPDevice device)
+        private DeviceData deviceUserData;
+        private readonly Timer _batteryQuery;
+        public readonly List<SettingsModes> settingsModesList = new List<SettingsModes>
         {
-            _device = device;
+            SettingsModes.Global,
+            SettingsModes.Profile,
+            SettingsModes.Custom,
+        };
 
-            _batteryQuery = new Timer(UpdateBatteryStatus, null, 10000, 10000);
-        }
+        // ------------------------------------------------------ PROPERTIES
 
-        /*
-        public bool MuteDigitalPressureButtons
-        {
-            get => _device.GetProperty<byte>(DsHidMiniDriver.MuteDigitalPressureButtonsProperty) > 0;
-            set
-            {
-                using (var evt = EventWaitHandle.OpenExisting(
-                           $"Global\\DsHidMiniConfigHotReloadEvent{DeviceAddress}"
-                       ))
-                {
-                    _device.SetProperty(DsHidMiniDriver.MuteDigitalPressureButtonsProperty, (byte)(value ? 1 : 0));
+        [ObservableProperty] private SettingsEditorViewModel _deviceCustomsVM = new() { AllowEditing = true };
+        [ObservableProperty] private SettingsEditorViewModel _profileCustomsVM = new();
+        [ObservableProperty] private SettingsEditorViewModel _globalCustomsVM = new();
 
-                    evt.Set();
-                }
-            }
-        }
-        */
+        [ObservableProperty] private SettingsEditorViewModel _selectedGroupsVM = new();
 
-        public bool IsHidModeChangeable =>
-            SecurityUtil.IsElevated /*&& HidEmulationMode != DsHidDeviceMode.XInputHIDCompatible*/;
+        //internal string DisplayName { get; set; }
+        [ObservableProperty] private bool _isEditorEnabled;
+        [ObservableProperty] private bool _isProfileSelectorVisible;
+
+        public List<SettingsModes> SettingsModesList => settingsModesList;
+
+        [ObservableProperty] private SettingsModes _currentDeviceSettingsMode;
 
         /// <summary>
         ///     Current HID device emulation mode.
         /// </summary>
-        public DsHidDeviceMode HidEmulationMode
-        {
-            get =>
-                (DsHidDeviceMode)_device.GetProperty<byte>(
-                    DsHidMiniDriver.HidDeviceModeProperty);
-            set
-            {
-                _device.SetProperty(DsHidMiniDriver.HidDeviceModeProperty, (byte)value);
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsPressureMutingSupported)));
-            }
-        }
+        public int HidEmulationMode => _device.GetProperty<byte>(DsHidMiniDriver.HidDeviceModeProperty);
 
-        /*
-        public bool IsOutputRateControlEnabled
-        {
-            get => _device.GetProperty<byte>(DsHidMiniDriver.IsOutputRateControlEnabledProperty) > 0;
-            set => _device.SetProperty(DsHidMiniDriver.IsOutputRateControlEnabledProperty, (byte)(value ? 1 : 0));
-        }
-
-        public byte OutputRateControlPeriodMs
-        {
-            get => _device.GetProperty<byte>(DsHidMiniDriver.OutputRateControlPeriodMsProperty);
-            set => _device.SetProperty(DsHidMiniDriver.OutputRateControlPeriodMsProperty, value);
-        }
-
-        public bool IsOutputDeduplicatorEnabled
-        {
-            get => _device.GetProperty<byte>(DsHidMiniDriver.IsOutputDeduplicatorEnabledProperty) > 0;
-            set => _device.SetProperty(DsHidMiniDriver.IsOutputDeduplicatorEnabledProperty, (byte)(value ? 1 : 0));
-        }
-
-        public uint WirelessIdleTimeoutPeriodMs
-        {
-            get => _device.GetProperty<uint>(DsHidMiniDriver.WirelessIdleTimeoutPeriodMsProperty) / 60000;
-            set => _device.SetProperty(DsHidMiniDriver.WirelessIdleTimeoutPeriodMsProperty, value * 60000);
-        }
-        */
 
         /// <summary>
         ///     The device Instance ID.
@@ -131,6 +94,8 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
+        [ObservableProperty] private bool _autoPairDeviceWhenCabled = true;
+
         /// <summary>
         ///     Current battery status.
         /// </summary>
@@ -138,28 +103,36 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             (DsBatteryStatus)_device.GetProperty<byte>(DsHidMiniDriver.BatteryStatusProperty);
 
         /// <summary>
+        ///     Current battery status.
+        /// </summary>
+        public string BatteryStatusInText =>
+            ((DsBatteryStatus)_device.GetProperty<byte>(DsHidMiniDriver.BatteryStatusProperty)).ToString();
+
+        /// <summary>
         ///     Return a battery icon depending on the charge.
         /// </summary>
-        public EFontAwesomeIcon BatteryIcon
+        public SymbolRegular BatteryIcon
         {
             get
             {
                 switch (BatteryStatus)
                 {
                     case DsBatteryStatus.Charged:
+                        return SymbolRegular.Battery1024;
                     case DsBatteryStatus.Charging:
+                        return SymbolRegular.BatteryCharge24;
                     case DsBatteryStatus.Full:
-                        return EFontAwesomeIcon.Solid_BatteryFull;
+                        return SymbolRegular.Battery1024;
                     case DsBatteryStatus.High:
-                        return EFontAwesomeIcon.Solid_BatteryThreeQuarters;
+                        return SymbolRegular.Battery724;
                     case DsBatteryStatus.Medium:
-                        return EFontAwesomeIcon.Solid_BatteryHalf;
+                        return SymbolRegular.Battery524;
                     case DsBatteryStatus.Low:
-                        return EFontAwesomeIcon.Solid_BatteryQuarter;
+                        return SymbolRegular.Battery224;
                     case DsBatteryStatus.Dying:
-                        return EFontAwesomeIcon.Solid_BatteryEmpty;
+                        return SymbolRegular.Battery024;
                     default:
-                        return EFontAwesomeIcon.Solid_BatteryEmpty;
+                        return SymbolRegular.BatteryWarning24;
                 }
             }
         }
@@ -176,15 +149,15 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             }
         }
 
-        public EFontAwesomeIcon GenuineIcon
-        {
-            get
-            {
-                if (Validator.IsGenuineAddress(PhysicalAddress.Parse(DeviceAddress)))
-                    return EFontAwesomeIcon.Regular_CheckCircle;
-                return EFontAwesomeIcon.Solid_ExclamationTriangle;
-            }
-        }
+        //public EFontAwesomeIcon GenuineIcon
+        //{
+        //    get
+        //    {
+        //        if (Validator.IsGenuineAddress(PhysicalAddress.Parse(DeviceAddress)))
+        //            return EFontAwesomeIcon.Regular_CheckCircle;
+        //        return EFontAwesomeIcon.Solid_ExclamationTriangle;
+        //    }
+        //}
 
         /// <summary>
         ///     The friendly (product) name of this device.
@@ -218,27 +191,131 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
                 : EFontAwesomeIcon.Brands_Bluetooth;
 
         /// <summary>
+        ///     Icon for connection protocol
+        /// </summary>
+        public SymbolRegular ConnectionTypeIcon =>
+            !IsWireless
+                ? SymbolRegular.UsbPlug24
+                : SymbolRegular.Bluetooth24;
+
+        /// <summary>
         ///     Last time this device has been seen connected (applies to Bluetooth connected devices only).
         /// </summary>
         public DateTimeOffset LastConnected =>
             _device.GetProperty<DateTimeOffset>(DsHidMiniDriver.BluetoothLastConnectedTimeProperty);
 
-        public bool IsPressureMutingSupported =>
-            HidEmulationMode is DsHidDeviceMode.Single or DsHidDeviceMode.Multi;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private void UpdateBatteryStatus(object state)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("BatteryStatus"));
+            OnPropertyChanged(nameof(BatteryStatus));
         }
 
-        /// <summary>
-        ///     Apply changes by requesting device restart.
-        /// </summary>
-        public void ApplyChanges()
+
+
+        // ------------------------------------------------------ CONSTRUCTOR
+
+        internal DeviceViewModel(PnPDevice device)
         {
-            _device.Restart();
+            _device = device;
+            _batteryQuery = new Timer(UpdateBatteryStatus, null, 10000, 10000);
+            deviceUserData = UserDataManager.GetDeviceData(DeviceAddress);
+            // Loads correspondent controller data based on controller's MAC address 
+
+
+            AutoPairDeviceWhenCabled = deviceUserData.AutoPairWhenCabled;
+
+
+
+            //DisplayName = DeviceAddress;
+            RefreshDeviceSettings();
         }
+
+
+        // ------------------------------------------------------ METHODS
+
+        [ObservableProperty] private ProfileData? _selectedProfile;
+
+        [ObservableProperty] public List<ProfileData> _listOfProfiles;
+
+        partial void OnCurrentDeviceSettingsModeChanged(SettingsModes value)
+        {
+            switch (CurrentDeviceSettingsMode)
+            {
+                case SettingsModes.Custom:
+                    SelectedGroupsVM = DeviceCustomsVM;
+                    break;
+                case SettingsModes.Profile:
+                    SelectedGroupsVM = ProfileCustomsVM;
+                    break;
+                case SettingsModes.Global:
+                default:
+                    SelectedGroupsVM = GlobalCustomsVM;
+                    break;
+            }
+            IsProfileSelectorVisible = CurrentDeviceSettingsMode == SettingsModes.Profile;
+        }
+
+        partial void OnSelectedProfileChanged(ProfileData? value)
+        {
+            ProfileCustomsVM.LoadDatasToAllGroups(SelectedProfile.DataContainer);
+        }
+
+        [RelayCommand]
+        public void RefreshDeviceSettings()
+        {
+            AutoPairDeviceWhenCabled = deviceUserData.AutoPairWhenCabled;
+            DeviceCustomsVM.LoadDatasToAllGroups(deviceUserData.DatasContainter);
+            ListOfProfiles = UserDataManager.Profiles;
+            SelectedProfile = UserDataManager.GetProfile(deviceUserData.GuidOfProfileToUse);
+            GlobalCustomsVM.LoadDatasToAllGroups(UserDataManager.GlobalProfile.DataContainer);
+            CurrentDeviceSettingsMode = deviceUserData.SettingsMode;
+        }
+
+        //public void UpdateEditor()
+        //{
+
+        //}
+
+        [RelayCommand]
+        private void ApplyChanges()
+        {
+            deviceUserData.SettingsMode = CurrentDeviceSettingsMode;
+            deviceUserData.AutoPairWhenCabled = AutoPairDeviceWhenCabled;
+
+            if(CurrentDeviceSettingsMode != SettingsModes.Global)
+            {
+                SelectedGroupsVM.SaveAllChangesToBackingData(deviceUserData.DatasContainter);
+            }
+
+            if (CurrentDeviceSettingsMode == SettingsModes.Profile)
+            {
+                deviceUserData.GuidOfProfileToUse = SelectedProfile.ProfileGuid;
+            }
+            UserDataManager.SaveChangesAndUpdateDsHidMiniConfigFile();
+        }
+
+        [RelayCommand]
+        private void RestartDevice()
+        {
+            if(IsWireless)
+            {
+                using (var radio = new HostRadio())
+                {
+                    radio.DisconnectRemoteDevice(DeviceAddress);
+                };
+            }
+            else
+            {
+                try
+                {
+                    (_device).RemoveAndSetup();
+                }
+                catch
+                {
+
+                }
+            }
+        }
+
     }
+
 }

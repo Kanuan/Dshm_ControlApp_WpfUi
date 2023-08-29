@@ -1,9 +1,9 @@
-﻿using Nefarius.DsHidMini.ControlApp.UserData;
-using static Nefarius.DsHidMini.ControlApp.UserData.LedsSettings.All4LEDsCustoms;
+﻿using Nefarius.DsHidMini.ControlApp.DshmConfigManager;
+using static Nefarius.DsHidMini.ControlApp.DshmConfigManager.LedsSettings.All4LEDsCustoms;
 
 namespace Nefarius.DsHidMini.ControlApp.MVVM
 {
-    public partial class GroupLEDsCustomsVM : GroupSettingsVM
+    public partial class LedsSettingsViewModel : DeviceSettingsViewModel
     {
         private LedsSettings _tempBackingData = new();
 
@@ -41,7 +41,7 @@ namespace Nefarius.DsHidMini.ControlApp.MVVM
             SelectedLED_VM = Leds_VM[value];
         }
 
-        public GroupLEDsCustomsVM()
+        public LedsSettingsViewModel()
         {
             Leds_VM[0].singleLEDCustoms = _tempBackingData.LEDsCustoms.LED_x_Customs[0];
             Leds_VM[1].singleLEDCustoms = _tempBackingData.LEDsCustoms.LED_x_Customs[1];

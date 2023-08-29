@@ -1,8 +1,8 @@
-﻿using Nefarius.DsHidMini.ControlApp.DSHM_Settings;
+﻿using Nefarius.DsHidMini.ControlApp.DshmConfiguration;
 using Nefarius.DsHidMini.ControlApp.MVVM;
 using System.Text.Json.Serialization;
 
-namespace Nefarius.DsHidMini.ControlApp.UserData
+namespace Nefarius.DsHidMini.ControlApp.DshmConfigManager
 {
     public class ButtonsCombo
     {

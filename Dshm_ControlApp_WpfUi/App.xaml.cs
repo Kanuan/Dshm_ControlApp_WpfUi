@@ -45,8 +45,7 @@ namespace Dshm_ControlApp_WpfUi
                 services.AddSingleton<DevicesPage>();
                 services.AddSingleton<DevicesViewModel>();
                 services.AddSingleton<ProfilesPage>();
-                services.AddSingleton<ProfileEditorViewModel>();
-                services.AddSingleton<DataViewModel>();
+                services.AddSingleton<ProfilesViewModel>();
                 services.AddSingleton<SettingsPage>();
                 services.AddSingleton<SettingsViewModel>();
             }).Build();

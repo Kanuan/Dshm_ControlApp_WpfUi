@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Nefarius.DsHidMini.ControlApp.MVVM;
 
-namespace Nefarius.DsHidMini.ControlApp.DSHM_Settings
+namespace Nefarius.DsHidMini.ControlApp.DshmConfiguration
 {
     public enum DSHM_HidDeviceMode
     {
