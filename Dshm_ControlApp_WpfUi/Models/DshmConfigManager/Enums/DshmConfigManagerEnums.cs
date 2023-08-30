@@ -79,4 +79,11 @@
         HAT,
         Buttons,
     }
+
+    public enum BluetoothPairingMode
+    {
+        Auto,
+        Custom,
+        Disabled,
+    }
 }

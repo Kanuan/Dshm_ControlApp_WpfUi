@@ -71,6 +71,7 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels
             }
         }
 
+
         /// <summary>
         ///     The Bluetooth MAC address of the host radio this device is currently paired to.
         /// </summary>
@@ -90,8 +91,21 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels
                 return friendlyAddress;
             }
         }
+        
+        [ObservableProperty] private string? _pairingMacAddress;
 
-        [ObservableProperty] private bool _autoPairDeviceWhenCabled = true;
+        private BluetoothPairingMode? _pairingMode;
+
+        public int PairingMode
+        {
+            get => (int)_pairingMode;
+            set
+            {
+                _pairingMode = (BluetoothPairingMode)value;
+                this.OnPropertyChanged(nameof(PairingMode));
+            }
+
+        }
 
         /// <summary>
         ///     Current battery status.
@@ -220,9 +234,6 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels
             // Loads correspondent controller data based on controller's MAC address 
 
 
-            AutoPairDeviceWhenCabled = deviceUserData.AutoPairWhenCabled;
-
-
 
             //DisplayName = DeviceAddress;
             RefreshDeviceSettings();
@@ -261,8 +272,8 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels
         [RelayCommand]
         public void RefreshDeviceSettings()
         {
-            AutoPairDeviceWhenCabled = deviceUserData.AutoPairWhenCabled;
-            DeviceCustomsVM.LoadDatasToAllGroups(deviceUserData.DatasContainter);
+            PairingMode = (int)deviceUserData.BluetoothPairingMode;
+            DeviceCustomsVM.LoadDatasToAllGroups(deviceUserData.Settings);
             ListOfProfiles = _dshmConfigManager.Profiles;
             SelectedProfile = _dshmConfigManager.GetProfile(deviceUserData.GuidOfProfileToUse);
             GlobalCustomsVM.LoadDatasToAllGroups(_dshmConfigManager.GlobalProfile.DeviceSettings);
@@ -278,11 +289,11 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels
         private void ApplyChanges()
         {
             deviceUserData.SettingsMode = CurrentDeviceSettingsMode;
-            deviceUserData.AutoPairWhenCabled = AutoPairDeviceWhenCabled;
+            deviceUserData.BluetoothPairingMode = (BluetoothPairingMode)PairingMode;
 
-            if(CurrentDeviceSettingsMode != SettingsModes.Global)
+            if (CurrentDeviceSettingsMode != SettingsModes.Global)
             {
-                SelectedGroupsVM.SaveAllChangesToBackingData(deviceUserData.DatasContainter);
+                SelectedGroupsVM.SaveAllChangesToBackingData(deviceUserData.Settings);
             }
 
             if (CurrentDeviceSettingsMode == SettingsModes.Profile)

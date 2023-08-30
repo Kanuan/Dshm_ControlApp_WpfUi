@@ -200,12 +200,12 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
             {
                 var dshmDeviceData = new DshmDeviceData();
                 dshmDeviceData.DeviceAddress = dev.DeviceMac;
-                dshmDeviceData.DeviceSettings.DisableAutoPairing = !dev.AutoPairWhenCabled;
+                //dshmDeviceData.DeviceSettings.DisableAutoPairing = !dev.AutoPairWhenCabled;
                 dshmDeviceData.DeviceSettings.PairingAddress = dev.PairingAddress;
                 switch (dev.SettingsMode)
                 {
                     case SettingsModes.Custom:
-                        dev.DatasContainter.ConvertAllToDSHM(dshmDeviceData.DeviceSettings);
+                        dev.Settings.ConvertAllToDSHM(dshmDeviceData.DeviceSettings);
                         break;
                     case SettingsModes.Profile:
                         ProfileData devprof = GetProfile(dev.GuidOfProfileToUse);

@@ -19,6 +19,9 @@
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     ScrollViewer.CanContentScroll="False"
     mc:Ignorable="d">
+    <Page.Resources>
+        <Thickness x:Key="MyKey_NextLineSpacement" Bottom="10" />
+    </Page.Resources>
     <DockPanel VerticalAlignment="Stretch">
         <DockPanel
             Width="250"
@@ -124,74 +127,98 @@
                         <!--  Device info  -->
                         <DockPanel HorizontalAlignment="Stretch" LastChildFill="False">
                             <DockPanel DockPanel.Dock="Top">
-                                <DockPanel DockPanel.Dock="Top">
+                                <DockPanel Margin="{StaticResource MyKey_NextLineSpacement}" DockPanel.Dock="Top">
                                     <ui:TextBlock
                                         HorizontalAlignment="Left"
                                         DockPanel.Dock="Left"
                                         Text="DEVICE NAME" />
-                                    <ui:TextBlock
-                                        HorizontalAlignment="Left"
+                                    <ui:TextBox
+                                        HorizontalAlignment="Stretch"
                                         DockPanel.Dock="Right"
-                                        Text="{Binding DisplayName}" />
+                                        IsReadOnly="True"
+                                        Text="{Binding DisplayName, Mode=OneWay}" />
                                 </DockPanel>
-                                <DockPanel DockPanel.Dock="Top">
+                                <DockPanel Margin="{StaticResource MyKey_NextLineSpacement}" DockPanel.Dock="Top">
+                                    <ui:TextBlock DockPanel.Dock="Left" Text="Device address:" />
+                                    <ui:TextBox
+                                        DockPanel.Dock="Right"
+                                        IsReadOnly="True"
+                                        Text="{Binding DeviceAddressFriendly, Mode=OneWay}" />
+                                </DockPanel>
+                                <DockPanel Margin="{StaticResource MyKey_NextLineSpacement}" DockPanel.Dock="Top">
                                     <ui:TextBlock DockPanel.Dock="Left" Text="Battery status:" />
                                     <ui:TextBlock
                                         HorizontalAlignment="Right"
                                         DockPanel.Dock="Right"
                                         Text="{Binding BatteryStatusInText}" />
                                 </DockPanel>
-                                <DockPanel DockPanel.Dock="Top">
-                                    <ui:TextBlock DockPanel.Dock="Left" Text="Device address:" />
-                                    <ui:TextBlock DockPanel.Dock="Right" Text="{Binding DeviceAddressFriendly, Mode=OneWay}" />
-                                </DockPanel>
-                                <DockPanel DockPanel.Dock="Top">
+                                <DockPanel Margin="{StaticResource MyKey_NextLineSpacement}" DockPanel.Dock="Top">
                                     <ui:TextBlock DockPanel.Dock="Left" Text="Current HID Device Mode:" />
                                     <ComboBox
                                         DockPanel.Dock="Right"
                                         IsEnabled="False"
                                         SelectedIndex="{Binding HidEmulationMode, Mode=OneWay}">
-                                        <ComboBoxItem Content="Unkown" />
-                                        <ComboBoxItem Content="SDF (PCSX2)" />
-                                        <ComboBoxItem Content="GPJ (Generic DirectInput)" />
-                                        <ComboBoxItem Content="SXS (Steam, RPCS3)" />
-                                        <ComboBoxItem Content="DS4Windows" />
+                                        <ComboBoxItem Content="Unknown" />
+                                        <ComboBoxItem Content="SDF" />
+                                        <ComboBoxItem Content="GPJ" />
+                                        <ComboBoxItem Content="SXS" />
+                                        <ComboBoxItem Content="DS4W" />
                                         <ComboBoxItem Content="XInput" />
                                     </ComboBox>
                                 </DockPanel>
-                                <DockPanel DockPanel.Dock="Top">
-                                    <ui:TextBlock DockPanel.Dock="Left" Text="Xinput slot #:" />
-                                    <ui:TextBlock DockPanel.Dock="Right" />
-                                </DockPanel>
                             </DockPanel>
+                            <ui:Card DockPanel.Dock="Top">
+                                <DockPanel>
+                                    <DockPanel Margin="{StaticResource MyKey_NextLineSpacement}" DockPanel.Dock="Top">
+                                        <ui:TextBlock
+                                            VerticalAlignment="Center"
+                                            DockPanel.Dock="Left"
+                                            Text="Paired to (host address):" />
+                                        <ui:TextBox
+                                            DockPanel.Dock="Right"
+                                            IsReadOnly="True"
+                                            Text="{Binding HostAddress, Mode=OneWay}" />
+                                    </DockPanel>
+                                    <DockPanel Margin="{StaticResource MyKey_NextLineSpacement}" DockPanel.Dock="Top">
+                                        <ui:TextBlock
+                                            VerticalAlignment="Center"
+                                            DockPanel.Dock="Left"
+                                            Text="Bluetooth pairing mode:" />
+                                        <ComboBox SelectedIndex="{Binding PairingMode}">
+                                            <ComboBoxItem Content="To this PC" />
+                                            <ComboBoxItem Content="Custom MAC address" />
+                                            <ComboBoxItem Content="Disabled" />
+                                        </ComboBox>
 
+                                    </DockPanel>
+                                    <DockPanel DockPanel.Dock="Top">
+                                        <ui:TextBlock DockPanel.Dock="Left" Text="Custom MAC pairing address:" />
+                                        <ui:TextBox DockPanel.Dock="Right" />
+                                    </DockPanel>
+                                    <DockPanel Margin="{StaticResource MyKey_NextLineSpacement}" DockPanel.Dock="Top">
+                                        <ui:TextBlock DockPanel.Dock="Left" Text="Connected wirelessly at:" />
+                                        <ui:TextBox
+                                            DockPanel.Dock="Right"
+                                            IsReadOnly="True"
+                                            Text="{Binding LastConnected, Mode=OneWay}" />
+                                    </DockPanel>
+
+
+                                </DockPanel>
+
+                            </ui:Card>
 
 
                             <DockPanel DockPanel.Dock="Bottom">
-                                <DockPanel DockPanel.Dock="Top">
+
+                                <DockPanel Margin="{StaticResource MyKey_NextLineSpacement}" DockPanel.Dock="Top">
                                     <ui:TextBlock DockPanel.Dock="Left" Text="Instance ID:" />
                                     <ui:TextBox DockPanel.Dock="Right" Text="{Binding InstanceId, Mode=OneWay}" />
                                 </DockPanel>
-                                <DockPanel DockPanel.Dock="Top">
-                                    <ui:TextBlock DockPanel.Dock="Left" Text="Last connected wirelessly:" />
-                                    <ui:TextBox DockPanel.Dock="Right" Text="{Binding LastConnected, Mode=OneWay}" />
-                                </DockPanel>
-                                <DockPanel DockPanel.Dock="Top">
-                                    <ui:TextBlock
-                                        VerticalAlignment="Center"
-                                        DockPanel.Dock="Left"
-                                        Text="Paired to (host address):" />
-                                    <ui:TextBox DockPanel.Dock="Right" Text="{Binding HostAddress, Mode=OneWay}" />
-                                </DockPanel>
-                                <CheckBox
-                                    Content="Auto-pair device to this PC's BT when connecting via cable"
-                                    DockPanel.Dock="Top"
-                                    IsChecked="{Binding AutoPairDeviceWhenCabled}" />
-                                <DockPanel DockPanel.Dock="Top">
-                                    <ui:Button Content="Pair device to this PC" DockPanel.Dock="Left" />
-                                    <ui:Button Content="Pair Device to custom MAC:" DockPanel.Dock="Left" />
-                                    <ui:TextBox DockPanel.Dock="Right" />
-                                </DockPanel>
+
+
+
+
                             </DockPanel>
 
                         </DockPanel>
