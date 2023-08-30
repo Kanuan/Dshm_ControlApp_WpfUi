@@ -193,15 +193,20 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
         public void ApplySettings()
         {
             var dshmConfiguration = new DshmConfiguration();
-            
             GlobalProfile.DeviceSettings.ConvertAllToDSHM(dshmConfiguration.Global);
            
             foreach(DeviceData dev in dshmManagerUserData.Devices)
             {
                 var dshmDeviceData = new DshmDeviceData();
                 dshmDeviceData.DeviceAddress = dev.DeviceMac;
-                //dshmDeviceData.DeviceSettings.DisableAutoPairing = !dev.AutoPairWhenCabled;
-                dshmDeviceData.DeviceSettings.PairingAddress = dev.PairingAddress;
+                
+                // Disable BT auto-pairing if in Disabled BT Pairing Mode
+                dshmDeviceData.DeviceSettings.DisableAutoPairing =
+                    (dev.BluetoothPairingMode == BluetoothPairingMode.Disabled) ? true : false;
+                // If using custom BT Pairing Mode, set the pairing address to the desired one. Otherwise, leave it blank so DsHidMini auto-pairs to current BT host
+                dshmDeviceData.DeviceSettings.PairingAddress =
+                    (dev.BluetoothPairingMode == BluetoothPairingMode.Custom) ? dev.PairingAddress : null;
+
                 switch (dev.SettingsMode)
                 {
                     case SettingsModes.Custom:

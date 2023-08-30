@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using Nefarius.DsHidMini.ControlApp.Helpers;
+using Nefarius.DsHidMini.ControlApp.Resources;
 using Nefarius.Utilities.DeviceManagement.PnP;
 
 namespace Nefarius.DsHidMini.ControlApp.Models.Drivers
@@ -70,12 +71,12 @@ namespace Nefarius.DsHidMini.ControlApp.Models.Drivers
     [TypeConverter(typeof(EnumDescriptionTypeConverter))]
     public enum DsHidDeviceMode : byte
     {
-        [Description("SDF (PCSX2)")] Single = 0x01,
+        [Description("SDF (PCSX2)")] SDF = 0x01,
 
-        [Description("GPJ (Generic DirectInput)")]
-        Multi = 0x02,
-        [Description("SXS (Steam, RPCS3)")] SixaxisCompatible = 0x03,
-        [Description("DS4Windows")] DualShock4Rev1Compatible = 0x04,
-        [Description("XInput")] XInputHIDCompatible = 0x05
+        [LocalizedDescription("HidModeEnumSDF", typeof(test))]
+        GPJ = 0x02,
+        [Description("SXS (Steam, RPCS3)")] SXS = 0x03,
+        [Description("DS4Windows")] DS4W = 0x04,
+        [Description("XInput")] XInput = 0x05
     }
 }

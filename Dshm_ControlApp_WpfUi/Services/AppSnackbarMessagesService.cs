@@ -90,7 +90,7 @@ namespace Nefarius.DsHidMini.ControlApp.Services
         {
             _snackbarService.Show(
                 "Canceled changes on profile being edited",
-                "Remember to save changes",
+                "Remember to save next time",
                 ControlAppearance.Caution,
                 new SymbolIcon(SymbolRegular.ErrorCircle24),
                 TimeSpan.FromSeconds(5)

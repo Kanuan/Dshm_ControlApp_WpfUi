@@ -2,6 +2,7 @@
 using Nefarius.DsHidMini.ControlApp.Models.Drivers;
 using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager;
 using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums;
+using Nefarius.DsHidMini.ControlApp.Models.Enums;
 using Nefarius.DsHidMini.ControlApp.Services;
 using Nefarius.DsHidMini.ControlApp.ViewModels.Pages;
 using Nefarius.DsHidMini.ControlApp.ViewModels.UserControls;
@@ -41,8 +42,11 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels
         /// <summary>
         ///     Current HID device emulation mode.
         /// </summary>
-        public int HidEmulationMode => _device.GetProperty<byte>(DsHidMiniDriver.HidDeviceModeProperty);
 
+        public DsHidDeviceMode HidEmulationMode => (DsHidDeviceMode)_device.GetProperty<byte>(DsHidMiniDriver.HidDeviceModeProperty);
+
+        public string DeviceSettingsStatus => $"{(HidModeShort)_device.GetProperty<byte>(DsHidMiniDriver.HidDeviceModeProperty)} • {CurrentDeviceSettingsMode}";
+        
 
         /// <summary>
         ///     The device Instance ID.
@@ -92,7 +96,7 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels
             }
         }
         
-        [ObservableProperty] private string? _pairingMacAddress;
+        [ObservableProperty] private string? _customPairingAddress;
 
         private BluetoothPairingMode? _pairingMode;
 
@@ -106,6 +110,7 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels
             }
 
         }
+
 
         /// <summary>
         ///     Current battery status.
@@ -273,11 +278,14 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels
         public void RefreshDeviceSettings()
         {
             PairingMode = (int)deviceUserData.BluetoothPairingMode;
+            CustomPairingAddress = deviceUserData.PairingAddress;
             DeviceCustomsVM.LoadDatasToAllGroups(deviceUserData.Settings);
             ListOfProfiles = _dshmConfigManager.Profiles;
             SelectedProfile = _dshmConfigManager.GetProfile(deviceUserData.GuidOfProfileToUse);
             GlobalCustomsVM.LoadDatasToAllGroups(_dshmConfigManager.GlobalProfile.DeviceSettings);
             CurrentDeviceSettingsMode = deviceUserData.SettingsMode;
+
+            this.OnPropertyChanged(nameof(DeviceSettingsStatus));
         }
 
         //public void UpdateEditor()
@@ -290,6 +298,7 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels
         {
             deviceUserData.SettingsMode = CurrentDeviceSettingsMode;
             deviceUserData.BluetoothPairingMode = (BluetoothPairingMode)PairingMode;
+            deviceUserData.PairingAddress = CustomPairingAddress;
 
             if (CurrentDeviceSettingsMode != SettingsModes.Global)
             {
@@ -302,6 +311,7 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels
             }
             _appSnackbarMessagesService.ShowDsHidMiniConfigurationUpdateSuccessMessage();
             _dshmConfigManager.SaveChangesAndUpdateDsHidMiniConfigFile();
+            this.OnPropertyChanged(nameof(DeviceSettingsStatus));
         }
 
         [RelayCommand]

@@ -48,7 +48,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Enums\" />
+    <Compile Update="Resources\test.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>test.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Views\UserControls\DeviceUserControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\test.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>test.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
