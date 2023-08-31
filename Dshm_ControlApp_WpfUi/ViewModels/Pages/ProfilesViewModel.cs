@@ -15,7 +15,6 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels.Pages
 
         [ObservableProperty] public List<ProfileViewModel> _profilesViewModels;
         [ObservableProperty] private ProfileViewModel? _selectedProfileVM = null;
-        [ObservableProperty] bool _isEditing = false;
 
         // ----------------------------------------------------------- PROPERTIES
 
@@ -31,34 +30,25 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels.Pages
             _appSnackbarMessagesService = appSnackbarMessagesService;
             UpdateProfileList();
         }
-     
-
+        
         public void UpdateProfileList()
         {
             List<ProfileViewModel> newList = new();
             foreach(ProfileData prof in ProfilesDatas)
             {
-                newList.Add(new(prof) { IsGlobal = (prof == _dshmConfigManager.GlobalProfile)});
+                newList.Add(new(prof, _appSnackbarMessagesService, _dshmConfigManager) { IsGlobal = (prof == _dshmConfigManager.GlobalProfile)});
             }
             ProfilesViewModels = newList;
         }
 
 
         // ---------------------------------------- Methods
-
-        partial void OnIsEditingChanged(bool value)
-        {
-            if(SelectedProfileVM != null)
-            {
-                SelectedProfileVM.VmGroupsCont.AllowEditing = value;
-            }
-        }
-
+        
         public void OnNavigatedFrom() 
         {
-            if(IsEditing && SelectedProfileVM != null)
+            if(SelectedProfileVM != null && SelectedProfileVM.IsEditEnabled)
             {
-                CancelChangesToProfile();
+                SelectedProfileVM.CancelChanges();
                 _appSnackbarMessagesService.ShowProfileChangedCanceledMessage();
             }
         }
@@ -70,43 +60,11 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels.Pages
 
 
         [RelayCommand]
-        private void EnableEditingOfSelectedProfile()
-        {
-            if (SelectedProfileVM == null) return;
-            if (SelectedProfileVM._profileData == ProfileData.DefaultProfile)
-            {
-                _appSnackbarMessagesService.ShowDefaultProfileEditingBlockedMessage();
-            }
-            else
-            {
-                IsEditing = true;
-            }
-        }
-
-        [RelayCommand]
-        private void SaveChangesToProfile()
-        {
-            SelectedProfileVM.SaveChanges();
-            _appSnackbarMessagesService.ShowProfileUpdateMessage();
-            IsEditing = false;
-            _dshmConfigManager.SaveChangesAndUpdateDsHidMiniConfigFile();
-        }
-
-        [RelayCommand]
-        private void CancelChangesToProfile()
-        {
-            SelectedProfileVM.CancelChanges();
-            IsEditing = false;
-        }
-
-
-
-        [RelayCommand]
         private void SetprofileAsGlobal(ProfileViewModel? obj)
         {
             if (obj != null)
             {
-                _dshmConfigManager.GlobalProfile = obj._profileData;
+                _dshmConfigManager.GlobalProfile = obj.ProfileData;
                 _appSnackbarMessagesService.ShowGlobalProfileUpdatedMessage();
                 _dshmConfigManager.SaveChangesAndUpdateDsHidMiniConfigFile();
             }
@@ -125,12 +83,12 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels.Pages
         private void DeleteProfile(ProfileViewModel? obj)
         {
             if (obj == null) return;
-            if (obj._profileData == ProfileData.DefaultProfile)
+            if (obj.ProfileData == ProfileData.DefaultProfile)
             {
                 _appSnackbarMessagesService.ShowDefaultProfileEditingBlockedMessage();
                 return;
             }
-            _dshmConfigManager.DeleteProfile(obj._profileData);
+            _dshmConfigManager.DeleteProfile(obj.ProfileData);
             _dshmConfigManager.SaveChangesAndUpdateDsHidMiniConfigFile();
             _appSnackbarMessagesService.ShowProfileDeletedMessage();
             UpdateProfileList();

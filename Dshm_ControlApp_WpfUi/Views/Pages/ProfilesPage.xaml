@@ -33,14 +33,14 @@
             Width="250"
             MaxWidth="250"
             DockPanel.Dock="Left"
-            IsEnabled="{Binding ViewModel.IsEditing, Converter={StaticResource BooleanToReverseConverterKey}}">
+            IsEnabled="{Binding ViewModel.SelectedProfileVM.IsEditEnabled, Converter={StaticResource BooleanToReverseConverterKey}}">
             <DockPanel.Style>
                 <Style TargetType="DockPanel">
                     <Style.Setters>
                         <Setter Property="Opacity" Value="1" />
                     </Style.Setters>
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding ViewModel.IsEditing}" Value="True">
+                        <DataTrigger Binding="{Binding ViewModel.SelectedProfileVM.IsEditEnabled}" Value="True">
                             <Setter Property="Opacity" Value="0.3" />
                         </DataTrigger>
                     </Style.Triggers>
@@ -49,7 +49,7 @@
             <ui:TextBlock
                 HorizontalAlignment="Center"
                 DockPanel.Dock="Top"
-                FontSize="20"
+                FontTypography="Title"
                 Text="Profiles" />
 
             <Grid DockPanel.Dock="Top">
@@ -62,43 +62,44 @@
                 <Button
                     Grid.Column="0"
                     Margin="2"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
                     Command="{Binding ViewModel.CreateProfileCommand}">
                     <Button.Content>
-                        <Viewbox>
-                            <ui:SymbolIcon Symbol="Add24" />
-                        </Viewbox>
+                        <ui:SymbolIcon Symbol="Add24" />
                     </Button.Content>
                 </Button>
                 <Button
                     Grid.Column="1"
                     Margin="2"
-                    Command="{Binding ViewModel.EnableEditingOfSelectedProfileCommand}">
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    Command="{Binding ViewModel.SelectedProfileVM.EnableEditingCommand}"
+                    IsEnabled="{Binding ViewModel.NoProfileSelected, Converter={StaticResource BooleanToReverseConverterKey}}">
                     <Button.Content>
-                        <Viewbox>
-                            <ui:SymbolIcon Symbol="Pen24" />
-                        </Viewbox>
+                        <ui:SymbolIcon Symbol="Pen24" />
                     </Button.Content>
                 </Button>
                 <Button
                     Grid.Column="2"
                     Margin="2"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
                     Command="{Binding ViewModel.SetprofileAsGlobalCommand}"
                     CommandParameter="{Binding ViewModel.SelectedProfileVM}">
                     <Button.Content>
-                        <Viewbox>
-                            <ui:TextBlock Text="Set as global" />
-                        </Viewbox>
+                        <ui:TextBlock Text="Set as global" />
                     </Button.Content>
                 </Button>
                 <Button
                     Grid.Column="3"
                     Margin="2"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
                     Command="{Binding ViewModel.DeleteProfileCommand}"
                     CommandParameter="{Binding ViewModel.SelectedProfileVM}">
                     <Button.Content>
-                        <Viewbox>
-                            <ui:SymbolIcon Symbol="Delete28" />
-                        </Viewbox>
+                        <ui:SymbolIcon Symbol="Delete28" />
                     </Button.Content>
                 </Button>
             </Grid>
@@ -112,14 +113,24 @@
                 SelectedItem="{Binding ViewModel.SelectedProfileVM}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <ui:Card Padding="2">
+                        <ui:Card
+                            Margin="0"
+                            Padding="2"
+                            HorizontalAlignment="Stretch">
                             <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
+                                </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="210" />
-                                    <ColumnDefinition Width="40" />
+                                    <ColumnDefinition Width="5*" />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <ui:TextBlock HorizontalAlignment="Stretch" Text="{Binding Name}" />
-                                <ui:SymbolIcon Symbol="Globe24">
+                                <ui:TextBlock
+                                    Margin="10,0,0,0"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding Name}" />
+                                <ui:SymbolIcon Grid.Column="1" Symbol="Globe24">
                                     <ui:SymbolIcon.Style>
                                         <Style TargetType="ui:SymbolIcon">
                                             <Setter Property="Visibility" Value="Hidden" />
@@ -142,36 +153,7 @@
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Stretch"
             DockPanel.Dock="Right">
-            <DockPanel DockPanel.Dock="Right">
-                <ui:Card DockPanel.Dock="Top">
-                    <DockPanel>
-                        <ui:TextBlock
-                            Margin="0,0,10,0"
-                            VerticalAlignment="Center"
-                            Text="Profile name:" />
-                        <ui:TextBox IsEnabled="{Binding ViewModel.IsEditing}" Text="{Binding ViewModel.SelectedProfileVM.Name}" />
-                    </DockPanel>
-                </ui:Card>
-                <DockPanel DockPanel.Dock="Bottom" IsEnabled="{Binding ViewModel.IsEditing}">
-                    <UniformGrid Columns="2">
-                        <ui:Button
-                            HorizontalAlignment="Stretch"
-                            Command="{Binding ViewModel.SaveChangesToProfileCommand}"
-                            Content="Save changes" />
-                        <ui:Button
-                            HorizontalAlignment="Stretch"
-                            Command="{Binding ViewModel.CancelChangesToProfileCommand}"
-                            Content="Cancel" />
-                    </UniformGrid>
-                </DockPanel>
-                <viewuserctrls:DeviceSettingsEditor
-                    Height="auto"
-                    Margin="0,10,0,10"
-                    VerticalAlignment="Stretch"
-                    DataContext="{Binding ViewModel.SelectedProfileVM.VmGroupsCont}"
-                    DockPanel.Dock="Top" />
-
-            </DockPanel>
+            <viewuserctrls:ProfileUserControl DataContext="{Binding ViewModel.SelectedProfileVM}" />
         </ui:Card>
 
 

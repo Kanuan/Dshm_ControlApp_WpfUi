@@ -72,9 +72,7 @@ namespace Nefarius.DsHidMini.ControlApp.Models.Drivers
     public enum DsHidDeviceMode : byte
     {
         [Description("SDF (PCSX2)")] SDF = 0x01,
-
-        [LocalizedDescription("HidModeEnumSDF", typeof(test))]
-        GPJ = 0x02,
+        [Description("GPJ (Separated pressure)")] GPJ = 0x02,
         [Description("SXS (Steam, RPCS3)")] SXS = 0x03,
         [Description("DS4Windows")] DS4W = 0x04,
         [Description("XInput")] XInput = 0x05

@@ -53,6 +53,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>test.resx</DependentUpon>
     </Compile>
+    <Compile Update="Views\UserControls\ProfileUserControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\UserControls\DeviceUserControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
