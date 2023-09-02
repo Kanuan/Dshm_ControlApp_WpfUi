@@ -9,6 +9,7 @@ using Nefarius.Utilities.DeviceManagement.PnP;
 using System.Collections.ObjectModel;
 using Nefarius.DsHidMini.ControlApp.Services;
 using Wpf.Ui.Controls;
+using Newtonsoft.Json.Linq;
 
 namespace Nefarius.DsHidMini.ControlApp.ViewModels.Pages
 {
@@ -67,7 +68,7 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels.Pages
 
         public void OnNavigatedFrom()
         {
-            //throw new NotImplementedException();
+            SelectedDevice = null;
         }
 
 

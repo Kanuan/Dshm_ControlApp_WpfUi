@@ -11,10 +11,10 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels.UserControls.DeviceSettings
         public override SettingsModeGroups Group { get; } = SettingsModeGroups.LEDsControl;
         public int LEDMode
         {
-            get => (int)_tempBackingData.LEDMode;
+            get => (int)_tempBackingData.LeDMode;
             set
             {
-                _tempBackingData.LEDMode = (ControlApp_LEDsModes)value;
+                _tempBackingData.LeDMode = (LEDsMode)value;
                 this.OnPropertyChanged(nameof(LEDMode));
             }
         }

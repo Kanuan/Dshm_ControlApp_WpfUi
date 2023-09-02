@@ -40,7 +40,7 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels.UserControls.DeviceSettings
             }
         }
 
-        public Manager_Button AltModeToggleButttonCombo_Button1
+        public Button AltModeToggleButttonCombo_Button1
         {
             get => _tempBackingData.AltModeToggleButtonCombo.Button1;
             set
@@ -50,7 +50,7 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels.UserControls.DeviceSettings
             }
         }
 
-        public Manager_Button AltModeToggleButttonCombo_Button2
+        public Button AltModeToggleButttonCombo_Button2
         {
             get => _tempBackingData.AltModeToggleButtonCombo.Button2;
             set
@@ -59,7 +59,7 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels.UserControls.DeviceSettings
                 this.OnPropertyChanged(nameof(AltModeToggleButttonCombo_Button2));
             }
         }
-        public Manager_Button AltModeToggleButttonCombo_Button3
+        public Button AltModeToggleButttonCombo_Button3
         {
             get => _tempBackingData.AltModeToggleButtonCombo.Button3;
             set

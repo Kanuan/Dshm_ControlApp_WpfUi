@@ -22,6 +22,8 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels.Pages
 
         private readonly AppSnackbarMessagesService _appSnackbarMessagesService;
 
+        [ObservableProperty] private bool _anyProfileSelected;
+
         // ----------------------------------------------------------- CONSTRUCTOR
 
         public ProfilesViewModel(AppSnackbarMessagesService appSnackbarMessagesService, DshmConfigManager dshmConfigManager)
@@ -51,13 +53,18 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels.Pages
                 SelectedProfileVM.CancelChanges();
                 _appSnackbarMessagesService.ShowProfileChangedCanceledMessage();
             }
+
+            SelectedProfileVM = null;
         }
 
         public void OnNavigatedTo()
         {
         }
 
-
+        partial void OnSelectedProfileVMChanged(ProfileViewModel? value)
+        {
+            AnyProfileSelected = (SelectedProfileVM != null);
+        }
 
         [RelayCommand]
         private void SetprofileAsGlobal(ProfileViewModel? obj)

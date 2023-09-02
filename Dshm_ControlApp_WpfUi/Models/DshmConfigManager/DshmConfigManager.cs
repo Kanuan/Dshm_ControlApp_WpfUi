@@ -10,7 +10,6 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
     /// </summary>
     public class DshmConfigManager
     {
-        // ----------------------------------------------------------- AUTO-PROPERTIES
 
         /// <summary>
         /// Singleton instace of the DshmConfigManager's user data
@@ -71,6 +70,11 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
             }
         }
 
+        public List<DeviceData> Devices
+        {
+            get => dshmManagerUserData.Devices;
+            set => dshmManagerUserData.Devices = value;
+        }
 
         // ----------------------------------------------------------- CONSTRUCTOR
 
@@ -147,7 +151,7 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
         /// </summary>
         private void FixDevicesWithBlankProfiles()
         {
-            foreach(DeviceData device in dshmManagerUserData.Devices)
+            foreach(DeviceData device in Devices)
             {
                 if(GetProfile(device.GuidOfProfileToUse) == null)
                 {
@@ -193,9 +197,9 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
         public void ApplySettings()
         {
             var dshmConfiguration = new DshmConfiguration();
-            GlobalProfile.DeviceSettings.ConvertAllToDSHM(dshmConfiguration.Global);
+            GlobalProfile.Settings.ConvertAllToDSHM(dshmConfiguration.Global);
            
-            foreach(DeviceData dev in dshmManagerUserData.Devices)
+            foreach(DeviceData dev in Devices)
             {
                 var dshmDeviceData = new DshmDeviceData();
                 dshmDeviceData.DeviceAddress = dev.DeviceMac;
@@ -216,30 +220,25 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
                         ProfileData devprof = GetProfile(dev.GuidOfProfileToUse);
                         if(devprof == null)
                         {
+                            // Maybe throw error here instead?
                             break; ; // If profile set for the controller does not exist anymore then leave settings blank so controller loads Global Profile
                         }
                         else
                         {
-                            devprof.DeviceSettings.ConvertAllToDSHM(dshmDeviceData.DeviceSettings);
+                            devprof.Settings.ConvertAllToDSHM(dshmDeviceData.DeviceSettings);
                         }
                         break;
 
                     case SettingsModes.Global:
                     default:
-                        break; ;
+                        // Device's in Global settings mode need to have empty settings so global settings are not overwritten
+                        break;
                 }
                 dshmConfiguration.Devices.Add(dshmDeviceData);
             }
 
             var updateStatus = dshmConfiguration.ApplyConfiguration();
-
             DshmConfigurationUpdated?.Invoke(this, new DshmUpdatedEventArgs() { UpdatedSuccessfully = updateStatus});
-
-        }
-
-        public class DshmUpdatedEventArgs : EventArgs
-        {
-            public bool UpdatedSuccessfully;
         }
 
         /// <summary>
@@ -251,7 +250,7 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
             ProfileData newProfile = new();
             newProfile.ProfileName = profileName;
             //newProfile.DiskFileName = profileName + ".json";
-            dshmManagerUserData.Profiles.Add(newProfile);
+            Profiles.Add(newProfile);
         }
 
         /// <summary>
@@ -261,11 +260,11 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
         /// <param name="profile">The profile to be deleted</param>
         public void DeleteProfile(ProfileData profile)
         {
-            if (profile == ProfileData.DefaultProfile) // Must not save Default Profile to disk
+            if (profile == ProfileData.DefaultProfile) // Never remove Default profile from the list
             {
                 return;
             }
-            dshmManagerUserData.Profiles.Remove(profile);
+            Profiles.Remove(profile);
             FixDevicesWithBlankProfiles();
         }
 
@@ -276,7 +275,7 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
         /// <returns>The device data of the DsHidMini device</returns>
         public DeviceData GetDeviceData(string deviceMac)
         {
-            foreach (DeviceData dev in dshmManagerUserData.Devices)
+            foreach (DeviceData dev in Devices)
             {
                 if (dev.DeviceMac == deviceMac)
                 {
@@ -285,8 +284,13 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
             }
             var newDevice = new DeviceData(deviceMac);
             newDevice.DeviceMac = deviceMac;
-            dshmManagerUserData.Devices.Add(newDevice);
+            Devices.Add(newDevice);
             return newDevice;
+        }
+
+        public class DshmUpdatedEventArgs : EventArgs
+        {
+            public bool UpdatedSuccessfully;
         }
 
     }

@@ -35,8 +35,9 @@
             <ui:TextBlock
                 HorizontalAlignment="Center"
                 DockPanel.Dock="Top"
-                FontTypography="Subtitle"
-                Text="DsHidMini Devices" />
+                FontTypography="Title"
+                Text="DsHidMini Devices"
+                TextWrapping="Wrap" />
             <ListView
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
@@ -95,12 +96,14 @@
                                         Padding="0"
                                         VerticalAlignment="Stretch"
                                         HorizontalContentAlignment="Center"
-                                        Background="DarkRed"
-                                        Command="{Binding RestartDeviceCommand}">
+                                        Command="{Binding RestartDeviceCommand}"
+                                        FontStyle="Normal">
                                         <Button.Content>
                                             <ui:SymbolIcon
+                                                Margin="0"
                                                 HorizontalAlignment="Center"
                                                 FontSize="16"
+                                                Foreground="White"
                                                 Symbol="Power24" />
                                         </Button.Content>
 
@@ -127,7 +130,10 @@
             Padding="10"
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Stretch">
-            <viewuserctrls:DeviceUserControl DataContext="{Binding ViewModel.SelectedDevice}" />
+            <Grid Visibility="{Binding ViewModel.AnyDeviceSelected, Converter={StaticResource BoolToVis}}">
+                <viewuserctrls:DeviceUserControl DataContext="{Binding ViewModel.SelectedDevice}" />
+            </Grid>
+
         </ui:Card>
 
 

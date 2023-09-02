@@ -32,7 +32,7 @@ public partial class ProfileViewModel : ObservableObject
         _appSnackbarMessagesService = appSnackbarMessagesService;
         ProfileData = data;
         _name = data.ProfileName;
-        _vmGroupsCont = new(data.DeviceSettings);
+        _vmGroupsCont = new(data.Settings);
     }
 
     [RelayCommand]
@@ -54,7 +54,7 @@ public partial class ProfileViewModel : ObservableObject
             _name = "User Profile";
         }
         ProfileData.ProfileName = _name;
-        VmGroupsCont.SaveAllChangesToBackingData(ProfileData.DeviceSettings);
+        VmGroupsCont.SaveAllChangesToBackingData(ProfileData.Settings);
         _dshmConfigManager.SaveChangesAndUpdateDsHidMiniConfigFile();
         IsEditEnabled = false;
 
@@ -64,7 +64,7 @@ public partial class ProfileViewModel : ObservableObject
     [RelayCommand]
     public void CancelChanges()
     {
-        VmGroupsCont.LoadDatasToAllGroups(ProfileData.DeviceSettings);
+        VmGroupsCont.LoadDatasToAllGroups(ProfileData.Settings);
         Name = ProfileData.ProfileName;
         IsEditEnabled = false;
     }

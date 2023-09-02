@@ -14,21 +14,21 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels.UserControls.DeviceSettings
             SettingsContext.DS4W,
             SettingsContext.XInput,
         };
-        public static readonly List<ControlApp_DsPressureMode> listOfPressureModes = new()
+        public static readonly List<PressureMode> listOfPressureModes = new()
         {
-            ControlApp_DsPressureMode.Digital,
-            ControlApp_DsPressureMode.Analogue,
-            ControlApp_DsPressureMode.Default,
+            PressureMode.Digital,
+            PressureMode.Analogue,
+            PressureMode.Default,
         };
 
-        public static readonly List<ControlApp_DPADModes> listOfDPadModes = new()
+        public static readonly List<DPadMode> listOfDPadModes = new()
         {
-            ControlApp_DPADModes.HAT,
-            ControlApp_DPADModes.Buttons,
+            DPadMode.HAT,
+            DPadMode.Buttons,
         };
         public List<SettingsContext> HIDDeviceModesList => hidDeviceModesList;
-        public static List<ControlApp_DsPressureMode> ListOfPressureModes { get => listOfPressureModes; }
-        public static List<ControlApp_DPADModes> ListOfDPadModes { get => listOfDPadModes; }
+        public static List<PressureMode> ListOfPressureModes { get => listOfPressureModes; }
+        public static List<DPadMode> ListOfDPadModes { get => listOfDPadModes; }
 
         private HidModeSettings _tempBackingData = new();
         protected override IDeviceSettings _myInterface => _tempBackingData;
@@ -45,7 +45,7 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels.UserControls.DeviceSettings
             }
 
         }
-        public ControlApp_DsPressureMode PressureExposureMode
+        public PressureMode PressureExposureMode
         {
             get => _tempBackingData.PressureExposureMode;
             set
@@ -55,7 +55,7 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels.UserControls.DeviceSettings
             }
         }
 
-        public ControlApp_DPADModes DPadExposureMode
+        public DPadMode DPadExposureMode
         {
             get => _tempBackingData.DPadExposureMode;
             set

@@ -15,6 +15,7 @@ using Nefarius.DsHidMini.ControlApp.ViewModels.Pages;
 using Nefarius.DsHidMini.ControlApp.ViewModels.Windows;
 using Nefarius.DsHidMini.ControlApp.Views.Pages;
 using Nefarius.DsHidMini.ControlApp.Views.Windows;
+using Nefarius.Utilities.Bluetooth;
 using Nefarius.Utilities.DeviceManagement.PnP;
 using Wpf.Ui;
 
@@ -45,6 +46,7 @@ namespace Nefarius.DsHidMini.ControlApp
 
                 services.AddSingleton<DeviceNotificationListener>();
                 services.AddSingleton<AppSnackbarMessagesService>();
+                services.AddSingleton<HostRadio>();
 
                 services.AddSingleton<DshmConfigManager>();
 

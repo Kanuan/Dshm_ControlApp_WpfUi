@@ -36,7 +36,7 @@
         Unique_XInput,
     }
 
-    public enum ControlApp_LEDsModes
+    public enum LEDsMode
     {
         BatteryIndicatorPlayerIndex,
         BatteryIndicatorBarGraph,
@@ -44,7 +44,7 @@
         CustomPattern,
     }
 
-    public enum Manager_Button
+    public enum Button
     {
         None,
         PS,
@@ -66,14 +66,14 @@
         Left,
     }
 
-    public enum ControlApp_DsPressureMode
+    public enum PressureMode
     {
         Digital,
         Analogue,
         Default,
     }
 
-    public enum ControlApp_DPADModes
+    public enum DPadMode
     {
         Default,
         HAT,

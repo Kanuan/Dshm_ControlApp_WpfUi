@@ -47,7 +47,7 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels.UserControls.DeviceSettings
                 this.OnPropertyChanged(nameof(QuickDisconnectComboHoldTime));
             }
         }
-        public Manager_Button QuickDisconnectComboButton1
+        public Button QuickDisconnectComboButton1
         {
             get => _tempBackingData.QuickDisconnectCombo.Button1;
             set
@@ -57,7 +57,7 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels.UserControls.DeviceSettings
             }
         }
 
-        public Manager_Button QuickDisconnectComboButton2
+        public Button QuickDisconnectComboButton2
         {
             get => _tempBackingData.QuickDisconnectCombo.Button2;
             set
@@ -67,7 +67,7 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels.UserControls.DeviceSettings
             }
         }
 
-        public Manager_Button QuickDisconnectComboButton3
+        public Button QuickDisconnectComboButton3
         {
             get => _tempBackingData.QuickDisconnectCombo.Button3;
             set

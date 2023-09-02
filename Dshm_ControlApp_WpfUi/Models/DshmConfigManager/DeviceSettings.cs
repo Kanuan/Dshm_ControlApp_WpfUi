@@ -2,6 +2,9 @@
 using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.DshmConfig;
 using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.DshmConfig.Enums;
 using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums;
+using Button = Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums.Button;
+using LEDsMode = Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums.LEDsMode;
+using PressureMode = Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums.PressureMode;
 
 namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
 {
@@ -16,10 +19,10 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
             set => holdTime = (value >= 0) ? value : 0;
         }
 
-        private Manager_Button button1;
-        private Manager_Button button2;
-        private Manager_Button button3;
-        public Manager_Button Button1
+        private Button button1;
+        private Button button2;
+        private Button button3;
+        public Button Button1
         {
             get => button1;
             set
@@ -28,7 +31,7 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
                     button1 = value;
             }
         }
-        public Manager_Button Button2
+        public Button Button2
         {
             get => button2;
             set
@@ -37,7 +40,7 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
                     button2 = value;
             }
         }
-        public Manager_Button Button3
+        public Button Button3
         {
             get => button3;
             set
@@ -164,8 +167,8 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
     public class HidModeSettings : DeviceSubSettings
     {
         public SettingsContext SettingsContext { get; set; } = SettingsContext.XInput;
-        public ControlApp_DsPressureMode PressureExposureMode { get; set; } = ControlApp_DsPressureMode.Default;
-        public ControlApp_DPADModes DPadExposureMode { get; set; } = ControlApp_DPADModes.HAT;
+        public PressureMode PressureExposureMode { get; set; } = PressureMode.Default;
+        public DPadMode DPadExposureMode { get; set; } = DPadMode.HAT;
         public bool IsLEDsAsXInputSlotEnabled { get; set; } = false;
         public bool PreventRemappingConflictsInSXSMode { get; set; } = false;
         public bool PreventRemappingConflictsInDS4WMode { get; set; } = false;
@@ -192,7 +195,7 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
         {
             if (SettingsContext != SettingsContext.General)
             {
-                dshmContextSettings.HIDDeviceMode = DshmManagerToDriverConversion.DictHidDeviceModes[SettingsContext];
+                dshmContextSettings.HIDDeviceMode = DshmManagerToDriverConversion.HidDeviceMode[SettingsContext];
                 dshmContextSettings.ContextSettings.HIDDeviceMode = dshmContextSettings.HIDDeviceMode;
             }
 
@@ -222,7 +225,7 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
 
     public class LedsSettings : DeviceSubSettings
     {
-        public ControlApp_LEDsModes LEDMode { get; set; } = ControlApp_LEDsModes.BatteryIndicatorPlayerIndex;
+        public LEDsMode LeDMode { get; set; } = LEDsMode.BatteryIndicatorPlayerIndex;
         public bool AllowExternalLedsControl { get; set; } = true;
         public All4LEDsCustoms LEDsCustoms { get; set; } = new();
 
@@ -234,7 +237,7 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
 
         public static void CopySettings(LedsSettings destiny, LedsSettings source)
         {
-            destiny.LEDMode = source.LEDMode;
+            destiny.LeDMode = source.LeDMode;
             destiny.AllowExternalLedsControl = source.AllowExternalLedsControl;
             destiny.LEDsCustoms.CopyLEDsCustoms(source.LEDsCustoms);
         }
@@ -253,7 +256,7 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
         {
             DshmDeviceSettings.AllLEDSettings dshm_AllLEDsSettings = dshmContextSettings.ContextSettings.LEDSettings;
 
-            dshm_AllLEDsSettings.Mode = DshmManagerToDriverConversion.LedModeManagerToDriver[this.LEDMode];
+            dshm_AllLEDsSettings.Mode = DshmManagerToDriverConversion.LedModeManagerToDriver[this.LeDMode];
             dshm_AllLEDsSettings.Authority = AllowExternalLedsControl ? DSHM_LEDsAuthority.Automatic : DSHM_LEDsAuthority.Driver;
 
             var dshm_Customs = dshm_AllLEDsSettings.CustomPatterns;
@@ -272,7 +275,7 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
                     dshm_Customs.LEDFlags |= (byte)(1 << (1 + i));
                 }
 
-                if(this.LEDMode == ControlApp_LEDsModes.CustomPattern)
+                if(this.LeDMode == LEDsMode.CustomPattern)
                 {
                     dshm_singleLED[i].Duration = singleLEDCustoms.Duration;
                     dshm_singleLED[i].CycleDuration1 = (byte)(singleLEDCustoms.CycleDuration >> 4); // FIX THIS
@@ -359,9 +362,9 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
         {
             IsEnabled = true,
             HoldTime = 3,
-            Button1 = Manager_Button.PS,
-            Button2 = Manager_Button.R1,
-            Button3 = Manager_Button.L1,
+            Button1 = Button.PS,
+            Button2 = Button.R1,
+            Button3 = Button.L1,
         };
 
         public override void ResetToDefault()
@@ -490,9 +493,9 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
         {
             IsEnabled = false,
             HoldTime = 3,
-            Button1 = Manager_Button.PS,
-            Button2 = Manager_Button.SELECT,
-            Button3 = Manager_Button.None,
+            Button1 = Button.PS,
+            Button2 = Button.SELECT,
+            Button3 = Button.None,
         };
 
         public override void ResetToDefault()

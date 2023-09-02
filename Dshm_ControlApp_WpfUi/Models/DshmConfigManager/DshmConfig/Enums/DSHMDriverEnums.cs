@@ -1,6 +1,6 @@
 ﻿namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.DshmConfig.Enums
 {
-    public enum DSHM_HidDeviceMode
+    public enum HidDeviceMode
     {
         SDF,
         GPJ,
@@ -9,28 +9,28 @@
         XInput,
     }
 
-    public enum DSHM_PressureMode
+    public enum PressureMode
     {
         Digital,
         Analogue,
         Default,
     }
 
-    public enum DSHM_DPadExposureMode
+    public enum DPadExposureMode
     {
         HAT,
         IndividualButtons,
         Default,
     }
 
-    public enum DSHM_LEDsMode
+    public enum LEDsMode
     {
         BatteryIndicatorPlayerIndex,
         BatteryIndicatorBarGraph,
         CustomPattern,
     }
 
-    public enum DSHM_Button
+    public enum Button
     {
         None,
         PS,

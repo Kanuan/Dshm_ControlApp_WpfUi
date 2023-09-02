@@ -6,7 +6,7 @@
         public string ProfileName { get; set; }
         public Guid ProfileGuid { get; set; } = Guid.NewGuid();
 
-        public DeviceSettings DeviceSettings { get; set; } = new();
+        public DeviceSettings Settings { get; set; } = new();
 
         public ProfileData()
         {
@@ -16,7 +16,7 @@
         {
             ProfileName = "XInput (Default)",
             ProfileGuid = DefaultGuid,
-            DeviceSettings = new(),
+            Settings = new(),
         };
 
         public override string ToString()

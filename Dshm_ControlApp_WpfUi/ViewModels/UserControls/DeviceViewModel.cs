@@ -19,24 +19,18 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels
 
         private readonly DshmConfigManager _dshmConfigManager;
         private readonly AppSnackbarMessagesService _appSnackbarMessagesService;
-
-
         private readonly PnPDevice _device;
-        private DeviceData deviceUserData;
+
         private readonly Timer _batteryQuery;
 
-        // ------------------------------------------------------ PROPERTIES
 
+        private DeviceData deviceUserData;
         [ObservableProperty] private SettingsEditorViewModel _deviceCustomsVM = new() { AllowEditing = true };
         [ObservableProperty] private SettingsEditorViewModel _profileCustomsVM = new();
         [ObservableProperty] private SettingsEditorViewModel _globalCustomsVM = new();
-
         [ObservableProperty] private SettingsEditorViewModel _selectedGroupsVM = new();
-
-        //internal string DisplayName { get; set; }
         [ObservableProperty] private bool _isEditorEnabled;
         [ObservableProperty] private bool _isProfileSelectorVisible;
-
         [ObservableProperty] private SettingsModes _currentDeviceSettingsMode;
 
         /// <summary>
@@ -242,6 +236,7 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels
 
             //DisplayName = DeviceAddress;
             RefreshDeviceSettings();
+            UpdateSettingsEditor();
         }
 
 
@@ -252,6 +247,11 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels
         [ObservableProperty] public List<ProfileData> _listOfProfiles;
 
         partial void OnCurrentDeviceSettingsModeChanged(SettingsModes value)
+        {
+            UpdateSettingsEditor();
+        }
+
+        public void UpdateSettingsEditor()
         {
             switch (CurrentDeviceSettingsMode)
             {
@@ -271,36 +271,34 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels
 
         partial void OnSelectedProfileChanged(ProfileData? value)
         {
-            ProfileCustomsVM.LoadDatasToAllGroups(SelectedProfile.DeviceSettings);
+            ProfileCustomsVM.LoadDatasToAllGroups(SelectedProfile.Settings);
         }
 
         [RelayCommand]
         public void RefreshDeviceSettings()
         {
+            // Bluetooth
             PairingMode = (int)deviceUserData.BluetoothPairingMode;
             CustomPairingAddress = deviceUserData.PairingAddress;
+
+            // Settings and selected profile
+            CurrentDeviceSettingsMode = deviceUserData.SettingsMode;
             DeviceCustomsVM.LoadDatasToAllGroups(deviceUserData.Settings);
             ListOfProfiles = _dshmConfigManager.Profiles;
             SelectedProfile = _dshmConfigManager.GetProfile(deviceUserData.GuidOfProfileToUse);
-            GlobalCustomsVM.LoadDatasToAllGroups(_dshmConfigManager.GlobalProfile.DeviceSettings);
-            CurrentDeviceSettingsMode = deviceUserData.SettingsMode;
-
+            GlobalCustomsVM.LoadDatasToAllGroups(_dshmConfigManager.GlobalProfile.Settings);
+            
             this.OnPropertyChanged(nameof(DeviceSettingsStatus));
         }
-
-        //public void UpdateEditor()
-        //{
-
-        //}
 
         [RelayCommand]
         private void ApplyChanges()
         {
-            deviceUserData.SettingsMode = CurrentDeviceSettingsMode;
             deviceUserData.BluetoothPairingMode = (BluetoothPairingMode)PairingMode;
             deviceUserData.PairingAddress = CustomPairingAddress;
 
-            if (CurrentDeviceSettingsMode != SettingsModes.Global)
+            deviceUserData.SettingsMode = CurrentDeviceSettingsMode;
+            if (CurrentDeviceSettingsMode == SettingsModes.Custom)
             {
                 SelectedGroupsVM.SaveAllChangesToBackingData(deviceUserData.Settings);
             }
@@ -309,8 +307,9 @@ namespace Nefarius.DsHidMini.ControlApp.ViewModels
             {
                 deviceUserData.GuidOfProfileToUse = SelectedProfile.ProfileGuid;
             }
-            _appSnackbarMessagesService.ShowDsHidMiniConfigurationUpdateSuccessMessage();
+
             _dshmConfigManager.SaveChangesAndUpdateDsHidMiniConfigFile();
+            _appSnackbarMessagesService.ShowDsHidMiniConfigurationUpdateSuccessMessage();
             this.OnPropertyChanged(nameof(DeviceSettingsStatus));
         }
 

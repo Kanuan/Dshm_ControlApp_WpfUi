@@ -306,21 +306,21 @@
                         Width="80"
                         DockPanel.Dock="Left"
                         IsEnabled="{Binding IsChecked, ElementName=EnableQuickDisconnectComboCheckbox}"
-                        ItemsSource="{Binding Source={helpers:EnumBindingSource {x:Type enums:Manager_Button}}}"
+                        ItemsSource="{Binding Source={helpers:EnumBindingSource {x:Type enums:Button}}}"
                         SelectedItem="{Binding QuickDisconnectComboButton1}"
                         Text="{Binding QuickDisconnectComboButton1}" />
                     <ComboBox
                         Width="80"
                         DockPanel.Dock="Left"
                         IsEnabled="{Binding IsChecked, ElementName=EnableQuickDisconnectComboCheckbox}"
-                        ItemsSource="{Binding Source={helpers:EnumBindingSource {x:Type enums:Manager_Button}}}"
+                        ItemsSource="{Binding Source={helpers:EnumBindingSource {x:Type enums:Button}}}"
                         SelectedItem="{Binding QuickDisconnectComboButton2}"
                         Text="{Binding QuickDisconnectComboButton2}" />
                     <ComboBox
                         Width="80"
                         DockPanel.Dock="Left"
                         IsEnabled="{Binding IsChecked, ElementName=EnableQuickDisconnectComboCheckbox}"
-                        ItemsSource="{Binding Source={helpers:EnumBindingSource {x:Type enums:Manager_Button}}}"
+                        ItemsSource="{Binding Source={helpers:EnumBindingSource {x:Type enums:Button}}}"
                         SelectedItem="{Binding QuickDisconnectComboButton3}"
                         Text="{Binding QuickDisconnectComboButton3}" />
                     <ui:NumberBox
@@ -504,19 +504,19 @@
                         <ComboBox
                             Width="80"
                             DockPanel.Dock="Left"
-                            ItemsSource="{Binding Source={helpers:EnumBindingSource {x:Type enums:Manager_Button}}}"
+                            ItemsSource="{Binding Source={helpers:EnumBindingSource {x:Type enums:Button}}}"
                             SelectedItem="{Binding AltModeToggleButttonCombo_Button1}"
                             Text="{Binding AltModeToggleButttonCombo_Button1}" />
                         <ComboBox
                             Width="80"
                             DockPanel.Dock="Left"
-                            ItemsSource="{Binding Source={helpers:EnumBindingSource {x:Type enums:Manager_Button}}}"
+                            ItemsSource="{Binding Source={helpers:EnumBindingSource {x:Type enums:Button}}}"
                             SelectedItem="{Binding AltModeToggleButttonCombo_Button2}"
                             Text="{Binding AltModeToggleButttonCombo_Button2}" />
                         <ComboBox
                             Width="80"
                             DockPanel.Dock="Left"
-                            ItemsSource="{Binding Source={helpers:EnumBindingSource {x:Type enums:Manager_Button}}}"
+                            ItemsSource="{Binding Source={helpers:EnumBindingSource {x:Type enums:Button}}}"
                             SelectedItem="{Binding AltModeToggleButttonCombo_Button3}"
                             Text="{Binding AltModeToggleButttonCombo_Button3}" />
                         <ui:NumberBox

@@ -74,10 +74,9 @@
                     Margin="2"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
-                    Command="{Binding ViewModel.SelectedProfileVM.EnableEditingCommand}"
-                    IsEnabled="{Binding ViewModel.NoProfileSelected, Converter={StaticResource BooleanToReverseConverterKey}}">
+                    Command="{Binding ViewModel.SelectedProfileVM.EnableEditingCommand}">
                     <Button.Content>
-                        <ui:SymbolIcon Symbol="Pen24" />
+                        <ui:SymbolIcon HorizontalAlignment="Center" Symbol="Pen24" />
                     </Button.Content>
                 </Button>
                 <Button
@@ -99,7 +98,7 @@
                     Command="{Binding ViewModel.DeleteProfileCommand}"
                     CommandParameter="{Binding ViewModel.SelectedProfileVM}">
                     <Button.Content>
-                        <ui:SymbolIcon Symbol="Delete28" />
+                        <ui:SymbolIcon HorizontalAlignment="Center" Symbol="Delete28" />
                     </Button.Content>
                 </Button>
             </Grid>
@@ -153,7 +152,11 @@
             VerticalAlignment="Stretch"
             VerticalContentAlignment="Stretch"
             DockPanel.Dock="Right">
-            <viewuserctrls:ProfileUserControl DataContext="{Binding ViewModel.SelectedProfileVM}" />
+            <Grid Visibility="{Binding ViewModel.AnyProfileSelected, Converter={StaticResource BoolToVis}}">
+                <viewuserctrls:ProfileUserControl DataContext="{Binding ViewModel.SelectedProfileVM}" />
+            </Grid>
+
+
         </ui:Card>
 
 

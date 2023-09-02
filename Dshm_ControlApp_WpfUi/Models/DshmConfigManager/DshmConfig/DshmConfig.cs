@@ -11,7 +11,7 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.DshmConfig
     /// </summary>
     public class DshmDeviceSettings
     {
-        public DSHM_HidDeviceMode? HIDDeviceMode { get; set; }// = DSHM_HidDeviceModes.DS4Windows;
+        public HidDeviceMode? HIDDeviceMode { get; set; }// = DSHM_HidDeviceModes.DS4Windows;
         public bool? DisableAutoPairing { get; set; }
         public string? PairingAddress { get; set; }
         public bool? DisableWirelessIdleTimeout { get; set; }// = false;
@@ -25,11 +25,11 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.DshmConfig
 
         [JsonIgnore]
         public DshmHidModeSettings ContextSettings { get; set; } = new();
-        public DshmHidModeSettings? SDF => HIDDeviceMode == DSHM_HidDeviceMode.SDF ? ContextSettings : null;
-        public DshmHidModeSettings? GPJ => HIDDeviceMode == DSHM_HidDeviceMode.GPJ ? ContextSettings : null;
-        public DshmHidModeSettings? SXS => HIDDeviceMode == DSHM_HidDeviceMode.SXS ? ContextSettings : null;
-        public DshmHidModeSettings? DS4Windows => HIDDeviceMode == DSHM_HidDeviceMode.DS4Windows ? ContextSettings : null;
-        public DshmHidModeSettings? XInput => HIDDeviceMode == DSHM_HidDeviceMode.XInput ? ContextSettings : null;
+        public DshmHidModeSettings? SDF => HIDDeviceMode == HidDeviceMode.SDF ? ContextSettings : null;
+        public DshmHidModeSettings? GPJ => HIDDeviceMode == HidDeviceMode.GPJ ? ContextSettings : null;
+        public DshmHidModeSettings? SXS => HIDDeviceMode == HidDeviceMode.SXS ? ContextSettings : null;
+        public DshmHidModeSettings? DS4Windows => HIDDeviceMode == HidDeviceMode.DS4Windows ? ContextSettings : null;
+        public DshmHidModeSettings? XInput => HIDDeviceMode == HidDeviceMode.XInput ? ContextSettings : null;
 
             public DshmDeviceSettings()
         {
@@ -66,9 +66,9 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.DshmConfig
         {
             public bool? IsEnabled { get; set; }
             public double? HoldTime { get; set; }
-            public DSHM_Button? Button1 { get; set; }
-            public DSHM_Button? Button2 { get; set; }
-            public DSHM_Button? Button3 { get; set; }
+            public Button? Button1 { get; set; }
+            public Button? Button2 { get; set; }
+            public Button? Button3 { get; set; }
         }
 
         public class ForcedSMSettings
@@ -99,7 +99,7 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.DshmConfig
 
         public class AllLEDSettings
         {
-            public DSHM_LEDsMode? Mode { get; set; }// = DSHM_LEDsModes.BatteryIndicatorPlayerIndex;
+            public LEDsMode? Mode { get; set; }// = DSHM_LEDsModes.BatteryIndicatorPlayerIndex;
             public DSHM_LEDsAuthority? Authority { get; set; }
             public LEDsCustoms CustomPatterns { get; set; } = new();
         }
@@ -128,9 +128,9 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.DshmConfig
     public class DshmHidModeSettings
     {
         [JsonIgnore]
-        public DSHM_HidDeviceMode? HIDDeviceMode { get; set; }
-        public DSHM_PressureMode? PressureExposureMode { get; set; }// = DSHM_PressureModes.Default;
-        public DSHM_DPadExposureMode? DPadExposureMode { get; set; }// = DSHM_DPadExposureModes.Default;
+        public HidDeviceMode? HIDDeviceMode { get; set; }
+        public PressureMode? PressureExposureMode { get; set; }// = DSHM_PressureModes.Default;
+        public DPadExposureMode? DPadExposureMode { get; set; }// = DSHM_DPadExposureModes.Default;
         public DeadZoneSettings DeadZoneLeft { get; set; } = new();
         public DeadZoneSettings DeadZoneRight { get; set; } = new();
         public AllRumbleSettings RumbleSettings { get; set; } = new();

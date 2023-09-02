@@ -1,69 +1,72 @@
 ﻿using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.DshmConfig.Enums;
 using Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums;
+using Button = Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums.Button;
+using LEDsMode = Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums.LEDsMode;
+using PressureMode = Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager.Enums.PressureMode;
 
 namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
 {
     public class DshmManagerToDriverConversion
     {
-        public static Dictionary<SettingsContext, DSHM_HidDeviceMode> DictHidDeviceModes = new()
+        public static Dictionary<SettingsContext, DshmConfig.Enums.HidDeviceMode> HidDeviceMode = new()
         {
-            {SettingsContext.Global , DSHM_HidDeviceMode.XInput},
-            {SettingsContext.General , DSHM_HidDeviceMode.XInput},
-            {SettingsContext.SDF , DSHM_HidDeviceMode.SDF},
-            {SettingsContext.GPJ , DSHM_HidDeviceMode.GPJ},
-            {SettingsContext.SXS , DSHM_HidDeviceMode.SXS},
-            {SettingsContext.DS4W , DSHM_HidDeviceMode.DS4Windows},
-            {SettingsContext.XInput , DSHM_HidDeviceMode.XInput},
+            {SettingsContext.Global , DshmConfig.Enums.HidDeviceMode.XInput},
+            {SettingsContext.General , DshmConfig.Enums.HidDeviceMode.XInput},
+            {SettingsContext.SDF , DshmConfig.Enums.HidDeviceMode.SDF},
+            {SettingsContext.GPJ , DshmConfig.Enums.HidDeviceMode.GPJ},
+            {SettingsContext.SXS , DshmConfig.Enums.HidDeviceMode.SXS},
+            {SettingsContext.DS4W , DshmConfig.Enums.HidDeviceMode.DS4Windows},
+            {SettingsContext.XInput , DshmConfig.Enums.HidDeviceMode.XInput},
         };
 
         //---------------------------------------------------- LEDsModes
 
-        public static Dictionary<ControlApp_LEDsModes, DSHM_LEDsMode> LedModeManagerToDriver = new()
+        public static Dictionary<LEDsMode, DshmConfig.Enums.LEDsMode> LedModeManagerToDriver = new()
         {
-            { ControlApp_LEDsModes.BatteryIndicatorPlayerIndex, DSHM_LEDsMode.BatteryIndicatorPlayerIndex },
-            { ControlApp_LEDsModes.BatteryIndicatorBarGraph, DSHM_LEDsMode.BatteryIndicatorBarGraph },
-            { ControlApp_LEDsModes.CustomStatic, DSHM_LEDsMode.CustomPattern },
-            { ControlApp_LEDsModes.CustomPattern, DSHM_LEDsMode.CustomPattern },
+            { LEDsMode.BatteryIndicatorPlayerIndex, DshmConfig.Enums.LEDsMode.BatteryIndicatorPlayerIndex },
+            { LEDsMode.BatteryIndicatorBarGraph, DshmConfig.Enums.LEDsMode.BatteryIndicatorBarGraph },
+            { LEDsMode.CustomStatic, DshmConfig.Enums.LEDsMode.CustomPattern },
+            { LEDsMode.CustomPattern, DshmConfig.Enums.LEDsMode.CustomPattern },
         };
 
         //---------------------------------------------------- DPadModes
 
-        public static Dictionary<ControlApp_DPADModes, DSHM_DPadExposureMode> DPadExposureModeManagerToDriver = new()
+        public static Dictionary<DPadMode, DPadExposureMode> DPadExposureModeManagerToDriver = new()
         {
-            { ControlApp_DPADModes.Default, DSHM_DPadExposureMode.Default },
-            { ControlApp_DPADModes.HAT, DSHM_DPadExposureMode.HAT },
-            { ControlApp_DPADModes.Buttons, DSHM_DPadExposureMode.IndividualButtons },
+            { DPadMode.Default, DPadExposureMode.Default },
+            { DPadMode.HAT, DPadExposureMode.HAT },
+            { DPadMode.Buttons, DPadExposureMode.IndividualButtons },
         };
 
         //---------------------------------------------------- PressureModes
 
-        public static Dictionary<ControlApp_DsPressureMode, DSHM_PressureMode> DsPressureModeManagerToDriver = new()
+        public static Dictionary<PressureMode, DshmConfig.Enums.PressureMode> DsPressureModeManagerToDriver = new()
         {
-            { ControlApp_DsPressureMode.Default, DSHM_PressureMode.Default },
-            { ControlApp_DsPressureMode.Analogue, DSHM_PressureMode.Analogue },
-            { ControlApp_DsPressureMode.Digital, DSHM_PressureMode.Digital },
+            { PressureMode.Default, DshmConfig.Enums.PressureMode.Default },
+            { PressureMode.Analogue, DshmConfig.Enums.PressureMode.Analogue },
+            { PressureMode.Digital, DshmConfig.Enums.PressureMode.Digital },
         };
 
-        public static Dictionary<Manager_Button, DSHM_Button> ButtonManagerToDriver = new()
+        public static Dictionary<Button, DshmConfig.Enums.Button> ButtonManagerToDriver = new()
         {
-            { Manager_Button.None, DSHM_Button.None },
-            { Manager_Button.PS, DSHM_Button.PS },
-            { Manager_Button.START, DSHM_Button.START },
-            { Manager_Button.SELECT, DSHM_Button.SELECT },
-            { Manager_Button.R1, DSHM_Button.R1 },
-            { Manager_Button.L1, DSHM_Button.L1 },
-            { Manager_Button.R2, DSHM_Button.R2 },
-            { Manager_Button.L2, DSHM_Button.L2 },
-            { Manager_Button.R3, DSHM_Button.R3 },
-            { Manager_Button.L3, DSHM_Button.L3 },
-            { Manager_Button.Triangle, DSHM_Button.Triangle },
-            { Manager_Button.Circle, DSHM_Button.Circle },
-            { Manager_Button.Cross, DSHM_Button.Cross },
-            { Manager_Button.Square, DSHM_Button.Square },
-            { Manager_Button.Up, DSHM_Button.Up },
-            { Manager_Button.Right, DSHM_Button.Right },
-            { Manager_Button.Dowm, DSHM_Button.Dowm },
-            { Manager_Button.Left, DSHM_Button.Left },
+            { Button.None, DshmConfig.Enums.Button.None },
+            { Button.PS, DshmConfig.Enums.Button.PS },
+            { Button.START, DshmConfig.Enums.Button.START },
+            { Button.SELECT, DshmConfig.Enums.Button.SELECT },
+            { Button.R1, DshmConfig.Enums.Button.R1 },
+            { Button.L1, DshmConfig.Enums.Button.L1 },
+            { Button.R2, DshmConfig.Enums.Button.R2 },
+            { Button.L2, DshmConfig.Enums.Button.L2 },
+            { Button.R3, DshmConfig.Enums.Button.R3 },
+            { Button.L3, DshmConfig.Enums.Button.L3 },
+            { Button.Triangle, DshmConfig.Enums.Button.Triangle },
+            { Button.Circle, DshmConfig.Enums.Button.Circle },
+            { Button.Cross, DshmConfig.Enums.Button.Cross },
+            { Button.Square, DshmConfig.Enums.Button.Square },
+            { Button.Up, DshmConfig.Enums.Button.Up },
+            { Button.Right, DshmConfig.Enums.Button.Right },
+            { Button.Dowm, DshmConfig.Enums.Button.Dowm },
+            { Button.Left, DshmConfig.Enums.Button.Left },
         };
     }
 }
