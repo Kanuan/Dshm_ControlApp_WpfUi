@@ -5,7 +5,7 @@ namespace Nefarius.DsHidMini.ControlApp.Models.DshmConfigManager
     public class DeviceData
     {
         public string DeviceMac { get; set; } = "0000000000";
-        public string DeviceCustomName { get; set; } = "DualShock 3";
+        public string CustomName { get; set; } = "DualShock 3";
         public Guid GuidOfProfileToUse { get; set; } = ProfileData.DefaultGuid;
         public BluetoothPairingMode BluetoothPairingMode { get; set; } = BluetoothPairingMode.Auto;
         public string? PairingAddress { get; set; } = null;
